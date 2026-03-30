@@ -101,6 +101,7 @@ async def google_login_simulation(user: UserLogin):
     # 在 MongoDB 中尋找是否有這個信箱
     existing_user = users_collection.find_one({"email": user.email})
     
+    
     if not existing_user:
         # 如果是新用戶，寫入資料庫
         new_user_data = {
