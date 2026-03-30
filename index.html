@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Free | 專為台中大學生打造的高效率三觀媒合系統</title>
+    <style>
+        :root { --primary-blue: #2563eb; --primary-hover: #1d4ed8; --accent-orange: #ff6b6b; --bg-light: #f8fafc; --text-dark: #1e293b; --text-gray: #64748b; }
+        * { box-sizing: border-box; font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
+        body { margin: 0; padding: 0; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 24px; font-weight: 800; color: var(--primary-blue); letter-spacing: 1px; }
+        .logo span { color: var(--accent-orange); }
+        .login-btn { background-color: var(--primary-blue); color: white; border: none; padding: 10px 24px; border-radius: 20px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .login-btn:hover { background-color: var(--primary-hover); }
+        .hero { max-width: 1000px; margin: 80px auto; padding: 0 20px; text-align: center; }
+        h1 { font-size: 42px; margin-bottom: 20px; color: var(--text-dark); }
+        .highlight { color: var(--primary-blue); position: relative; }
+        .highlight::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 8px; background-color: rgba(255, 107, 107, 0.2); z-index: -1; }
+        .subtitle { font-size: 18px; color: var(--text-gray); max-width: 800px; margin: 0 auto 40px auto; line-height: 1.8; text-align: justify; }
+        .features { display: flex; justify-content: center; gap: 20px; margin-top: 40px; }
+        .feature-tag { background: white; padding: 12px 24px; border-radius: 30px; font-weight: bold; color: var(--primary-blue); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; }
+        .close-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: var(--text-gray); border: none; background: none; }
+        .modal-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; text-align: center; }
+        .modal-desc { font-size: 14px; color: var(--text-gray); text-align: center; margin-bottom: 24px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group input { width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s; }
+        .input-group input:focus { border-color: var(--primary-blue); }
+        .submit-btn { width: 100%; background-color: var(--accent-orange); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: opacity 0.3s; }
+        .submit-btn:hover { opacity: 0.9; }
+        #otpSection { display: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Date <span>Free</span></div>
+        <button class="login-btn" onclick="openModal()">登入 / 註冊</button>
+    </header>
+    <section class="hero">
+        <h1>為校園社交降噪，找回<span class="highlight">靈魂契合</span>的深度連結</h1>
+        <p class="subtitle">目前大學生在校園社交中面臨「社交通膨」與「無效匹配」的雙重困境。Date Free 是一款專為台中大學學生打造的「高效率、深社交」媒合系統。我們透過 6 大維度深度演算與學生身份驗證，排除外貌與隨機滑動的社交雜訊。運用大數據分析三觀問卷，幫想深度約會交友的大學生快速精準的找到適配對象，解決現在交友市場中極大的隱形池，開拓新型態的約會配對型態。</p>
+        <div class="features">
+            <div class="feature-tag">🎯 每週一次精準開獎</div>
+            <div class="feature-tag">🎓 限定 .edu.tw 真實認證</div>
+            <div class="feature-tag">☕ 200 元線下約會補貼</div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div id="emailSection">
+                <div class="modal-title">校園身分驗證</div>
+                <div class="modal-desc">請輸入您的學校信箱 (.edu.tw)，我們將發送驗證碼給您。</div>
+                <div class="input-group">
+                    <input type="email" id="schoolEmail" placeholder="例如：student@thu.edu.tw">
+                </div>
+                <button class="submit-btn" onclick="sendOTP()">發送驗證碼</button>
+            </div>
+            <div id="otpSection">
+                <div class="modal-title">輸入驗證碼</div>
+                <div class="modal-desc">我們已將 6 位數驗證碼發送至 <br><strong id="displayEmail"></strong></div>
+                <div class="input-group">
+                    <input type="text" id="otpCode" placeholder="請輸入 6 位數驗證碼" maxlength="6">
+                </div>
+                <button class="submit-btn" onclick="verifyOTP()">完成驗證並登入</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const modal = document.getElementById('loginModal');
+    const emailSection = document.getElementById('emailSection');
+    const otpSection = document.getElementById('otpSection');
+    const emailInput = document.getElementById('schoolEmail');
+    
+    // 打開登入視窗
+    function openModal() { 
+        modal.style.display = 'flex'; 
+        emailSection.style.display = 'block'; 
+        otpSection.style.display = 'none'; 
+        emailInput.value = ''; 
+    }
+    
+    // 關閉登入視窗
+    function closeModal() { 
+        modal.style.display = 'none'; 
+    }
+    
+    // 【修改這裡！】這是真正呼叫後端的登入按鈕動作
+    function sendOTP() {
+        // 1. 取得使用者在輸入框填寫的信箱
+        const userEmail = emailInput.value.trim();
+        
+        // 前端基礎防呆
+        if (!userEmail) { 
+            alert('請輸入信箱！'); 
+            return; 
+        }
+
+        // 2. 使用 fetch 呼叫 Vercel 上的 Python 後端 API
+        fetch('/api/auth/google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            // 將信箱打包成 JSON 送給後端 (這裡的名字先暫時代入)
+            body: JSON.stringify({ email: userEmail, name: "測試同學" }) 
+        })
+        .then(response => {
+            // 解析後端回傳的 JSON 資料
+            return response.json();
+        })
+        .then(data => {
+            // 3. 根據後端回傳的結果，決定接下來的動作
+            if (data.detail) {
+                // 如果後端擋下來了 (例如不是 .edu.tw)，會回傳 detail 錯誤訊息
+                alert("登入失敗：" + data.detail);
+            } else {
+                // 如果後端驗證成功
+                alert(data.message); // 顯示「身分驗證成功，歡迎進入校園社交圈！」
+                
+                // 【關鍵！】把信箱存在瀏覽器，這樣切換到問卷頁面時才知道是誰填的
+                localStorage.setItem('userEmail', userEmail);
+                
+                // 成功後跳轉到主控台
+                window.location.href = 'dashboard.html'; 
+            }
+        })
+        .catch(error => {
+            console.error('API 呼叫錯誤:', error);
+            alert('無法連線到伺服器，請稍後再試！');
+        });
+    }
+
+    // 點擊視窗外部也可關閉
+    window.onclick = function(event) { 
+        if (event.target == modal) closeModal(); 
+    }
+    </script>
+    
+</body>
+</html>

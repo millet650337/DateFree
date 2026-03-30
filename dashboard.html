@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Free | 會員主控台</title>
+    <style>
+        :root { --bg-color: #fafafa; --border-color: #333; --text-color: #333; --hover-bg: #ff6b6b; --hover-text: #ffffff; }
+        body { margin: 0; padding: 0; background-color: var(--bg-color); font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+        .diamond-wrapper { position: relative; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); background-color: white; transform: rotate(45deg); transition: all 0.3s ease; cursor: pointer; box-shadow: 2px 2px 10px rgba(0,0,0,0.03); }
+        .diamond-content { transform: rotate(-45deg); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%; }
+        .profile-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 60px; }
+        .profile-diamond { width: 100px; height: 100px; cursor: default; }
+        .avatar-circle { width: 60px; height: 60px; background-color: #ccc; border-radius: 50%; border: 2px solid var(--border-color); margin-bottom: -15px; }
+        .nickname { margin-top: 35px; font-size: 18px; font-weight: bold; color: var(--text-color); letter-spacing: 2px; }
+        .menu-section { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; max-width: 900px; }
+        .menu-item { margin: 15px -10px; width: 130px; height: 130px; }
+        .menu-item:hover { background-color: var(--hover-bg); border-color: var(--hover-bg); }
+        .menu-item:hover .menu-text { color: var(--hover-text); font-weight: bold; }
+        .menu-text { font-size: 16px; color: var(--text-color); transition: color 0.3s ease; letter-spacing: 1px; }
+        .logout-section { margin-top: 80px; }
+        .logout-btn { background: none; border: none; font-size: 16px; color: #666; cursor: pointer; letter-spacing: 2px; transition: color 0.2s; text-decoration: none; }
+        .logout-btn:hover { color: var(--hover-bg); font-weight: bold; }
+        @media (max-width: 768px) { .menu-item { width: 100px; height: 100px; margin: 20px -5px; } .menu-text { font-size: 14px; } }
+    </style>
+</head>
+<body>
+    <div class="profile-section">
+        <div class="diamond-wrapper profile-diamond">
+            <div class="diamond-content"><div class="avatar-circle"></div></div>
+        </div>
+        <div class="nickname">王同學</div>
+    </div>
+    <div class="menu-section">
+        <div class="diamond-wrapper menu-item" onclick="goToSurvey()">
+            <div class="diamond-content"><span class="menu-text">填寫問卷</span></div>
+        </div>
+        <div class="diamond-wrapper menu-item" onclick="alert('配對結果每週三開獎，敬請期待！')">
+        <div class="diamond-wrapper menu-item" onclick="checkMatchResult()">
+            <div class="diamond-content"><span class="menu-text">配對結果</span></div>
+        </div>
+        <div class="diamond-wrapper menu-item" onclick="alert('您目前還沒有正在進行的聊天。')">
+            <div class="diamond-content"><span class="menu-text">聊天室</span></div>
+        </div>
+        <div class="diamond-wrapper menu-item" onclick="alert('客服信箱：support@datefree.tw')">
+            <div class="diamond-content"><span class="menu-text">聯繫我們</span></div>
+        </div>
+    </div>
+    <div class="logout-section">
+        <button class="logout-btn" onclick="logout()">登出</button>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. 頁面載入時：身分驗證與介面初始化
+        // ==========================================
+        const userEmail = localStorage.getItem('userEmail');
+    
+        if (!userEmail) {
+            alert("您尚未登入或登入已逾時，請重新驗證校園信箱！");
+            window.location.href = 'index.html';
+        }
+
+        // 簡單將信箱 @ 前面的帳號作為暱稱顯示在畫面上
+        const nicknameElement = document.querySelector('.nickname');
+        if (nicknameElement) {
+            nicknameElement.innerText = userEmail.split('@')[0] + " 同學";
+        }
+
+    // ==========================================
+    // 2. 導覽列與功能按鈕邏輯
+    // ==========================================
+    function goToSurvey() {
+        window.location.href = 'survey.html'; 
+    }
+
+    // 【核心開獎邏輯】向 Python 後端請求配對分數
+    function checkMatchResult() {
+        // 先給予使用者等待的反饋
+        alert("系統正在大數據池中為您演算三觀契合度，請稍候...");
+
+        // 呼叫 Vercel 上的 Match API
+        fetch(`/api/match/${userEmail}`)
+            .then(response => response.json())
+            .then(data => {
+                // 狀況 A：後端報錯 (例如：還沒填寫問卷)
+                if (data.detail) {
+                    alert("⚠️ 提示：" + data.detail);
+                } 
+                // 狀況 B：配對成功，有拿到 match_result 資料包
+                else if (data.match_result) {
+                    const result = data.match_result;
+                    alert(
+                        `🎉 ${data.message}\n\n` +
+                        `✨ 專屬配對對象：${result.partner_name}\n` +
+                        `📊 三觀契合度：${result.similarity_score}\n\n` +
+                        `🎁 ${result.reward_eligible}\n` +
+                        `快到「聊天室」與對方打個招呼吧！`
+                    );
+                } 
+                // 狀況 C：系統裡還沒有適合的人 (例如資料庫只有他自己)
+                else {
+                    alert(`⏳ ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('API 呼叫錯誤:', error);
+                alert("伺服器連線異常，請稍後再試！");
+            });
+    }
+
+    // ==========================================
+    // 3. 安全登出機制
+    // ==========================================
+    function logout() {
+        if (confirm('確定要登出 Date Free 嗎？')) {
+            // 【關鍵】清除瀏覽器記憶體中的信箱，徹底註銷身分
+            localStorage.removeItem('userEmail');
+            alert("已成功登出，期待您再次回來！");
+            window.location.href = 'index.html'; 
+        }
+    }
+    </script>
+</body>
+</html>
