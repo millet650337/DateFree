@@ -146,13 +146,15 @@ function handleCredentialResponse(response) {
             return;
         }
 
-        // ✅ 存 token + user
+       // ✅ 存 token + user
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
         updateUI();
-
         closeModal();
+
+        // ✅ 登入成功後，自動跳轉到主控台
+        window.location.href = "dashboard.html";
     });
 }
 
@@ -164,10 +166,13 @@ function updateUI() {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
 
-    if (token && user) {
+   if (token && user) {
+        // 如果已經登入，直接幫他跳轉到 dashboard，不用再看一次首頁
+        window.location.href = "dashboard.html";
+        
+        // 下面這幾行其實可以刪掉或保留，因為已經跳轉了
         loginBtn.style.display = "none";
         userBox.style.display = "flex";
-
         userName.innerText = user.name + " (" + user.email + ")";
         welcomeText.innerText = "歡迎回來 " + user.name + " 🎉";
     }
