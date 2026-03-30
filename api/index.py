@@ -123,9 +123,6 @@ async def google_login(data: GoogleLoginRequest):
         email = idinfo["email"]
         name = idinfo.get("name", "")
 
-        if not email.endswith(".edu.tw"):
-            raise HTTPException(403, "僅限 .edu.tw")
-
         user = users_collection.find_one({"email": email})
 
         if not user:
