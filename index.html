@@ -75,6 +75,8 @@
     const emailSection = document.getElementById('emailSection');
     const otpSection = document.getElementById('otpSection');
     const emailInput = document.getElementById('schoolEmail');
+    const displayEmail = document.getElementById('displayEmail');
+    const otpInput = document.getElementById('otpCode');
     
     // 打開登入視窗
     function openModal() { 
@@ -82,6 +84,7 @@
         emailSection.style.display = 'block'; 
         otpSection.style.display = 'none'; 
         emailInput.value = ''; 
+        otpInput.value = '';
     }
     
     // 關閉登入視窗
@@ -89,42 +92,50 @@
         modal.style.display = 'none'; 
     }
     
-    // 【修改這裡！】這是真正呼叫後端的登入按鈕動作
+    // 第一步：發送驗證碼 (純前端畫面切換)
     function sendOTP() {
-        // 1. 取得使用者在輸入框填寫的信箱
         const userEmail = emailInput.value.trim();
         
-        // 前端基礎防呆
+        // 基礎防呆：檢查是否填寫以及是否為 .edu.tw
         if (!userEmail) { 
             alert('請輸入信箱！'); 
             return; 
         }
+        if (!userEmail.endsWith('.edu.tw')) {
+            alert('目前僅限台灣學術網路 (.edu.tw) 信箱註冊！');
+            return;
+        }
 
-        // 2. 使用 fetch 呼叫 Vercel 上的 Python 後端 API
+        // 切換到驗證碼畫面
+        displayEmail.innerText = userEmail;
+        emailSection.style.display = 'none';
+        otpSection.style.display = 'block';
+    }
+
+    // 第二步：完成驗證並登入 (呼叫 Python 後端)
+    function verifyOTP() {
+        const userEmail = emailInput.value.trim();
+        const otpValue = otpInput.value.trim();
+
+        if (otpValue.length !== 6) {
+            alert('請輸入完整的 6 位數驗證碼！(測試期間可隨意輸入)');
+            return;
+        }
+
+        // 使用 fetch 呼叫 Vercel 上的 Python 後端 API
         fetch('/api/auth/google', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            // 將信箱打包成 JSON 送給後端 (這裡的名字先暫時代入)
             body: JSON.stringify({ email: userEmail, name: "測試同學" }) 
         })
-        .then(response => {
-            // 解析後端回傳的 JSON 資料
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            // 3. 根據後端回傳的結果，決定接下來的動作
             if (data.detail) {
-                // 如果後端擋下來了 (例如不是 .edu.tw)，會回傳 detail 錯誤訊息
                 alert("登入失敗：" + data.detail);
             } else {
-                // 如果後端驗證成功
-                alert(data.message); // 顯示「身分驗證成功，歡迎進入校園社交圈！」
-                
-                // 【關鍵！】把信箱存在瀏覽器，這樣切換到問卷頁面時才知道是誰填的
-                localStorage.setItem('userEmail', userEmail);
-                
-                // 成功後跳轉到主控台
-                window.location.href = 'dashboard.html'; 
+                alert(data.message); // 顯示成功訊息
+                localStorage.setItem('userEmail', userEmail); // 記住登入狀態
+                window.location.href = 'dashboard.html'; // 跳轉到主控台
             }
         })
         .catch(error => {
