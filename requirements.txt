@@ -3,3 +3,5 @@ uvicorn
 pymongo
 python-jose
 google-auth
+email-validator
+requests
