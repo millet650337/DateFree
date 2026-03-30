@@ -1,189 +1,176 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date Free | 精準配對深度問卷</title>
-    <style>
-        :root { --primary-color: #ff6b81; --primary-hover: #ff4757; --bg-color: #f8f9fa; --card-bg: #ffffff; --text-main: #2f3542; --text-muted: #747d8c; --border-color: #dfe4ea; }
-        body { font-family: 'PingFang TC', 'Helvetica Neue', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .survey-container { width: 100%; max-width: 600px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; min-height: 80vh; }
-        .progress-header { padding: 20px 30px; background: #fff; border-bottom: 1px solid var(--border-color); }
-        .progress-bar { width: 100%; height: 8px; background: #f1f2f6; border-radius: 4px; overflow: hidden; margin-top: 10px; }
-        .progress-fill { height: 100%; background: var(--primary-color); width: 0%; transition: width 0.3s ease; }
-        .progress-text { font-size: 14px; color: var(--text-muted); font-weight: bold; display: flex; justify-content: space-between;}
-        .close-survey { color: var(--text-muted); text-decoration: none; font-weight: normal; }
-        .close-survey:hover { color: var(--primary-color); }
-        .question-content { padding: 30px; flex-grow: 1; overflow-y: auto; }
-        .category-title { font-size: 20px; margin-top: 0; margin-bottom: 25px; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); display: inline-block; padding-bottom: 5px; }
-        .question-block { margin-bottom: 30px; }
-        .question-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; }
-        .radio-group { display: flex; flex-direction: column; gap: 10px; }
-        .radio-label { display: flex; align-items: center; padding: 15px; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-        .radio-label:hover { border-color: var(--primary-color); background: #fff0f2; }
-        .radio-label input[type="radio"] { margin-right: 10px; accent-color: var(--primary-color); width: 18px; height: 18px; }
-        .tags-group { display: flex; flex-wrap: wrap; gap: 10px; }
-        .tag-btn { padding: 10px 16px; border: 1px solid var(--border-color); border-radius: 20px; background: #fff; cursor: pointer; color: var(--text-muted); transition: all 0.2s; font-size: 14px; }
-        .tag-btn.selected { background: var(--primary-color); color: white; border-color: var(--primary-color); }
-        .nav-buttons { padding: 20px 30px; background: #fff; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; }
-        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-prev { background: #f1f2f6; color: var(--text-main); }
-        .btn-prev:hover { background: #dfe4ea; }
-        .btn-next { background: var(--primary-color); color: white; }
-        .btn-next:hover { background: var(--primary-hover); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Free | 精準配對問卷</title>
+
+<style>
+body {
+    font-family: 'Microsoft JhengHei';
+    background:#f8f9fa;
+    display:flex;
+    justify-content:center;
+    padding:20px;
+}
+.container {
+    max-width:600px;
+    width:100%;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+button {
+    padding:10px;
+    margin-top:20px;
+}
+</style>
 </head>
+
 <body>
-    <div class="survey-container">
-        <div class="progress-header">
-            <div class="progress-text">
-                <span id="progressText">進度 1 / 4</span>
-                <a href="dashboard.html" class="close-survey">✕ 先離開</a>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="container">
+    <h2 id="title">問卷</h2>
+    <div id="content"></div>
+
+    <button onclick="prev()">上一步</button>
+    <button onclick="next()" id="nextBtn">下一步</button>
+</div>
+
+<script>
+// ==========================
+// 🔐 登入檢查
+// ==========================
+const token = localStorage.getItem("token");
+
+if (!token) {
+    alert("請先登入！");
+    window.location.href = "index.html";
+}
+
+// ==========================
+// 問卷資料
+// ==========================
+const steps = [
+{
+    title:"性別",
+    key:"gender",
+    options:["男","女","非二元"]
+},
+{
+    title:"未來",
+    key:"future_status",
+    options:["大學在讀","研究所","工作"]
+},
+{
+    title:"金錢觀",
+    key:"money_view",
+    options:["AA","互請","男付","女付"]
+},
+{
+    title:"約會目的",
+    key:"dating_goal",
+    options:["交友","穩定關係","曖昧"]
+}
+];
+
+let i = 0;
+let answers = {};
+
+// ==========================
+// 渲染
+// ==========================
+function render() {
+    const step = steps[i];
+
+    document.getElementById("title").innerText = step.title;
+
+    let html = "";
+    step.options.forEach(opt => {
+        html += `
+        <div>
+            <input type="radio" name="q" value="${opt}"
+            ${answers[step.key] === opt ? "checked" : ""}
+            onchange="select('${step.key}','${opt}')">
+            ${opt}
         </div>
-        <div class="question-content" id="questionContent"></div>
-        <div class="nav-buttons">
-            <button class="btn btn-prev" id="btnPrev" style="visibility: hidden;">上一步</button>
-            <button class="btn btn-next" id="btnNext">下一步</button>
-        </div>
-    </div>
-
-    <script>
-        const surveyData = [
-            { category: "第一類：個人基礎資料", questions: [ { id: "gender", type: "radio", title: "1. 您的性別是？", options: ["男", "女", "非二元"] }, { id: "future", type: "radio", title: "2. 未來 1-3 年動態", options: ["大學在讀", "準備研究所", "職場新鮮人", "準備入伍", "出國留學"] } ] },
-            { category: "第二類：地雷自選區", questions: [ { id: "dealbreakers", type: "tags", max: 3, title: "請選擇您的地雷（至多 3 項）：", options: ["抽菸習慣", "頻繁買醉", "衛生髒亂", "作息不合", "邊界感模糊", "過度黏人", "冷暴力", "身高不符", "政治對立"] } ] },
-            { category: "第三類：三觀核心", questions: [ { id: "money", type: "radio", title: "金錢觀：約會最偏好哪種付錢方式？", options: ["絕對 AA 制", "互請制", "提議者付費", "願意主動買單"] } ] },
-            { category: "第七類：約會目的", questions: [ { id: "goal", type: "radio", title: "您的約會目的？", options: ["【純粹交友】擴展交友圈", "【穩定關係】尋找長期伴侶", "【浪漫曖昧】享受約會", "【學術/運動戰友】找讀書運動夥伴"] } ] }
-        ];
-
-        let currentStep = 0; let userAnswers = {};
-        const contentDiv = document.getElementById('questionContent');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const btnPrev = document.getElementById('btnPrev');
-        const btnNext = document.getElementById('btnNext');
-
-        function renderStep() {
-            const stepData = surveyData[currentStep];
-            let html = `<h2 class="category-title">${stepData.category}</h2>`;
-            stepData.questions.forEach(q => {
-                html += `<div class="question-block"><div class="question-title">${q.title}</div>`;
-                if (q.type === 'radio') {
-                    html += `<div class="radio-group">`;
-                    q.options.forEach(opt => {
-                        const isChecked = userAnswers[q.id] === opt ? 'checked' : '';
-                        html += `<label class="radio-label"><input type="radio" name="${q.id}" value="${opt}" ${isChecked} onchange="saveAnswer('${q.id}', '${opt}')">${opt}</label>`;
-                    });
-                    html += `</div>`;
-                } else if (q.type === 'tags') {
-                    html += `<div class="tags-group" id="tags_${q.id}">`;
-                    const currentSelected = userAnswers[q.id] || [];
-                    q.options.forEach(opt => {
-                        const isSelected = currentSelected.includes(opt);
-                        html += `<button type="button" class="tag-btn ${isSelected ? 'selected' : ''}" onclick="toggleTag('${q.id}', '${opt}', ${q.max}, this)">${opt}</button>`;
-                    });
-                    html += `</div>`;
-                }
-                html += `</div>`;
-            });
-            contentDiv.innerHTML = html; updateUI();
-        }
-
-        function saveAnswer(questionId, value) { userAnswers[questionId] = value; }
-        function toggleTag(questionId, value, max, btn) {
-            if (!userAnswers[questionId]) userAnswers[questionId] = [];
-            let selected = userAnswers[questionId];
-            if (selected.includes(value)) { selected = selected.filter(v => v !== value); btn.classList.remove('selected'); }
-            else { if (selected.length >= max) { alert(`最多選 ${max} 項！`); return; } selected.push(value); btn.classList.add('selected'); }
-            userAnswers[questionId] = selected;
-        }
-
-        function updateUI() {
-            const totalSteps = surveyData.length;
-            progressText.innerText = `進度 ${currentStep + 1} / ${totalSteps}`;
-            progressFill.style.width = `${((currentStep + 1) / totalSteps) * 100}%`;
-            btnPrev.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
-            btnNext.innerText = currentStep === totalSteps - 1 ? '完成並送出配對' : '下一步';
-        }
-
-        // ==========================================
-    // 1. 頁面載入時：檢查使用者是否已登入
-    // ==========================================
-        const userEmail = localStorage.getItem('userEmail');
-    
-        if (!userEmail) {
-            alert("系統找不到您的登入資訊，請先從首頁登入校園信箱！");
-            window.location.href = 'index.html';
-        }
-
-    // ==========================================
-    // 2. 處理「下一步」與「送出問卷」按鈕
-    // ==========================================
-        btnNext.addEventListener('click', () => {
-        // 如果還沒到最後一題，就切換到下一頁
-            if (currentStep < surveyData.length - 1) { 
-                currentStep++; 
-                renderStep(); 
-                contentDiv.scrollTop = 0; 
-            } 
-        // 如果是最後一頁，準備送出資料！
-            else { 
-                btnNext.innerText = '資料分析中...';
-                btnNext.disabled = true; // 防止重複點擊
-
-            // 【關鍵！】將前端收集到的 userAnswers 轉換成符合 Python 後端嚴格要求的格式
-                const payload = {
-                gender: userAnswers['gender'] || "未提供",
-                future_status: userAnswers['future'] || "未提供",
-                dealbreakers: userAnswers['dealbreakers'] || [],
-                bad_habits: [], // 若前端還沒做這題，先給空陣列避免後端報錯
-                money_view: userAnswers['money'] || "未提供",
-                boundaries: userAnswers['boundaries'] || "【報備信任型】", // 給予預設值
-                dating_goal: userAnswers['goal'] || "未提供"
-                };
-
-            // 使用 fetch 呼叫 Vercel 上的 Python 後端 API
-                fetch(`/api/survey/${userEmail}`, {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                })
-            .then(response => response.json())
-            .then(data => {
-                if(data.detail) {
-                    // 捕捉後端的 Pydantic 格式驗證錯誤
-                    alert("問卷送出失敗：" + JSON.stringify(data.detail));
-                    btnNext.innerText = '完成並送出配對';
-                    btnNext.disabled = false;
-                } else {
-                    // 成功存入 MongoDB！
-                    alert(data.message); // 顯示："問卷分析完成，已安全存入大數據庫！"
-                    window.location.href = 'dashboard.html'; // 跳轉回主控台
-                }
-            })
-            .catch(error => {
-                console.error('API 呼叫錯誤:', error);
-                alert("伺服器連線失敗，請稍後再試！");
-                btnNext.innerText = '完成並送出配對';
-                btnNext.disabled = false;
-            });
-        }
+        `;
     });
 
-    // 處理「上一步」按鈕 (維持原樣)
-    btnPrev.addEventListener('click', () => { 
-        if (currentStep > 0) { 
-            currentStep--; 
-            renderStep(); 
-            contentDiv.scrollTop = 0; 
-        } 
-    });
+    document.getElementById("content").innerHTML = html;
 
-    // 初始化渲染第一步
-    renderStep();
-    </script>
+    document.getElementById("nextBtn").innerText =
+        i === steps.length - 1 ? "送出" : "下一步";
+}
+
+function select(key,val) {
+    answers[key] = val;
+}
+
+// ==========================
+// 下一步
+// ==========================
+function next() {
+
+    if (i < steps.length - 1) {
+        i++;
+        render();
+    } else {
+        submitSurvey();
+    }
+}
+
+// ==========================
+// 上一步
+// ==========================
+function prev() {
+    if (i > 0) {
+        i--;
+        render();
+    }
+}
+
+// ==========================
+// 🚀 送出問卷（JWT）
+// ==========================
+function submitSurvey() {
+
+    const payload = {
+        gender: answers.gender || "未提供",
+        future_status: answers.future_status || "未提供",
+        dealbreakers: [],
+        bad_habits: [],
+        money_view: answers.money_view || "未提供",
+        boundaries: "【報備信任型】",
+        dating_goal: answers.dating_goal || "未提供"
+    };
+
+    fetch("/api/survey", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":`Bearer ${token}`
+        },
+        body:JSON.stringify(payload)
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        if (data.detail) {
+            alert("錯誤："+data.detail);
+            return;
+        }
+
+        alert("問卷完成！");
+        window.location.href = "dashboard.html";
+    })
+    .catch(()=>{
+        alert("伺服器錯誤");
+    });
+}
+
+// 初始
+render();
+</script>
+
 </body>
 </html>
