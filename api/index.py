@@ -88,7 +88,7 @@ def calculate_match_score(user_a_survey: dict, user_b_survey: dict) -> int:
 # 4. API 路由與 MongoDB 實作
 # ==========================================
 
-@app.get("/")
+@app.get("/api")
 async def root():
     return {"message": "Date Free 伺服器運作正常！資料庫已連線。"}
 
