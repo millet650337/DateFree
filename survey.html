@@ -7,168 +7,106 @@
 
 <style>
 body {
-    font-family: 'Microsoft JhengHei';
-    background:#f8f9fa;
-    display:flex;
-    justify-content:center;
-    padding:20px;
+    margin: 0;
+    font-family: 'Microsoft JhengHei', sans-serif;
+    background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+/* 導覽列 */
+header {
+    width: 100%; max-width: 1200px;
+    display: flex; justify-content: flex-start; align-items: center;
+    padding: 20px 40px; box-sizing: border-box;
+}
+.logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+.logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+.logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: #2d3748; }
+
 .container {
-    max-width:600px;
-    width:100%;
-    background:white;
-    padding:20px;
-    border-radius:10px;
+    max-width: 600px; width: 100%; background: white;
+    padding: 30px; border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    margin-top: 20px; box-sizing: border-box;
 }
-button {
-    padding:10px;
-    margin-top:20px;
+h2 { color: #2d3748; margin-top: 0; }
+button { padding: 10px 20px; margin-top: 20px; border-radius: 20px; border: none; background: #e2e8f0; cursor: pointer; transition: background 0.2s; font-size: 16px; font-family: inherit; }
+button:hover { background: #cbd5e1; }
+.options-group div { margin: 10px 0; font-size: 16px; }
+
+@media (max-width: 768px) {
+    header { padding: 15px 20px; }
+    .container { margin-top: 10px; width: 90%; }
 }
 </style>
 </head>
 
 <body>
 
+<header>
+    <div class="logo-container" onclick="window.location.href='dashboard.html'">
+        <img src="S__18784267.jpg" alt="Date Free Logo" class="logo-img">
+        <div class="logo-text">Date Free</div>
+    </div>
+</header>
+
 <div class="container">
     <h2 id="title">問卷</h2>
-    <div id="content"></div>
+    <div id="content" class="options-group"></div>
 
     <button onclick="prev()">上一步</button>
     <button onclick="next()" id="nextBtn">下一步</button>
 </div>
 
 <script>
-// ==========================
-// 🔐 登入檢查
-// ==========================
 const token = localStorage.getItem("token");
+if (!token) { alert("請先登入！"); window.location.href = "index.html"; }
 
-if (!token) {
-    alert("請先登入！");
-    window.location.href = "index.html";
-}
-
-// ==========================
-// 問卷資料
-// ==========================
 const steps = [
-{
-    title:"性別",
-    key:"gender",
-    options:["男","女","非二元"]
-},
-{
-    title:"未來",
-    key:"future_status",
-    options:["大學在讀","研究所","工作"]
-},
-{
-    title:"金錢觀",
-    key:"money_view",
-    options:["AA","互請","男付","女付"]
-},
-{
-    title:"約會目的",
-    key:"dating_goal",
-    options:["交友","穩定關係","曖昧"]
-}
+    { title:"性別", key:"gender", options:["男","女","非二元"] },
+    { title:"未來", key:"future_status", options:["大學在讀","研究所","工作"] },
+    { title:"金錢觀", key:"money_view", options:["AA","互請","男付","女付"] },
+    { title:"約會目的", key:"dating_goal", options:["交友","穩定關係","曖昧"] }
 ];
 
-let i = 0;
-let answers = {};
+let i = 0; let answers = {};
 
-// ==========================
-// 渲染
-// ==========================
 function render() {
     const step = steps[i];
-
     document.getElementById("title").innerText = step.title;
-
     let html = "";
     step.options.forEach(opt => {
-        html += `
-        <div>
-            <input type="radio" name="q" value="${opt}"
-            ${answers[step.key] === opt ? "checked" : ""}
-            onchange="select('${step.key}','${opt}')">
-            ${opt}
-        </div>
-        `;
+        html += `<div><label style="cursor:pointer;"><input type="radio" name="q" value="${opt}" ${answers[step.key] === opt ? "checked" : ""} onchange="select('${step.key}','${opt}')"> ${opt}</label></div>`;
     });
-
     document.getElementById("content").innerHTML = html;
-
-    document.getElementById("nextBtn").innerText =
-        i === steps.length - 1 ? "送出" : "下一步";
+    document.getElementById("nextBtn").innerText = i === steps.length - 1 ? "送出" : "下一步";
 }
 
-function select(key,val) {
-    answers[key] = val;
-}
+function select(key,val) { answers[key] = val; }
+function next() { if (i < steps.length - 1) { i++; render(); } else { submitSurvey(); } }
+function prev() { if (i > 0) { i--; render(); } }
 
-// ==========================
-// 下一步
-// ==========================
-function next() {
-
-    if (i < steps.length - 1) {
-        i++;
-        render();
-    } else {
-        submitSurvey();
-    }
-}
-
-// ==========================
-// 上一步
-// ==========================
-function prev() {
-    if (i > 0) {
-        i--;
-        render();
-    }
-}
-
-// ==========================
-// 🚀 送出問卷（JWT）
-// ==========================
 function submitSurvey() {
-
     const payload = {
-        gender: answers.gender || "未提供",
-        future_status: answers.future_status || "未提供",
-        dealbreakers: [],
-        bad_habits: [],
-        money_view: answers.money_view || "未提供",
-        boundaries: "【報備信任型】",
-        dating_goal: answers.dating_goal || "未提供"
+        gender: answers.gender || "未提供", future_status: answers.future_status || "未提供",
+        dealbreakers: [], bad_habits: [], money_view: answers.money_view || "未提供",
+        boundaries: "【報備信任型】", dating_goal: answers.dating_goal || "未提供"
     };
 
     fetch("/api/survey", {
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "Authorization":`Bearer ${token}`
-        },
+        method:"POST", headers:{ "Content-Type":"application/json", "Authorization":`Bearer ${token}` },
         body:JSON.stringify(payload)
     })
     .then(res=>res.json())
     .then(data=>{
-        if (data.detail) {
-            alert("錯誤："+data.detail);
-            return;
-        }
-
-        alert("問卷完成！");
-        window.location.href = "dashboard.html";
-    })
-    .catch(()=>{
-        alert("伺服器錯誤");
-    });
+        if (data.detail) { alert("錯誤："+data.detail); return; }
+        alert("問卷完成！"); window.location.href = "dashboard.html";
+    }).catch(()=>{ alert("伺服器錯誤"); });
 }
 
-// 初始
 render();
 </script>
 

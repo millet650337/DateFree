@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Date Free | 大學生的自動配對交友平台</title>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -41,9 +40,9 @@ header {
     margin: 0 auto;
 }
 
-.logo-container { display: flex; align-items: center; gap: 15px; }
-.logo-diamond { width: 24px; height: 24px; border: 2px solid var(--text-dark); transform: rotate(45deg); }
-.logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; }
+.logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+.logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+.logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
 
 .auth-btn {
     padding: 10px 24px; border: 1px solid var(--text-dark); background: transparent;
@@ -61,11 +60,7 @@ header {
 /* ==========================
    主視覺與介紹區塊
 ========================== */
-main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 40px;
-}
+main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
 
 .hero-section {
     display: flex; align-items: center; justify-content: space-between;
@@ -80,14 +75,12 @@ main {
 .hero-text p { font-size: 1.25rem; color: var(--text-gray); line-height: 1.6; }
 
 .hero-graphic { flex: 1; display: flex; justify-content: center; align-items: center; min-width: 350px; }
-.diamond-placeholder {
-    width: 280px; height: 280px; background: white; border: 2px solid var(--text-dark);
-    transform: rotate(45deg); display: flex; justify-content: center; align-items: center;
+.main-logo-img {
+    width: 300px; height: 300px; border-radius: 50%; object-fit: cover;
     box-shadow: 20px 20px 0px rgba(255, 107, 107, 0.1);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.diamond-placeholder:hover { transform: rotate(45deg) scale(1.05); }
-.diamond-content { transform: rotate(-45deg); text-align: center; font-size: 1.8rem; color: var(--text-gray); }
+.main-logo-img:hover { transform: scale(1.05); }
 
 .info-section {
     text-align: center; padding: 80px 40px; background: white;
@@ -103,161 +96,75 @@ main {
 .info-section h2 { font-size: 2.8rem; color: var(--text-dark); margin-top: 50px; letter-spacing: 2px; }
 
 /* ==========================
-   全新：比較數據區塊 (對應圖片三)
+   比較數據區塊
 ========================== */
-.comparison-section {
-    position: relative;
-    padding: 80px 0 120px 0;
-    max-width: 1000px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.table-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    padding: 0 10%;
-}
-.table-header h3 {
-    font-size: 24px;
-    background: #e2e8f0;
-    padding: 10px 20px;
-    border-radius: 8px;
-    margin: 0;
-}
-.table-header .brand-title {
-    background: #f1f5f9;
-}
-
-/* 比較列設計 */
-.compare-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--table-bg);
-    margin-bottom: 20px;
-    padding: 20px 10%;
-    border-radius: 12px;
-    font-size: 20px;
-    font-weight: bold;
-    position: relative;
-}
-
-/* 左側文字 (傳統交友APP) */
+.comparison-section { position: relative; padding: 80px 0 120px 0; max-width: 1000px; margin: 0 auto; text-align: center; }
+.table-header { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 0 10%; }
+.table-header h3 { font-size: 24px; background: #e2e8f0; padding: 10px 20px; border-radius: 8px; margin: 0; }
+.table-header .brand-title { background: #f1f5f9; }
+.compare-row { display: flex; justify-content: space-between; align-items: center; background: var(--table-bg); margin-bottom: 20px; padding: 20px 10%; border-radius: 12px; font-size: 20px; font-weight: bold; position: relative; }
 .col-left { flex: 1; text-align: left; color: var(--text-gray); }
-
-/* 右側文字 (Date Free) - 使用漸層色強調 */
-.col-right {
-    flex: 1;
-    text-align: right;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 24px;
-}
-
-/* 中間的菱形文字區塊 */
-.center-diamond-wrapper {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-}
-.center-diamond {
-    width: 250px;
-    height: 250px;
-    border: 1px solid var(--text-dark);
-    transform: rotate(45deg);
-    position: absolute;
-    top: -125px; /* 為了讓菱形置中於三列資料的中間 */
-    left: -125px;
-    pointer-events: none; /* 讓菱形不會擋住滑鼠點擊 */
-}
-.center-label {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 18px;
-    color: var(--text-dark);
-    white-space: nowrap;
-    background: white; /* 用白色背景遮住底下的灰條，讓文字更清晰 */
-    padding: 5px 15px;
-    border-radius: 20px;
-}
-
-/* 底部總結文字 */
-.bottom-summary {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 60px;
-    padding: 0 5%;
-}
-.bottom-summary h2 {
-    font-size: 28px;
-    margin: 0;
-}
+.col-right { flex: 1; text-align: right; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 24px; }
+.center-diamond-wrapper { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10; }
+.center-diamond { width: 250px; height: 250px; border: 1px solid var(--text-dark); transform: rotate(45deg); position: absolute; top: -125px; left: -125px; pointer-events: none; }
+.center-label { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 18px; color: var(--text-dark); white-space: nowrap; background: white; padding: 5px 15px; border-radius: 20px; }
+.bottom-summary { display: flex; justify-content: space-between; margin-top: 60px; padding: 0 5%; }
+.bottom-summary h2 { font-size: 28px; margin: 0; }
 .summary-left { color: var(--text-gray); font-weight: normal; }
 .summary-right { font-weight: bold; color: var(--text-dark); }
 
 /* ==========================
-   Modal (左右分割登入視窗)
+   Modal (登入視窗)
 ========================== */
 .modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-    justify-content: center; align-items: center; z-index: 9999; /* 提高 z-index 確保蓋在最上層 */
+    justify-content: center; align-items: center; z-index: 9999;
 }
-
 .modal-content.auth-layout {
     display: flex; flex-direction: row; background: white; border-radius: 20px;
-    width: 800px; max-width: 90%; overflow: hidden; position: relative;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    width: 800px; max-width: 90%; overflow: hidden; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 }
-
 .close-btn-abs {
     position: absolute; top: 15px; right: 20px; background: none; border: none;
     font-size: 24px; color: #cbd5e1; cursor: pointer; z-index: 10; transition: color 0.3s;
 }
 .close-btn-abs:hover { color: var(--text-dark); }
 
-/* 左側大菱形區塊 */
 .auth-left {
     flex: 1; background: #fafafa; display: flex; justify-content: center;
     align-items: center; padding: 80px 40px; border-right: 1px solid #f1f5f9;
 }
-.auth-diamond {
-    width: 200px; height: 200px; background: white; border: 2px solid var(--text-dark);
-    transform: rotate(45deg); display: flex; justify-content: center; align-items: center;
+.auth-logo-img {
+    width: 200px; height: 200px; border-radius: 50%; object-fit: cover;
     box-shadow: 15px 15px 0px rgba(255, 107, 107, 0.08);
 }
-.auth-diamond-text { transform: rotate(-45deg); text-align: center; }
-.auth-diamond-text .title { font-size: 32px; font-weight: bold; letter-spacing: 4px; color: var(--text-dark); }
-.auth-diamond-text hr { width: 100px; border: none; border-top: 2px solid var(--text-dark); margin: 10px auto; }
 
-/* 右側 Google 登入區塊 */
 .auth-right {
     flex: 1; display: flex; flex-direction: column; justify-content: center;
-    align-items: center; padding: 80px 40px; background: white;
+    align-items: center; padding: 80px 40px; background: white; text-align: center;
 }
-.auth-right h3 { margin-top: 0; margin-bottom: 30px; color: var(--text-dark); font-weight: normal; font-size: 20px; }
+.auth-right h3 { margin-top: 0; margin-bottom: 10px; color: var(--text-dark); font-weight: bold; font-size: 24px; }
+.auth-right p { color: var(--text-gray); font-size: 16px; margin-bottom: 30px; }
 
-
-/* RWD */
 @media (max-width: 768px) {
+    header { padding: 15px 20px; }
+    main { padding: 0 20px; }
+    .hero-section { text-align: center; padding: 20px 0 60px 0; }
+    .hero-text h1 { font-size: 2.2rem; }
+    .hero-text .brand-name { font-size: 2.8rem; }
+    .info-section h2 { font-size: 2rem; }
+    .main-logo-img { width: 240px; height: 240px; }
     .comparison-section { padding: 40px 10px; }
     .table-header h3 { font-size: 18px; }
     .compare-row { font-size: 16px; padding: 15px 5%; }
     .col-right { font-size: 18px; }
-    .center-diamond { display: none; /* 手機版隱藏大菱形框，避免破版 */ }
+    .center-diamond { display: none; }
     .bottom-summary { flex-direction: column; gap: 20px; text-align: center; }
     .modal-content.auth-layout { flex-direction: column; width: 400px; }
-    .auth-left { padding: 50px 20px; border-right: none; border-bottom: 1px solid #f1f5f9; }
-    .auth-right { padding: 50px 20px; }
+    .auth-left { padding: 40px 20px; border-right: none; border-bottom: 1px solid #f1f5f9; }
+    .auth-right { padding: 40px 20px; }
+    .auth-logo-img { width: 140px; height: 140px; }
 }
 </style>
 </head>
@@ -265,9 +172,9 @@ main {
 <body>
 
 <header>
-    <div class="logo-container">
-        <div class="logo-diamond"></div>
-        <div class="logo-text">LOGO</div>
+    <div class="logo-container" onclick="window.location.href='index.html'">
+        <img src="S__18784267.jpg" alt="Date Free Logo" class="logo-img">
+        <div class="logo-text">Date Free</div>
     </div>
 
     <button id="loginBtn" class="auth-btn" onclick="openModal()">登入 / 註冊</button>
@@ -285,17 +192,13 @@ main {
             <p>不用左滑右滑，填寫問卷由大數據幫你找出屬於你的靈魂伴侶</p>
         </div>
         <div class="hero-graphic">
-            <div class="diamond-placeholder">
-                <div class="diamond-content">圖片或<br>LOGO</div>
-            </div>
+            <img src="S__18784267.jpg" alt="Date Free Logo" class="main-logo-img">
         </div>
     </section>
 
     <section class="info-section">
         <p>專為台中大學學生打造的『高效率三觀媒合系統』，我們透過6大維度深度演<br>算與學生身份驗證，排除外貌與隨機滑動的社交雜訊，將線上配對精準轉化為<br>線下真實赴約，為校園社交進行降噪，找回靈魂契合的深度連結。</p>
-        
         <p class="highlight-text">我們不玩隨機盲滑，而是主打『每週一次精準開獎』<br>結合『200元約會補貼金』獎勵線下見面。</p>
-        
         <h2>你們約會，我們買單！</h2>
     </section>
 
@@ -304,31 +207,26 @@ main {
             <h3>傳統交友APP</h3>
             <h3 class="brand-title">Date Free</h3>
         </div>
-
         <div style="position: relative;">
             <div class="center-diamond-wrapper" style="top: 50%;">
                 <div class="center-diamond"></div>
             </div>
-
             <div class="compare-row">
                 <div class="col-left">12 天</div>
                 <div class="center-label">平均配對時間</div>
                 <div class="col-right">180 秒</div>
             </div>
-
             <div class="compare-row">
                 <div class="col-left">92 %</div>
                 <div class="center-label">配對被拒絕</div>
                 <div class="col-right">0 %</div>
             </div>
-
             <div class="compare-row">
                 <div class="col-left">30 %</div>
                 <div class="center-label">三觀契合</div>
                 <div class="col-right">90 %</div>
             </div>
         </div>
-
         <div class="bottom-summary">
             <h2 class="summary-left">你在上面浪費多少青春？</h2>
             <h2 class="summary-right">我們只給你對的人！</h2>
@@ -341,17 +239,12 @@ main {
         <button class="close-btn-abs" onclick="closeModal()">✕</button>
         
         <div class="auth-left">
-            <div class="auth-diamond">
-                <div class="auth-diamond-text">
-                    <div class="title">登入</div>
-                    <hr>
-                    <div class="title">註冊</div>
-                </div>
-            </div>
+            <img src="S__18784267.jpg" alt="Date Free Logo" class="auth-logo-img">
         </div>
 
         <div class="auth-right">
-            <h3>快速驗證身分</h3>
+            <h3>使用 Google 帳號登入 / 註冊</h3>
+            <p>快速驗證學生身分，開始你的精準配對</p>
             
             <div id="g_id_onload"
                 data-client_id="460379161583-tdkqba7mu0pd1b6haf2qcqs297ghqpds.apps.googleusercontent.com"
@@ -362,9 +255,10 @@ main {
                 data-type="standard"
                 data-size="large"
                 data-theme="outline"
-                data-text="sign_in_with"
-                data-shape="rectangular"
-                data-logo_alignment="left">
+                data-text="continue_with"
+                data-shape="pill"
+                data-width="320"
+                data-logo_alignment="center">
             </div>
         </div>
     </div>
@@ -372,82 +266,45 @@ main {
 
 <script>
 const API_BASE = "/api";
-
 const modal = document.getElementById("modal");
 const loginBtn = document.getElementById("loginBtn");
 const userBox = document.getElementById("userBox");
 const userName = document.getElementById("userName");
 
-// ==========================
-// Modal 控制
-// ==========================
-function openModal() {
-    modal.style.display = "flex";
-}
-function closeModal() {
-    modal.style.display = "none";
-}
+function openModal() { modal.style.display = "flex"; }
+function closeModal() { modal.style.display = "none"; }
 
-// ==========================
-// Google 登入成功處理
-// ==========================
 function handleCredentialResponse(response) {
     fetch(`${API_BASE}/auth/google`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            credential: response.credential
-        })
+        body: JSON.stringify({ credential: response.credential })
     })
     .then(res => res.json())
     .then(data => {
-        if (data.detail) {
-            alert("登入失敗：" + data.detail);
-            return;
-        }
-
+        if (data.detail) { alert("登入失敗：" + data.detail); return; }
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-
         updateUI();
         closeModal();
-
         window.location.href = "dashboard.html";
     });
 }
 
-// ==========================
-// UI 更新
-// ==========================
 function updateUI() {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
-
-   if (token && user) {
-        window.location.href = "dashboard.html";
-    }
+    if (token && user) { window.location.href = "dashboard.html"; }
 }
 
-// ==========================
-// 登出
-// ==========================
 function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.reload(); // 直接重整頁面
+    window.location.reload(); 
 }
 
-// ==========================
-// 事件監聽
-// ==========================
-window.onload = function() {
-    updateUI();
-}
-
-// 點擊背景黑灰處關閉
-window.onclick = function(e) {
-    if (e.target == modal) closeModal();
-}
+window.onload = function() { updateUI(); }
+window.onclick = function(e) { if (e.target == modal) closeModal(); }
 </script>
 
 </body>

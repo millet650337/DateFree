@@ -14,114 +14,52 @@
 }
 
 body {
-    margin: 0;
-    font-family: 'Microsoft JhengHei', sans-serif;
+    margin: 0; font-family: 'Microsoft JhengHei', sans-serif;
     background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
-    color: var(--text-dark);
-    min-height: 100vh;
+    color: var(--text-dark); min-height: 100vh;
 }
 
 /* 導覽列 */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 40px;
-    border-bottom: 1px solid #cbd5e1;
-    background: transparent;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 40px; border-bottom: 1px solid #cbd5e1; background: transparent;
 }
-.logo-container { display: flex; align-items: center; gap: 15px; }
-.logo-diamond { width: 20px; height: 20px; border: 2px solid var(--text-dark); transform: rotate(45deg); }
-.logo-text { font-weight: bold; font-size: 18px; letter-spacing: 1px; }
+.logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+.logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+.logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
 .logout-text { cursor: pointer; color: var(--text-gray); text-decoration: none; font-size: 16px; }
 
-/* 內容區 */
-main {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-/* 頂部照片與自介 */
-.photo-section {
-    text-align: center;
-    margin-bottom: 40px;
-}
-.preview-box {
-    width: 120px; height: 120px; border-radius: 50%; background: #f1f5f9;
-    margin: 0 auto 15px auto; display: flex; justify-content: center; align-items: center;
-    overflow: hidden; border: 3px solid var(--accent-orange);
-}
+main { max-width: 600px; margin: 40px auto; padding: 0 20px; }
+.photo-section { text-align: center; margin-bottom: 40px; }
+.preview-box { width: 120px; height: 120px; border-radius: 50%; background: #f1f5f9; margin: 0 auto 15px auto; display: flex; justify-content: center; align-items: center; overflow: hidden; border: 3px solid var(--accent-orange); }
 .preview-box img { width: 100%; height: 100%; object-fit: cover; }
 .upload-btn { padding: 6px 16px; background: #f1f5f9; border-radius: 20px; cursor: pointer; font-size: 14px; }
 input[type="file"] { display: none; }
 .bio-input { width: 100%; padding: 10px; margin-top: 20px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; }
 
-/* 標題裝飾 */
-.section-header {
-    text-align: center;
-    margin: 40px 0 30px 0;
-}
-.dotted-decor {
-    color: var(--text-gray);
-    letter-spacing: 2px;
-    font-size: 14px;
-}
-.section-header h3 {
-    font-size: 22px;
-    font-weight: normal;
-    margin: 10px 0 0 0;
-}
+.section-header { text-align: center; margin: 40px 0 30px 0; }
+.dotted-decor { color: var(--text-gray); letter-spacing: 2px; font-size: 14px; }
+.section-header h3 { font-size: 22px; font-weight: normal; margin: 10px 0 0 0; }
 
-/* 表單內容 */
-.form-group {
-    margin-bottom: 25px;
-    font-size: 16px;
-    line-height: 1.8;
-}
-.form-group label.title {
-    display: inline-block;
-    width: 140px;
-    color: var(--text-dark);
-}
-.form-group select, .form-group input[type="number"] {
-    padding: 5px;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
-    font-family: inherit;
-    font-size: 16px;
-}
+.form-group { margin-bottom: 25px; font-size: 16px; line-height: 1.8; }
+.form-group label.title { display: inline-block; width: 140px; color: var(--text-dark); }
+.form-group select, .form-group input[type="number"] { padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 16px; }
 
-/* 送出按鈕 */
-.submit-btn-wrapper {
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-.submit-btn {
-    padding: 12px 50px;
-    background: #e2e8f0;
-    color: var(--text-dark);
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-.submit-btn:hover {
-    background: #cbd5e1;
-}
-
-/* 單選按鈕間距微調 */
+.submit-btn-wrapper { text-align: center; margin-top: 50px; margin-bottom: 50px; }
+.submit-btn { padding: 12px 50px; background: #e2e8f0; color: var(--text-dark); border: none; font-size: 18px; cursor: pointer; transition: all 0.3s; border-radius: 30px; }
+.submit-btn:hover { background: #cbd5e1; }
 .radio-group label { margin-right: 15px; cursor: pointer; }
+
+@media (max-width: 768px) { header { padding: 15px 20px; } }
 </style>
 </head>
 
 <body>
 
 <header>
-    <div class="logo-container" onclick="window.location.href='dashboard.html'" style="cursor:pointer;">
-        <div class="logo-diamond"></div>
-        <div class="logo-text">LOGO</div>
+    <div class="logo-container" onclick="window.location.href='dashboard.html'">
+        <img src="S__18784267.jpg" alt="Date Free Logo" class="logo-img">
+        <div class="logo-text">Date Free</div>
     </div>
     <a href="#" class="logout-text" onclick="logout()">登出</a>
 </header>
@@ -131,10 +69,7 @@ input[type="file"] { display: none; }
         <div class="preview-box" id="previewBox">
             <span style="font-size:40px; color:#cbd5e1;">👤</span>
         </div>
-        <label class="upload-btn">
-            上傳大頭貼
-            <input type="file" id="photoInput" accept="image/*">
-        </label>
+        <label class="upload-btn">上傳大頭貼<input type="file" id="photoInput" accept="image/*"></label>
         <textarea id="bioInput" class="bio-input" rows="2" placeholder="一句話簡單介紹自己..."></textarea>
     </div>
 
@@ -143,192 +78,68 @@ input[type="file"] { display: none; }
         <h3>個人基本資料</h3>
     </div>
 
-    <div class="form-group">
-        <label class="title">性別：</label>
-        <span class="radio-group">
-            <label><input type="radio" name="gender" value="男"> 男</label>
-            <label><input type="radio" name="gender" value="女"> 女</label>
-            <label><input type="radio" name="gender" value="非二元"> 非二元</label>
-        </span>
+    <div class="form-group"><label class="title">性別：</label><span class="radio-group"><label><input type="radio" name="gender" value="男"> 男</label><label><input type="radio" name="gender" value="女"> 女</label><label><input type="radio" name="gender" value="非二元"> 非二元</label></span></div>
+    <div class="form-group"><label class="title">身高 (cm)：</label><input type="number" id="heightInput" min="140" max="200" placeholder="140-200"></div>
+    <div class="form-group"><label class="title">體重 (kg)：</label><input type="number" id="weightInput" min="40" max="120" placeholder="40-120"></div>
+    <div class="form-group"><label class="title">系級：</label>
+        <select id="deptInput"><option value="">選擇院系</option><option value="資訊學院">資訊學院</option><option value="商學院">商學院</option><option value="文學院">文學院</option><option value="理學院">理學院</option><option value="工學院">工學院</option></select>
+        <select id="gradeInput"><option value="">選擇年級</option><option value="一">一</option><option value="二">二</option><option value="三">三</option><option value="四">四</option><option value="五">五</option><option value="碩博">碩博</option></select>
     </div>
-
-    <div class="form-group">
-        <label class="title">身高 (cm)：</label>
-        <input type="number" id="heightInput" min="140" max="200" placeholder="140-200">
-    </div>
-
-    <div class="form-group">
-        <label class="title">體重 (kg)：</label>
-        <input type="number" id="weightInput" min="40" max="120" placeholder="40-120">
-    </div>
-
-    <div class="form-group">
-        <label class="title">系級：</label>
-        <select id="deptInput">
-            <option value="">選擇院系</option>
-            <option value="資訊學院">資訊學院</option>
-            <option value="商學院">商學院</option>
-            <option value="文學院">文學院</option>
-            <option value="理學院">理學院</option>
-            <option value="工學院">工學院</option>
-        </select>
-        <select id="gradeInput">
-            <option value="">選擇年級</option>
-            <option value="一">一</option><option value="二">二</option>
-            <option value="三">三</option><option value="四">四</option>
-            <option value="五">五</option><option value="碩博">碩博</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label class="title" style="width:100%; margin-bottom:10px;">期望身高區間：</label>
-        <span class="radio-group" style="display:block; margin-left:20px;">
-            <label><input type="radio" name="expected_height" value="150以下"> 150以下</label>
-            <label><input type="radio" name="expected_height" value="150-160"> 150-160</label>
-            <label><input type="radio" name="expected_height" value="160-170"> 160-170</label><br>
-            <label><input type="radio" name="expected_height" value="170-180"> 170-180</label>
-            <label><input type="radio" name="expected_height" value="180-190"> 180-190</label>
-            <label><input type="radio" name="expected_height" value="190以上"> 190以上</label>
-        </span>
-    </div>
-
-    <div class="form-group">
-        <label class="title" style="width:100%; margin-bottom:10px;">年齡差距接受範圍：</label>
-        <span class="radio-group" style="display:block; margin-left:20px;">
-            <label><input type="radio" name="age_diff" value="同歲"> 同歲</label>
-            <label><input type="radio" name="age_diff" value="相差三歲"> 相差三歲</label>
-            <label><input type="radio" name="age_diff" value="相差五歲"> 相差五歲</label>
-            <label><input type="radio" name="age_diff" value="相差十歲"> 相差十歲</label>
-        </span>
-    </div>
-
-    <div class="form-group" style="line-height:2.5;">
-        <label class="title">嗜好習慣：</label><br>
-        <span style="margin-left:20px;">抽菸：</span>
-        <span class="radio-group">
-            <label><input type="radio" name="smoking" value="是"> 是</label>
-            <label><input type="radio" name="smoking" value="否"> 否</label>
-        </span><br>
-        
-        <span style="margin-left:20px;">喝酒頻率：</span>
-        <span class="radio-group">
-            <label><input type="radio" name="drinking" value="不喝"> 不喝</label>
-            <label><input type="radio" name="drinking" value="小酌"> 小酌</label>
-            <label><input type="radio" name="drinking" value="頻繁"> 頻繁</label>
-        </span><br>
-
-        <span style="margin-left:20px;">紋身：</span>
-        <span class="radio-group">
-            <label><input type="radio" name="tattoo" value="是"> 是</label>
-            <label><input type="radio" name="tattoo" value="否"> 否</label>
-        </span>
-    </div>
-
-    <div class="submit-btn-wrapper">
-        <button class="submit-btn" onclick="saveProfile()">儲存</button>
-    </div>
+    <div class="form-group"><label class="title" style="width:100%; margin-bottom:10px;">期望身高區間：</label><span class="radio-group" style="display:block; margin-left:20px;"><label><input type="radio" name="expected_height" value="150以下"> 150以下</label><label><input type="radio" name="expected_height" value="150-160"> 150-160</label><label><input type="radio" name="expected_height" value="160-170"> 160-170</label><br><label><input type="radio" name="expected_height" value="170-180"> 170-180</label><label><input type="radio" name="expected_height" value="180-190"> 180-190</label><label><input type="radio" name="expected_height" value="190以上"> 190以上</label></span></div>
+    <div class="form-group"><label class="title" style="width:100%; margin-bottom:10px;">年齡差距接受範圍：</label><span class="radio-group" style="display:block; margin-left:20px;"><label><input type="radio" name="age_diff" value="同歲"> 同歲</label><label><input type="radio" name="age_diff" value="相差三歲"> 相差三歲</label><label><input type="radio" name="age_diff" value="相差五歲"> 相差五歲</label><label><input type="radio" name="age_diff" value="相差十歲"> 相差十歲</label></span></div>
+    <div class="form-group" style="line-height:2.5;"><label class="title">嗜好習慣：</label><br><span style="margin-left:20px;">抽菸：</span><span class="radio-group"><label><input type="radio" name="smoking" value="是"> 是</label><label><input type="radio" name="smoking" value="否"> 否</label></span><br><span style="margin-left:20px;">喝酒頻率：</span><span class="radio-group"><label><input type="radio" name="drinking" value="不喝"> 不喝</label><label><input type="radio" name="drinking" value="小酌"> 小酌</label><label><input type="radio" name="drinking" value="頻繁"> 頻繁</label></span><br><span style="margin-left:20px;">紋身：</span><span class="radio-group"><label><input type="radio" name="tattoo" value="是"> 是</label><label><input type="radio" name="tattoo" value="否"> 否</label></span></div>
+    <div class="submit-btn-wrapper"><button class="submit-btn" onclick="saveProfile()">儲存</button></div>
 </main>
 
 <script>
 const API_BASE = "/api";
 const token = localStorage.getItem("token");
-
-if (!token) {
-    alert("請先登入！");
-    window.location.href = "index.html";
-}
-
+if (!token) { alert("請先登入！"); window.location.href = "index.html"; }
 let currentBase64 = "";
 
-// 輔助函式：設定 Radio 按鈕的值
-function setRadio(name, value) {
-    if(!value) return;
-    const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
-    if(el) el.checked = true;
-}
-// 輔助函式：取得 Radio 按鈕的值
-function getRadio(name) {
-    const el = document.querySelector(`input[name="${name}"]:checked`);
-    return el ? el.value : null;
-}
+function setRadio(name, value) { if(!value) return; const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if(el) el.checked = true; }
+function getRadio(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; }
 
-// 1. 載入資料
 fetch(`${API_BASE}/profile`, { headers: { "Authorization": `Bearer ${token}` } })
 .then(res => res.json())
 .then(data => {
     if(data) {
-        if(data.photo_base64) {
-            currentBase64 = data.photo_base64;
-            document.getElementById("previewBox").innerHTML = `<img src="${currentBase64}">`;
-        }
+        if(data.photo_base64) { currentBase64 = data.photo_base64; document.getElementById("previewBox").innerHTML = `<img src="${currentBase64}">`; }
         if(data.bio) document.getElementById("bioInput").value = data.bio;
         if(data.height) document.getElementById("heightInput").value = data.height;
         if(data.weight) document.getElementById("weightInput").value = data.weight;
         if(data.department) document.getElementById("deptInput").value = data.department;
         if(data.grade) document.getElementById("gradeInput").value = data.grade;
-        
-        setRadio("gender", data.gender);
-        setRadio("expected_height", data.expected_height);
-        setRadio("age_diff", data.age_diff);
-        setRadio("smoking", data.smoking);
-        setRadio("drinking", data.drinking);
-        setRadio("tattoo", data.tattoo);
+        setRadio("gender", data.gender); setRadio("expected_height", data.expected_height); setRadio("age_diff", data.age_diff); setRadio("smoking", data.smoking); setRadio("drinking", data.drinking); setRadio("tattoo", data.tattoo);
     }
 });
 
-// 2. 處理圖片上傳
 document.getElementById('photoInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files[0]; if (!file) return;
     if (file.size > 2 * 1024 * 1024) { alert("圖片請小於 2MB！"); return; }
-    
     const reader = new FileReader();
-    reader.onload = function(event) {
-        currentBase64 = event.target.result;
-        document.getElementById("previewBox").innerHTML = `<img src="${currentBase64}">`;
-    };
+    reader.onload = function(event) { currentBase64 = event.target.result; document.getElementById("previewBox").innerHTML = `<img src="${currentBase64}">`; };
     reader.readAsDataURL(file);
 });
 
-// 3. 儲存資料
 function saveProfile() {
     const payload = {
-        photo_base64: currentBase64,
-        bio: document.getElementById("bioInput").value || null,
-        gender: getRadio("gender"),
+        photo_base64: currentBase64, bio: document.getElementById("bioInput").value || null, gender: getRadio("gender"),
         height: document.getElementById("heightInput").value ? parseInt(document.getElementById("heightInput").value) : null,
         weight: document.getElementById("weightInput").value ? parseInt(document.getElementById("weightInput").value) : null,
-        department: document.getElementById("deptInput").value || null,
-        grade: document.getElementById("gradeInput").value || null,
-        expected_height: getRadio("expected_height"),
-        age_diff: getRadio("age_diff"),
-        smoking: getRadio("smoking"),
-        drinking: getRadio("drinking"),
-        tattoo: getRadio("tattoo")
+        department: document.getElementById("deptInput").value || null, grade: document.getElementById("gradeInput").value || null,
+        expected_height: getRadio("expected_height"), age_diff: getRadio("age_diff"), smoking: getRadio("smoking"), drinking: getRadio("drinking"), tattoo: getRadio("tattoo")
     };
 
-    fetch(`${API_BASE}/profile`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify(payload)
-    })
+    fetch(`${API_BASE}/profile`, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }, body: JSON.stringify(payload) })
     .then(res => res.json())
     .then(data => {
-        if (data.detail) {
-            alert("錯誤：" + data.detail);
-        } else {
-            alert("資料已儲存！");
-            window.location.href = "dashboard.html"; // 儲存成功後跳轉回主控台
-        }
-    })
-    .catch(() => alert("伺服器錯誤"));
+        if (data.detail) { alert("錯誤：" + data.detail); } 
+        else { alert("資料已儲存！"); window.location.href = "dashboard.html"; }
+    }).catch(() => alert("伺服器錯誤"));
 }
 
-function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.href = "index.html";
-}
+function logout() { localStorage.removeItem("token"); localStorage.removeItem("user"); window.location.href = "index.html"; }
 </script>
 
 </body>

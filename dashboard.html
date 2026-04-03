@@ -23,121 +23,45 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* 讓內容從上方開始排，方便控制間距 */
+    justify-content: flex-start;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
+/* 導覽列 */
+header {
+    width: 100%; max-width: 1200px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 40px; box-sizing: border-box;
+}
+.logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+.logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+.logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
+
 .diamond-wrapper {
-    transform: rotate(45deg);
-    background: white;
-    cursor: pointer;
+    transform: rotate(45deg); background: white; cursor: pointer;
     box-shadow: 10px 10px 30px rgba(255, 107, 107, 0.08);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 12px;
 }
+.diamond-wrapper:hover { transform: rotate(45deg) scale(1.08); box-shadow: 15px 15px 40px rgba(255, 107, 107, 0.15); }
+.diamond-content { transform: rotate(-45deg); display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; overflow: hidden; border-radius: 50%; }
 
-.diamond-wrapper:hover {
-    transform: rotate(45deg) scale(1.08);
-    box-shadow: 15px 15px 40px rgba(255, 107, 107, 0.15);
-}
+.profile-section { text-align: center; margin-top: 50px; margin-bottom: 70px; display: flex; flex-direction: column; align-items: center; }
+.profile-diamond { width: 170px; height: 170px; border: 3px solid var(--accent-orange); }
+.profile-img { width: 150%; height: 150%; object-fit: cover; }
+.nickname { margin-top: 35px; font-size: 22px; font-weight: bold; color: var(--text-dark); }
 
-.diamond-content {
-    transform: rotate(-45deg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 50%;
-}
+.menu-section { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 40px; padding: 20px; max-width: 1000px; }
+.menu-item { width: 180px; height: 180px; border: 1px solid #ffe4e4; }
+.menu-item:hover { background: var(--accent-gradient); }
+.menu-item:hover .menu-text { color: white; }
+.menu-text { font-size: 20px; font-weight: bold; color: var(--text-gray); transition: color 0.3s; }
 
-/* ==================
-   大頭貼區塊
-================== */
-.profile-section {
-    text-align: center;
-    margin-top: 100px; /* 將個人資料菱形整體往下移 */
-    margin-bottom: 70px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.profile-diamond {
-    width: 170px; /* 框框再大一點 */
-    height: 170px;
-    border: 3px solid var(--accent-orange);
-}
-
-.profile-img {
-    width: 150%;
-    height: 150%;
-    object-fit: cover;
-}
-
-.nickname {
-    margin-top: 35px;
-    font-size: 22px;
-    font-weight: bold;
-    color: var(--text-dark);
-}
-
-/* ==================
-   四大選單區塊
-================== */
-.menu-section {
-    display: flex;
-    flex-direction: row; /* 橫向平行排列 */
-    flex-wrap: wrap; /* 螢幕縮小時自動換行 */
-    justify-content: center;
-    gap: 40px; /* 彼此隔開，但不會太遠 */
-    padding: 20px;
-    max-width: 1000px;
-}
-
-.menu-item {
-    width: 180px; /* 框框再大一點 */
-    height: 180px;
-    border: 1px solid #ffe4e4;
-}
-
-.menu-item:hover {
-    background: var(--accent-gradient);
-}
-
-.menu-item:hover .menu-text {
-    color: white;
-}
-
-.menu-text {
-    font-size: 20px;
-    font-weight: bold;
-    color: var(--text-gray);
-    transition: color 0.3s;
-}
-
-.logout-btn {
-    margin-top: 60px;
-    margin-bottom: 40px;
-    padding: 10px 30px;
-    border: 1px solid var(--text-gray);
-    border-radius: 30px;
-    background: transparent;
-    color: var(--text-gray);
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s;
-}
-
-.logout-btn:hover {
-    background: var(--text-dark);
-    color: white;
-}
+.logout-btn { margin-top: 60px; margin-bottom: 40px; padding: 10px 30px; border: 1px solid var(--text-gray); border-radius: 30px; background: transparent; color: var(--text-gray); cursor: pointer; font-size: 16px; transition: all 0.3s; }
+.logout-btn:hover { background: var(--text-dark); color: white; }
 
 @media (max-width: 900px) {
+    header { padding: 15px 20px; }
     .menu-section { gap: 30px; }
     .menu-item { width: 140px; height: 140px; }
     .profile-diamond { width: 140px; height: 140px; }
@@ -146,6 +70,13 @@ body {
 </head>
 
 <body>
+
+<header>
+    <div class="logo-container" onclick="window.location.href='index.html'">
+        <img src="S__18784267.jpg" alt="Date Free Logo" class="logo-img">
+        <div class="logo-text">Date Free</div>
+    </div>
+</header>
 
 <div class="profile-section">
     <div class="diamond-wrapper profile-diamond" onclick="window.location.href='profile.html'" title="設定個人資料">
@@ -161,15 +92,12 @@ body {
     <div class="diamond-wrapper menu-item" onclick="goToSurvey()">
         <div class="diamond-content"><span class="menu-text">填寫問卷</span></div>
     </div>
-
     <div class="diamond-wrapper menu-item" onclick="checkMatchResult()">
         <div class="diamond-content"><span class="menu-text">配對結果</span></div>
     </div>
-
     <div class="diamond-wrapper menu-item" onclick="alert('聊天功能開發中')">
         <div class="diamond-content"><span class="menu-text">聊天室</span></div>
     </div>
-
     <div class="diamond-wrapper menu-item" onclick="alert('客服信箱：support@datefree.tw')">
         <div class="diamond-content"><span class="menu-text">聯繫我們</span></div>
     </div>
@@ -179,8 +107,6 @@ body {
 
 <script>
 const API_BASE = "/api";
-
-// 1️⃣ 登入檢查
 const token = localStorage.getItem("token");
 let user = JSON.parse(localStorage.getItem("user"));
 
@@ -191,11 +117,8 @@ if (!token || !user) {
 
 document.getElementById("nickname").innerText = user.name;
 
-// 2️⃣ 載入個人資料
 function loadProfile() {
-    fetch(`${API_BASE}/profile`, {
-        headers: { "Authorization": `Bearer ${token}` }
-    })
+    fetch(`${API_BASE}/profile`, { headers: { "Authorization": `Bearer ${token}` } })
     .then(res => res.json())
     .then(data => {
         if(data && data.photo_base64) {
@@ -207,7 +130,6 @@ function loadProfile() {
 }
 loadProfile(); 
 
-// 3️⃣ 導頁與功能
 function goToSurvey() { window.location.href = "survey.html"; }
 
 function checkMatchResult() {
