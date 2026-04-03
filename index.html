@@ -21,7 +21,6 @@
 body {
     margin: 0;
     font-family: 'Microsoft JhengHei', sans-serif;
-    /* 加入柔和的漸層背景，消除斷層感 */
     background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
     color: var(--text-dark);
     min-height: 100vh;
@@ -103,7 +102,6 @@ main {
     padding: 0 40px;
 }
 
-/* 上半部：主視覺 (對應圖一) */
 .hero-section {
     display: flex;
     align-items: center;
@@ -157,7 +155,6 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* 增加陰影讓畫面不呆板 */
     box-shadow: 20px 20px 0px rgba(255, 107, 107, 0.1);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -174,7 +171,6 @@ main {
     line-height: 1.5;
 }
 
-/* 下半部：介紹文字 (對應圖二) */
 .info-section {
     text-align: center;
     padding: 80px 40px;
@@ -185,7 +181,6 @@ main {
     position: relative;
 }
 
-/* 頂部裝飾線 */
 .info-section::before {
     content: '';
     position: absolute;
@@ -221,7 +216,7 @@ main {
 }
 
 /* ==========================
-   Modal (登入彈跳視窗)
+   Modal (全新左右分割登入視窗)
 ========================== */
 .modal {
     display: none;
@@ -231,36 +226,99 @@ main {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(4px); /* 背景模糊效果 */
+    backdrop-filter: blur(4px);
     justify-content: center;
     align-items: center;
     z-index: 999;
 }
 
-.modal-content {
+.modal-content.auth-layout {
+    display: flex;
+    flex-direction: row;
     background: white;
-    padding: 40px;
     border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: 800px;
+    max-width: 90%;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 }
 
-.modal-content h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-}
-
-.close-btn {
-    margin-top: 20px;
-    padding: 8px 24px;
+.close-btn-abs {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
     border: none;
-    border-radius: 20px;
-    background: #f1f5f9;
+    font-size: 24px;
+    color: #cbd5e1;
     cursor: pointer;
-    font-weight: bold;
+    z-index: 10;
+    transition: color 0.3s;
 }
-.close-btn:hover {
-    background: #e2e8f0;
+.close-btn-abs:hover {
+    color: var(--text-dark);
+}
+
+/* 左側：大菱形區塊 */
+.auth-left {
+    flex: 1;
+    background: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 40px;
+    border-right: 1px solid #f1f5f9;
+}
+
+.auth-diamond {
+    width: 200px;
+    height: 200px;
+    background: white;
+    border: 2px solid var(--text-dark);
+    transform: rotate(45deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 15px 15px 0px rgba(255, 107, 107, 0.08);
+}
+
+.auth-diamond-text {
+    transform: rotate(-45deg);
+    text-align: center;
+}
+
+.auth-diamond-text .title {
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    color: var(--text-dark);
+}
+
+.auth-diamond-text hr {
+    width: 100px;
+    border: none;
+    border-top: 2px solid var(--text-dark);
+    margin: 10px auto;
+}
+
+/* 右側：Google登入按鈕區塊 */
+.auth-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 40px;
+    background: white;
+}
+
+.auth-right h3 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: var(--text-dark);
+    font-weight: normal;
+    font-size: 20px;
 }
 
 /* RWD 響應式微調 */
@@ -272,6 +330,14 @@ main {
     .hero-text .brand-name { font-size: 2.8rem; }
     .info-section h2 { font-size: 2rem; }
     .diamond-placeholder { width: 220px; height: 220px; }
+    
+    /* 登入視窗改為上下排列 */
+    .modal-content.auth-layout { flex-direction: column; width: 400px; }
+    .auth-left { padding: 50px 20px; border-right: none; border-bottom: 1px solid #f1f5f9; }
+    .auth-right { padding: 50px 20px; }
+    .auth-diamond { width: 140px; height: 140px; }
+    .auth-diamond-text .title { font-size: 24px; }
+    .auth-diamond-text hr { width: 70px; }
 }
 </style>
 </head>
@@ -315,21 +381,36 @@ main {
 </main>
 
 <div class="modal" id="modal">
-    <div class="modal-content">
-        <h3>使用 Google 登入 / 註冊</h3>
-
-        <div id="g_id_onload"
-            data-client_id="460379161583-tdkqba7mu0pd1b6haf2qcqs297ghqpds.apps.googleusercontent.com"
-            data-callback="handleCredentialResponse">
+    <div class="modal-content auth-layout">
+        <button class="close-btn-abs" onclick="closeModal()">✕</button>
+        
+        <div class="auth-left">
+            <div class="auth-diamond">
+                <div class="auth-diamond-text">
+                    <div class="title">登入</div>
+                    <hr>
+                    <div class="title">註冊</div>
+                </div>
+            </div>
         </div>
 
-        <div class="g_id_signin"
-            data-type="standard"
-            data-size="large">
-        </div>
+        <div class="auth-right">
+            <h3>快速驗證身分</h3>
+            
+            <div id="g_id_onload"
+                data-client_id="460379161583-tdkqba7mu0pd1b6haf2qcqs297ghqpds.apps.googleusercontent.com"
+                data-callback="handleCredentialResponse">
+            </div>
 
-        <br>
-        <button class="close-btn" onclick="closeModal()">關閉</button>
+            <div class="g_id_signin"
+                data-type="standard"
+                data-size="large"
+                data-theme="outline"
+                data-text="sign_in_with"
+                data-shape="rectangular"
+                data-logo_alignment="left">
+            </div>
+        </div>
     </div>
 </div>
 
@@ -342,7 +423,7 @@ const userBox = document.getElementById("userBox");
 const userName = document.getElementById("userName");
 
 // ==========================
-// Modal
+// Modal 控制
 // ==========================
 function openModal() {
     modal.style.display = "flex";
@@ -352,7 +433,7 @@ function closeModal() {
 }
 
 // ==========================
-// Google 登入成功
+// Google 登入成功處理
 // ==========================
 function handleCredentialResponse(response) {
     fetch(`${API_BASE}/auth/google`, {
@@ -389,10 +470,9 @@ function updateUI() {
     const user = JSON.parse(localStorage.getItem("user"));
 
    if (token && user) {
-        // 如果已經登入，直接幫他跳轉到 dashboard，不用再看一次首頁
+        // 如果已經登入，直接幫他跳轉到 dashboard
         window.location.href = "dashboard.html";
         
-        // 保留介面切換邏輯
         loginBtn.style.display = "none";
         userBox.style.display = "flex";
         userName.innerText = user.name + " (" + user.email + ")";
@@ -411,13 +491,13 @@ function logout() {
 }
 
 // ==========================
-// 頁面載入檢查登入
+// 頁面載入檢查登入狀態
 // ==========================
 window.onload = function() {
     updateUI();
 }
 
-// 點外面關閉
+// 點擊背景黑灰處關閉
 window.onclick = function(e) {
     if (e.target == modal) closeModal();
 }
