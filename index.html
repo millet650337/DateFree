@@ -16,12 +16,13 @@
     --text-dark: #2d3748;
     --text-gray: #4a5568;
     --bg-light: #f8fafc;
+    --table-bg: #f1f5f9;
 }
 
 body {
     margin: 0;
     font-family: 'Microsoft JhengHei', sans-serif;
-    background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #fff0f0 40%, #ffffff 100%);
     color: var(--text-dark);
     min-height: 100vh;
     overflow-x: hidden;
@@ -40,61 +41,25 @@ header {
     margin: 0 auto;
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.logo-diamond {
-    width: 24px;
-    height: 24px;
-    border: 2px solid var(--text-dark);
-    transform: rotate(45deg);
-}
-
-.logo-text {
-    font-weight: bold;
-    font-size: 20px;
-    letter-spacing: 1px;
-}
+.logo-container { display: flex; align-items: center; gap: 15px; }
+.logo-diamond { width: 24px; height: 24px; border: 2px solid var(--text-dark); transform: rotate(45deg); }
+.logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; }
 
 .auth-btn {
-    padding: 10px 24px;
-    border: 1px solid var(--text-dark);
-    background: transparent;
-    border-radius: 30px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: all 0.3s ease;
+    padding: 10px 24px; border: 1px solid var(--text-dark); background: transparent;
+    border-radius: 30px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s ease;
 }
+.auth-btn:hover { background: var(--text-dark); color: white; }
 
-.auth-btn:hover {
-    background: var(--text-dark);
-    color: white;
-}
-
-.user-box {
-    display: none;
-    align-items: center;
-    gap: 15px;
-}
-
+.user-box { display: none; align-items: center; gap: 15px; }
 .logout-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 20px;
-    background: #e2e8f0;
-    cursor: pointer;
-    transition: background 0.2s;
+    padding: 8px 16px; border: none; border-radius: 20px; background: #e2e8f0;
+    cursor: pointer; transition: background 0.2s;
 }
-.logout-btn:hover {
-    background: #cbd5e1;
-}
+.logout-btn:hover { background: #cbd5e1; }
 
 /* ==========================
-   主要內容區塊
+   主視覺與介紹區塊
 ========================== */
 main {
     max-width: 1200px;
@@ -103,241 +68,196 @@ main {
 }
 
 .hero-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 65vh;
-    flex-wrap: wrap;
-    gap: 40px;
-    padding: 40px 0;
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 65vh; flex-wrap: wrap; gap: 40px; padding: 40px 0;
 }
-
-.hero-text {
-    flex: 1;
-    min-width: 350px;
-}
-
-.hero-text h1 {
-    font-size: 2.8rem;
-    line-height: 1.3;
-    margin-bottom: 20px;
-    font-weight: normal;
-}
-
+.hero-text { flex: 1; min-width: 350px; }
+.hero-text h1 { font-size: 2.8rem; line-height: 1.3; margin-bottom: 20px; font-weight: normal; }
 .hero-text .brand-name {
-    font-weight: 900;
-    font-size: 3.5rem;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-weight: 900; font-size: 3.5rem; background: var(--accent-gradient);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
+.hero-text p { font-size: 1.25rem; color: var(--text-gray); line-height: 1.6; }
 
-.hero-text p {
-    font-size: 1.25rem;
-    color: var(--text-gray);
-    line-height: 1.6;
-}
-
-.hero-graphic {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 350px;
-}
-
+.hero-graphic { flex: 1; display: flex; justify-content: center; align-items: center; min-width: 350px; }
 .diamond-placeholder {
-    width: 280px;
-    height: 280px;
-    background: white;
-    border: 2px solid var(--text-dark);
-    transform: rotate(45deg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 280px; height: 280px; background: white; border: 2px solid var(--text-dark);
+    transform: rotate(45deg); display: flex; justify-content: center; align-items: center;
     box-shadow: 20px 20px 0px rgba(255, 107, 107, 0.1);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
-.diamond-placeholder:hover {
-    transform: rotate(45deg) scale(1.05);
-}
-
-.diamond-content {
-    transform: rotate(-45deg);
-    text-align: center;
-    font-size: 1.8rem;
-    color: var(--text-gray);
-    line-height: 1.5;
-}
+.diamond-placeholder:hover { transform: rotate(45deg) scale(1.05); }
+.diamond-content { transform: rotate(-45deg); text-align: center; font-size: 1.8rem; color: var(--text-gray); }
 
 .info-section {
+    text-align: center; padding: 80px 40px; background: white;
+    border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.04);
+    margin-bottom: 80px; position: relative;
+}
+.info-section::before {
+    content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 8px; background: var(--accent-gradient); border-radius: 4px;
+}
+.info-section p { font-size: 1.15rem; line-height: 1.8; color: var(--text-gray); margin: 0 auto 30px auto; max-width: 800px; }
+.info-section .highlight-text { font-size: 1.3rem; font-weight: bold; color: var(--text-dark); margin-top: 40px; }
+.info-section h2 { font-size: 2.8rem; color: var(--text-dark); margin-top: 50px; letter-spacing: 2px; }
+
+/* ==========================
+   全新：比較數據區塊 (對應圖片三)
+========================== */
+.comparison-section {
+    position: relative;
+    padding: 80px 0 120px 0;
+    max-width: 1000px;
+    margin: 0 auto;
     text-align: center;
-    padding: 80px 40px;
-    background: white;
-    border-radius: 40px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.04);
-    margin-bottom: 80px;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding: 0 10%;
+}
+.table-header h3 {
+    font-size: 24px;
+    background: #e2e8f0;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 0;
+}
+.table-header .brand-title {
+    background: #f1f5f9;
+}
+
+/* 比較列設計 */
+.compare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--table-bg);
+    margin-bottom: 20px;
+    padding: 20px 10%;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: bold;
     position: relative;
 }
 
-.info-section::before {
-    content: '';
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 8px;
+/* 左側文字 (傳統交友APP) */
+.col-left { flex: 1; text-align: left; color: var(--text-gray); }
+
+/* 右側文字 (Date Free) - 使用漸層色強調 */
+.col-right {
+    flex: 1;
+    text-align: right;
     background: var(--accent-gradient);
-    border-radius: 4px;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 24px;
 }
 
-.info-section p {
-    font-size: 1.15rem;
-    line-height: 1.8;
-    color: var(--text-gray);
-    margin: 0 auto 30px auto;
-    max-width: 800px;
+/* 中間的菱形文字區塊 */
+.center-diamond-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
 }
-
-.info-section .highlight-text {
-    font-size: 1.3rem;
-    font-weight: bold;
+.center-diamond {
+    width: 250px;
+    height: 250px;
+    border: 1px solid var(--text-dark);
+    transform: rotate(45deg);
+    position: absolute;
+    top: -125px; /* 為了讓菱形置中於三列資料的中間 */
+    left: -125px;
+    pointer-events: none; /* 讓菱形不會擋住滑鼠點擊 */
+}
+.center-label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
     color: var(--text-dark);
-    margin-top: 40px;
+    white-space: nowrap;
+    background: white; /* 用白色背景遮住底下的灰條，讓文字更清晰 */
+    padding: 5px 15px;
+    border-radius: 20px;
 }
 
-.info-section h2 {
-    font-size: 2.8rem;
-    color: var(--text-dark);
-    margin-top: 50px;
-    letter-spacing: 2px;
+/* 底部總結文字 */
+.bottom-summary {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
+    padding: 0 5%;
 }
+.bottom-summary h2 {
+    font-size: 28px;
+    margin: 0;
+}
+.summary-left { color: var(--text-gray); font-weight: normal; }
+.summary-right { font-weight: bold; color: var(--text-dark); }
 
 /* ==========================
-   Modal (全新左右分割登入視窗)
+   Modal (左右分割登入視窗)
 ========================== */
 .modal {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(4px);
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    justify-content: center; align-items: center; z-index: 9999; /* 提高 z-index 確保蓋在最上層 */
 }
 
 .modal-content.auth-layout {
-    display: flex;
-    flex-direction: row;
-    background: white;
-    border-radius: 20px;
-    width: 800px;
-    max-width: 90%;
-    overflow: hidden;
-    position: relative;
+    display: flex; flex-direction: row; background: white; border-radius: 20px;
+    width: 800px; max-width: 90%; overflow: hidden; position: relative;
     box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 }
 
 .close-btn-abs {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #cbd5e1;
-    cursor: pointer;
-    z-index: 10;
-    transition: color 0.3s;
+    position: absolute; top: 15px; right: 20px; background: none; border: none;
+    font-size: 24px; color: #cbd5e1; cursor: pointer; z-index: 10; transition: color 0.3s;
 }
-.close-btn-abs:hover {
-    color: var(--text-dark);
-}
+.close-btn-abs:hover { color: var(--text-dark); }
 
-/* 左側：大菱形區塊 */
+/* 左側大菱形區塊 */
 .auth-left {
-    flex: 1;
-    background: #fafafa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 80px 40px;
-    border-right: 1px solid #f1f5f9;
+    flex: 1; background: #fafafa; display: flex; justify-content: center;
+    align-items: center; padding: 80px 40px; border-right: 1px solid #f1f5f9;
 }
-
 .auth-diamond {
-    width: 200px;
-    height: 200px;
-    background: white;
-    border: 2px solid var(--text-dark);
-    transform: rotate(45deg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 200px; height: 200px; background: white; border: 2px solid var(--text-dark);
+    transform: rotate(45deg); display: flex; justify-content: center; align-items: center;
     box-shadow: 15px 15px 0px rgba(255, 107, 107, 0.08);
 }
+.auth-diamond-text { transform: rotate(-45deg); text-align: center; }
+.auth-diamond-text .title { font-size: 32px; font-weight: bold; letter-spacing: 4px; color: var(--text-dark); }
+.auth-diamond-text hr { width: 100px; border: none; border-top: 2px solid var(--text-dark); margin: 10px auto; }
 
-.auth-diamond-text {
-    transform: rotate(-45deg);
-    text-align: center;
-}
-
-.auth-diamond-text .title {
-    font-size: 32px;
-    font-weight: bold;
-    letter-spacing: 4px;
-    color: var(--text-dark);
-}
-
-.auth-diamond-text hr {
-    width: 100px;
-    border: none;
-    border-top: 2px solid var(--text-dark);
-    margin: 10px auto;
-}
-
-/* 右側：Google登入按鈕區塊 */
+/* 右側 Google 登入區塊 */
 .auth-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 80px 40px;
-    background: white;
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    align-items: center; padding: 80px 40px; background: white;
 }
+.auth-right h3 { margin-top: 0; margin-bottom: 30px; color: var(--text-dark); font-weight: normal; font-size: 20px; }
 
-.auth-right h3 {
-    margin-top: 0;
-    margin-bottom: 30px;
-    color: var(--text-dark);
-    font-weight: normal;
-    font-size: 20px;
-}
 
-/* RWD 響應式微調 */
+/* RWD */
 @media (max-width: 768px) {
-    header { padding: 15px 20px; }
-    main { padding: 0 20px; }
-    .hero-section { text-align: center; padding: 20px 0 60px 0; }
-    .hero-text h1 { font-size: 2.2rem; }
-    .hero-text .brand-name { font-size: 2.8rem; }
-    .info-section h2 { font-size: 2rem; }
-    .diamond-placeholder { width: 220px; height: 220px; }
-    
-    /* 登入視窗改為上下排列 */
+    .comparison-section { padding: 40px 10px; }
+    .table-header h3 { font-size: 18px; }
+    .compare-row { font-size: 16px; padding: 15px 5%; }
+    .col-right { font-size: 18px; }
+    .center-diamond { display: none; /* 手機版隱藏大菱形框，避免破版 */ }
+    .bottom-summary { flex-direction: column; gap: 20px; text-align: center; }
     .modal-content.auth-layout { flex-direction: column; width: 400px; }
     .auth-left { padding: 50px 20px; border-right: none; border-bottom: 1px solid #f1f5f9; }
     .auth-right { padding: 50px 20px; }
-    .auth-diamond { width: 140px; height: 140px; }
-    .auth-diamond-text .title { font-size: 24px; }
-    .auth-diamond-text hr { width: 70px; }
 }
 </style>
 </head>
@@ -378,6 +298,42 @@ main {
         
         <h2>你們約會，我們買單！</h2>
     </section>
+
+    <section class="comparison-section">
+        <div class="table-header">
+            <h3>傳統交友APP</h3>
+            <h3 class="brand-title">Date Free</h3>
+        </div>
+
+        <div style="position: relative;">
+            <div class="center-diamond-wrapper" style="top: 50%;">
+                <div class="center-diamond"></div>
+            </div>
+
+            <div class="compare-row">
+                <div class="col-left">12 天</div>
+                <div class="center-label">平均配對時間</div>
+                <div class="col-right">180 秒</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="col-left">92 %</div>
+                <div class="center-label">配對被拒絕</div>
+                <div class="col-right">0 %</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="col-left">30 %</div>
+                <div class="center-label">三觀契合</div>
+                <div class="col-right">90 %</div>
+            </div>
+        </div>
+
+        <div class="bottom-summary">
+            <h2 class="summary-left">你在上面浪費多少青春？</h2>
+            <h2 class="summary-right">我們只給你對的人！</h2>
+        </div>
+    </section>
 </main>
 
 <div class="modal" id="modal">
@@ -399,8 +355,8 @@ main {
             
             <div id="g_id_onload"
                 data-client_id="460379161583-tdkqba7mu0pd1b6haf2qcqs297ghqpds.apps.googleusercontent.com"
-                data-callback="handleCredentialResponse">
-            </div>
+                data-callback="handleCredentialResponse"
+                data-auto_prompt="false"> </div>
 
             <div class="g_id_signin"
                 data-type="standard"
@@ -450,14 +406,12 @@ function handleCredentialResponse(response) {
             return;
         }
 
-       // ✅ 存 token + user
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
         updateUI();
         closeModal();
 
-        // ✅ 登入成功後，自動跳轉到主控台
         window.location.href = "dashboard.html";
     });
 }
@@ -470,12 +424,7 @@ function updateUI() {
     const user = JSON.parse(localStorage.getItem("user"));
 
    if (token && user) {
-        // 如果已經登入，直接幫他跳轉到 dashboard
         window.location.href = "dashboard.html";
-        
-        loginBtn.style.display = "none";
-        userBox.style.display = "flex";
-        userName.innerText = user.name + " (" + user.email + ")";
     }
 }
 
@@ -485,13 +434,11 @@ function updateUI() {
 function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-
-    loginBtn.style.display = "block";
-    userBox.style.display = "none";
+    window.location.reload(); // 直接重整頁面
 }
 
 // ==========================
-// 頁面載入檢查登入狀態
+// 事件監聽
 // ==========================
 window.onload = function() {
     updateUI();
