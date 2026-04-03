@@ -85,6 +85,16 @@ class SurveyData(BaseModel):
 class UserProfile(BaseModel):
     photo_base64: str = None
     bio: str = None
+    gender: str = None
+    height: int = None
+    weight: int = None
+    department: str = None
+    grade: str = None
+    expected_height: str = None
+    age_diff: str = None
+    smoking: str = None
+    drinking: str = None
+    tattoo: str = None
 
 # ==========================================
 # 🧠 配對演算法（原封不動保留）
@@ -214,10 +224,10 @@ def root():
 # ==========================================
 @app.get("/api/profile")
 async def get_profile(current_user=Depends(get_current_user)):
-    # 回傳使用者資料，過濾掉 MongoDB 原生的 _id 欄位
+    # 直接回傳使用者資料，過濾掉 MongoDB 原生的 _id
     user_data = users_collection.find_one(
         {"email": current_user["email"]}, 
-        {"_id": 0, "photo_base64": 1, "bio": 1}
+        {"_id": 0}
     )
     if not user_data:
         return {}
@@ -225,13 +235,11 @@ async def get_profile(current_user=Depends(get_current_user)):
 
 @app.post("/api/profile")
 async def update_profile(profile: UserProfile, current_user=Depends(get_current_user)):
+    # 透過 Pydantic 過濾掉前端沒傳（為 null/None）的欄位，避免覆蓋既有資料
+    update_data = profile.model_dump(exclude_unset=True)
+    
     users_collection.update_one(
         {"email": current_user["email"]},
-        {
-            "$set": {
-                "photo_base64": profile.photo_base64,
-                "bio": profile.bio
-            }
-        }
+        {"$set": update_data}
     )
     return {"message": "個人資料已更新"}

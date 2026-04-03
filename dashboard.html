@@ -18,14 +18,14 @@
 body {
     margin: 0;
     font-family: 'Microsoft JhengHei', sans-serif;
-    /* 採用與首頁相同的柔和漸層背景 */
     background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
     color: var(--text-dark);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* 讓內容從上方開始排，方便控制間距 */
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .diamond-wrapper {
@@ -34,7 +34,7 @@ body {
     cursor: pointer;
     box-shadow: 10px 10px 30px rgba(255, 107, 107, 0.08);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border-radius: 8px; /* 微微的圓角讓菱形不那麼銳利 */
+    border-radius: 12px;
 }
 
 .diamond-wrapper:hover {
@@ -50,7 +50,7 @@ body {
     justify-content: center;
     height: 100%;
     width: 100%;
-    overflow: hidden; /* 確保圖片不會超出版面 */
+    overflow: hidden;
     border-radius: 50%;
 }
 
@@ -59,16 +59,17 @@ body {
 ================== */
 .profile-section {
     text-align: center;
-    margin-bottom: 60px;
+    margin-top: 100px; /* 將個人資料菱形整體往下移 */
+    margin-bottom: 70px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .profile-diamond {
-    width: 130px;
-    height: 130px;
-    border: 3px solid var(--accent-orange); /* 用品牌色強調 */
+    width: 170px; /* 框框再大一點 */
+    height: 170px;
+    border: 3px solid var(--accent-orange);
 }
 
 .profile-img {
@@ -78,8 +79,8 @@ body {
 }
 
 .nickname {
-    margin-top: 30px;
-    font-size: 20px;
+    margin-top: 35px;
+    font-size: 22px;
     font-weight: bold;
     color: var(--text-dark);
 }
@@ -88,15 +89,18 @@ body {
    四大選單區塊
 ================== */
 .menu-section {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 60px; /* 拉大四個菱形的間距 */
+    display: flex;
+    flex-direction: row; /* 橫向平行排列 */
+    flex-wrap: wrap; /* 螢幕縮小時自動換行 */
+    justify-content: center;
+    gap: 40px; /* 彼此隔開，但不會太遠 */
     padding: 20px;
+    max-width: 1000px;
 }
 
 .menu-item {
-    width: 160px; /* 放大選單菱形 */
-    height: 160px;
+    width: 180px; /* 框框再大一點 */
+    height: 180px;
     border: 1px solid #ffe4e4;
 }
 
@@ -109,7 +113,7 @@ body {
 }
 
 .menu-text {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     color: var(--text-gray);
     transition: color 0.3s;
@@ -117,6 +121,7 @@ body {
 
 .logout-btn {
     margin-top: 60px;
+    margin-bottom: 40px;
     padding: 10px 30px;
     border: 1px solid var(--text-gray);
     border-radius: 30px;
@@ -132,10 +137,10 @@ body {
     color: white;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
     .menu-section { gap: 30px; }
-    .menu-item { width: 120px; height: 120px; }
-    .menu-text { font-size: 15px; }
+    .menu-item { width: 140px; height: 140px; }
+    .profile-diamond { width: 140px; height: 140px; }
 }
 </style>
 </head>
@@ -145,11 +150,11 @@ body {
 <div class="profile-section">
     <div class="diamond-wrapper profile-diamond" onclick="window.location.href='profile.html'" title="設定個人資料">
         <div class="diamond-content" id="profileContent">
-            <span style="font-size: 40px;">👤</span>
+            <span style="font-size: 50px;">👤</span>
         </div>
     </div>
     <div class="nickname" id="nickname">載入中...</div>
-    <div style="font-size:12px; color:gray; margin-top:5px;">點擊頭像編輯個人資料</div>
+    <div style="font-size:14px; color:gray; margin-top:8px;">點擊頭像編輯個人資料</div>
 </div>
 
 <div class="menu-section">
@@ -175,7 +180,7 @@ body {
 <script>
 const API_BASE = "/api";
 
-// 1️⃣ 登入檢查（JWT）
+// 1️⃣ 登入檢查
 const token = localStorage.getItem("token");
 let user = JSON.parse(localStorage.getItem("user"));
 
@@ -186,7 +191,7 @@ if (!token || !user) {
 
 document.getElementById("nickname").innerText = user.name;
 
-// 2️⃣ 載入個人資料 (獲取大頭貼)
+// 2️⃣ 載入個人資料
 function loadProfile() {
     fetch(`${API_BASE}/profile`, {
         headers: { "Authorization": `Bearer ${token}` }
@@ -198,9 +203,9 @@ function loadProfile() {
                 `<img src="${data.photo_base64}" class="profile-img" alt="Profile">`;
         }
     })
-    .catch(err => console.error("無法載入個人資料", err));
+    .catch(err => console.error("無法載入", err));
 }
-loadProfile(); // 執行載入
+loadProfile(); 
 
 // 3️⃣ 導頁與功能
 function goToSurvey() { window.location.href = "survey.html"; }
