@@ -225,7 +225,7 @@ input[type="file"] { display: none; }
     </div>
 
     <div class="submit-btn-wrapper">
-        <button class="submit-btn" onclick="saveProfile()">下一頁</button>
+        <button class="submit-btn" onclick="saveProfile()">儲存</button>
     </div>
 </main>
 
@@ -318,7 +318,7 @@ function saveProfile() {
             alert("錯誤：" + data.detail);
         } else {
             alert("資料已儲存！");
-            window.location.href = "dashboard.html"; // 按下「下一頁」儲存並跳轉
+            window.location.href = "dashboard.html"; // 儲存成功後跳轉回主控台
         }
     })
     .catch(() => alert("伺服器錯誤"));
