@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Free | 聊天室</title>
+
+<style>
+:root {
+    --text-dark: #2d3748;
+    --text-gray: #4a5568;
+    --accent-orange: #ff6b6b;
+    --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    --bg-light: #f8fafc;
+}
+
+body {
+    margin: 0; font-family: 'Microsoft JhengHei', sans-serif;
+    background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
+    color: var(--text-dark); height: 100vh;
+    display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* 導覽列 */
+header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 40px; background: white; border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+}
+.logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+.logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+.logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
+.back-btn { padding: 8px 16px; border: 1px solid #cbd5e1; border-radius: 20px; background: transparent; cursor: pointer; transition: 0.3s; }
+.back-btn:hover { background: #f1f5f9; }
+
+/* 聊天室主架構 (三欄式) */
+.chat-container {
+    display: flex; flex: 1; overflow: hidden;
+    margin: 20px; background: white; border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+}
+
+/* 左側：配對列表 */
+.chat-sidebar {
+    width: 280px; border-right: 1px solid #eee;
+    display: flex; flex-direction: column; background: #fafafa;
+}
+.chat-sidebar h3 { padding: 20px; margin: 0; border-bottom: 1px solid #eee; font-size: 18px; }
+.match-list { flex: 1; overflow-y: auto; }
+.match-item {
+    display: flex; align-items: center; padding: 15px 20px;
+    cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;
+}
+.match-item:hover { background: #f1f5f9; }
+.match-item.active { background: #ffe4e4; border-left: 4px solid var(--accent-orange); }
+.match-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.match-info h4 { margin: 0 0 5px 0; font-size: 16px; }
+.match-info p { margin: 0; font-size: 12px; color: var(--text-gray); }
+
+/* 中間：聊天區塊 */
+.chat-main { flex: 1; display: flex; flex-direction: column; background: #fff; }
+.chat-header { padding: 20px; border-bottom: 1px solid #eee; font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 15px; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: #fcfcfc; }
+.msg { max-width: 65%; padding: 12px 18px; border-radius: 20px; font-size: 15px; line-height: 1.5; word-wrap: break-word; }
+.msg.self { align-self: flex-end; background: var(--accent-gradient); color: white; border-bottom-right-radius: 5px; box-shadow: 0 4px 10px rgba(255,107,107,0.2); }
+.msg.other { align-self: flex-start; background: #f1f5f9; color: var(--text-dark); border-bottom-left-radius: 5px; }
+
+.chat-input-area { padding: 15px 20px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
+.chat-input-area input { flex: 1; padding: 15px 20px; border-radius: 30px; border: 1px solid #cbd5e1; outline: none; font-size: 15px; font-family: inherit; }
+.chat-input-area button { padding: 0 30px; border-radius: 30px; background: var(--text-dark); color: white; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+.chat-input-area button:hover { background: var(--accent-orange); }
+
+/* 右側：話題卡 */
+.chat-right {
+    width: 280px; border-left: 1px solid #eee; padding: 30px 20px;
+    background: #fafafa; display: flex; flex-direction: column; align-items: center;
+}
+.topic-container {
+    background: white; border: 2px dashed #ffb8b8; border-radius: 20px;
+    padding: 30px 20px; text-align: center; width: 100%; box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(255,107,107,0.05); position: relative;
+}
+.topic-label { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--accent-gradient); color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; }
+.topic-text { font-size: 18px; color: var(--text-dark); line-height: 1.6; font-weight: bold; transition: opacity 0.5s; min-height: 80px; display: flex; align-items: center; justify-content: center; }
+
+@media (max-width: 900px) {
+    .chat-right { display: none; /* 手機版隱藏話題卡 */ }
+    .chat-sidebar { width: 220px; }
+}
+@media (max-width: 600px) {
+    .chat-container { flex-direction: column; margin: 0; border-radius: 0; }
+    .chat-sidebar { width: 100%; height: 120px; border-right: none; border-bottom: 1px solid #eee; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
+    .chat-sidebar h3 { display: none; }
+    .match-list { display: flex; flex-direction: row; }
+    .match-item { flex-direction: column; border-bottom: none; border-right: 1px solid #eee; min-width: 90px; justify-content: center; text-align: center; padding: 10px; }
+    .match-item.active { border-left: none; border-bottom: 4px solid var(--accent-orange); }
+    .match-avatar { margin: 0 0 5px 0; }
+    .match-info p { display: none; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo-container" onclick="window.location.href='dashboard.html'">
+        <img src="S__18784267.jpg" alt="Date Free Logo" class="logo-img">
+        <div class="logo-text">Date Free</div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">返回主控台</button>
+</header>
+
+<div class="chat-container">
+    <div class="chat-sidebar">
+        <h3>你的配對</h3>
+        <div class="match-list" id="matchList">
+            <div style="padding: 20px; color: gray; text-align: center;">載入中...</div>
+        </div>
+    </div>
+
+    <div class="chat-main">
+        <div class="chat-header" id="chatHeader">
+            <span style="color: gray;">請從左側選擇一位配對對象開始聊天</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="輸入訊息..." onkeypress="handleEnter(event)" disabled>
+            <button id="sendBtn" onclick="sendMessage()" disabled>傳送</button>
+        </div>
+    </div>
+
+    <div class="chat-right">
+        <div class="topic-container">
+            <div class="topic-label">破冰話題卡</div>
+            <div class="topic-text" id="topicText">載入中...</div>
+        </div>
+        <p style="color: gray; font-size: 12px; margin-top: 20px; text-align: center;">話題每 10 秒自動更新<br>不知道聊什麼就參考吧！</p>
+    </div>
+</div>
+
+<script>
+const API_BASE = "/api";
+const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user"));
+let currentTarget = null;
+let ws = null;
+
+if (!token || !user) { window.location.href = "index.html"; }
+
+// 1. 動態話題卡邏輯
+const topics = [
+    "如果你可以瞬間移動，現在最想去哪裡？",
+    "分享一件最近讓你大笑的事情！",
+    "你覺得情侶間最完美的週末是怎麼度過的？",
+    "你最受不了的一種生活習慣是什麼？",
+    "如果我們第一天約會，你會想安排什麼行程？",
+    "你有什麼鮮為人知的隱藏技能嗎？",
+    "如果這輩子只能吃一種食物，你會選什麼？",
+    "你最近聽過最喜歡的一首歌是什麼？",
+    "在大學裡做過最瘋狂的事情是什麼？"
+];
+
+function rotateTopic() {
+    const el = document.getElementById('topicText');
+    el.style.opacity = 0; // 淡出
+    setTimeout(() => {
+        el.innerText = topics[Math.floor(Math.random() * topics.length)];
+        el.style.opacity = 1; // 淡入
+    }, 500);
+}
+rotateTopic();
+setInterval(rotateTopic, 10000); // 每 10 秒更換
+
+// 2. 初始化 WebSocket
+function initWS() {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    ws = new WebSocket(`${protocol}//${window.location.host}/api/ws/chat?token=${token}`);
+    
+    ws.onmessage = function(event) {
+        const msg = JSON.parse(event.data);
+        // 如果目前正在跟這個人聊天，就把訊息印出來
+        if ((msg.sender === currentTarget) || (msg.receiver === currentTarget && msg.sender === user.email)) {
+            appendMessage(msg.content, msg.sender === user.email);
+        }
+    };
+    
+    ws.onclose = function() {
+        console.log("連線中斷，3秒後重新連線...");
+        setTimeout(initWS, 3000);
+    };
+}
+initWS();
+
+// 3. 獲取配對列表
+fetch(`${API_BASE}/my_matches`, { headers: { Authorization: `Bearer ${token}` } })
+.then(res => res.json())
+.then(data => {
+    const list = document.getElementById('matchList');
+    list.innerHTML = '';
+    if (!data.matches || data.matches.length === 0) {
+        list.innerHTML = "<div style='padding:20px; color:gray; text-align:center;'>目前尚未有契合度超過 50 分的對象。</div>";
+        return;
+    }
+    data.matches.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'match-item';
+        div.onclick = () => selectMatch(m.email, m.name, div);
+        const img = m.photo_base64 || 'S__18784267.jpg';
+        div.innerHTML = `
+            <img src="${img}" class="match-avatar">
+            <div class="match-info">
+                <h4>${m.name}</h4>
+                <p>契合度: <span style="color:var(--accent-orange);font-weight:bold;">${m.score}%</span></p>
+            </div>
+        `;
+        list.appendChild(div);
+    });
+});
+
+// 4. 選擇聊天對象
+function selectMatch(email, name, element) {
+    currentTarget = email;
+    document.getElementById('chatHeader').innerHTML = `與 <span style="color:var(--accent-orange);margin-left:5px;">${name}</span> 聊天中...`;
+    document.querySelectorAll('.match-item').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+    
+    document.getElementById('chatInput').disabled = false;
+    document.getElementById('sendBtn').disabled = false;
+
+    // 獲取歷史訊息
+    fetch(`${API_BASE}/messages/${email}`, { headers: { Authorization: `Bearer ${token}` } })
+    .then(res => res.json())
+    .then(data => {
+        const box = document.getElementById('chatMessages');
+        box.innerHTML = '';
+        if(data.messages.length === 0) {
+            box.innerHTML = '<div style="text-align:center; color:#ccc; margin-top:20px;">你們還沒有聊過天，發個訊息打招呼吧！</div>';
+        } else {
+            data.messages.forEach(m => {
+                appendMessage(m.content, m.sender === user.email);
+            });
+        }
+    });
+}
+
+// 5. 傳送訊息
+function sendMessage() {
+    if (!currentTarget) return;
+    const input = document.getElementById('chatInput');
+    const content = input.value.trim();
+    if (!content) return;
+
+    // 透過 WebSocket 發送
+    ws.send(JSON.stringify({ receiver: currentTarget, content: content }));
+    input.value = '';
+    
+    // 移除空白提示
+    const box = document.getElementById('chatMessages');
+    if(box.innerHTML.includes('你們還沒有聊過天')) box.innerHTML = '';
+}
+
+function handleEnter(e) {
+    if (e.key === 'Enter') sendMessage();
+}
+
+function appendMessage(content, isSelf) {
+    const box = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'msg ' + (isSelf ? 'self' : 'other');
+    div.innerText = content;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight; // 捲動到最底
+}
+</script>
+
+</body>
+</html>
