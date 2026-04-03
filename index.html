@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Date Free</title>
+<title>Date Free | 大學生的自動配對交友平台</title>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -12,56 +12,266 @@
 :root {
     --primary-blue: #2563eb;
     --accent-orange: #ff6b6b;
+    --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    --text-dark: #2d3748;
+    --text-gray: #4a5568;
     --bg-light: #f8fafc;
 }
+
 body {
-    margin:0;
-    font-family: 'Microsoft JhengHei';
-    background: var(--bg-light);
+    margin: 0;
+    font-family: 'Microsoft JhengHei', sans-serif;
+    /* 加入柔和的漸層背景，消除斷層感 */
+    background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
 }
+
+/* ==========================
+   導覽列 (Header)
+========================== */
 header {
-    display:flex;
-    justify-content:space-between;
-    padding:20px 40px;
-    background:white;
-}
-.logo {
-    font-weight:bold;
-    font-size:24px;
-}
-button {
-    padding:10px 20px;
-    border:none;
-    border-radius:20px;
-    cursor:pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: transparent;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* 使用者資訊 */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-diamond {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--text-dark);
+    transform: rotate(45deg);
+}
+
+.logo-text {
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.auth-btn {
+    padding: 10px 24px;
+    border: 1px solid var(--text-dark);
+    background: transparent;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+    background: var(--text-dark);
+    color: white;
+}
+
 .user-box {
-    display:none;
-    align-items:center;
-    gap:10px;
-}
-.logout-btn {
-    background:#eee;
+    display: none;
+    align-items: center;
+    gap: 15px;
 }
 
-/* Modal */
-.modal {
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.5);
-    justify-content:center;
-    align-items:center;
+.logout-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: #e2e8f0;
+    cursor: pointer;
+    transition: background 0.2s;
 }
+.logout-btn:hover {
+    background: #cbd5e1;
+}
+
+/* ==========================
+   主要內容區塊
+========================== */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* 上半部：主視覺 (對應圖一) */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 65vh;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 40px 0;
+}
+
+.hero-text {
+    flex: 1;
+    min-width: 350px;
+}
+
+.hero-text h1 {
+    font-size: 2.8rem;
+    line-height: 1.3;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+
+.hero-text .brand-name {
+    font-weight: 900;
+    font-size: 3.5rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-text p {
+    font-size: 1.25rem;
+    color: var(--text-gray);
+    line-height: 1.6;
+}
+
+.hero-graphic {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 350px;
+}
+
+.diamond-placeholder {
+    width: 280px;
+    height: 280px;
+    background: white;
+    border: 2px solid var(--text-dark);
+    transform: rotate(45deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 增加陰影讓畫面不呆板 */
+    box-shadow: 20px 20px 0px rgba(255, 107, 107, 0.1);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.diamond-placeholder:hover {
+    transform: rotate(45deg) scale(1.05);
+}
+
+.diamond-content {
+    transform: rotate(-45deg);
+    text-align: center;
+    font-size: 1.8rem;
+    color: var(--text-gray);
+    line-height: 1.5;
+}
+
+/* 下半部：介紹文字 (對應圖二) */
+.info-section {
+    text-align: center;
+    padding: 80px 40px;
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.04);
+    margin-bottom: 80px;
+    position: relative;
+}
+
+/* 頂部裝飾線 */
+.info-section::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 8px;
+    background: var(--accent-gradient);
+    border-radius: 4px;
+}
+
+.info-section p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--text-gray);
+    margin: 0 auto 30px auto;
+    max-width: 800px;
+}
+
+.info-section .highlight-text {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-top: 40px;
+}
+
+.info-section h2 {
+    font-size: 2.8rem;
+    color: var(--text-dark);
+    margin-top: 50px;
+    letter-spacing: 2px;
+}
+
+/* ==========================
+   Modal (登入彈跳視窗)
+========================== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px); /* 背景模糊效果 */
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
 .modal-content {
-    background:white;
-    padding:30px;
-    border-radius:10px;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.close-btn {
+    margin-top: 20px;
+    padding: 8px 24px;
+    border: none;
+    border-radius: 20px;
+    background: #f1f5f9;
+    cursor: pointer;
+    font-weight: bold;
+}
+.close-btn:hover {
+    background: #e2e8f0;
+}
+
+/* RWD 響應式微調 */
+@media (max-width: 768px) {
+    header { padding: 15px 20px; }
+    main { padding: 0 20px; }
+    .hero-section { text-align: center; padding: 20px 0 60px 0; }
+    .hero-text h1 { font-size: 2.2rem; }
+    .hero-text .brand-name { font-size: 2.8rem; }
+    .info-section h2 { font-size: 2rem; }
+    .diamond-placeholder { width: 220px; height: 220px; }
 }
 </style>
 </head>
@@ -69,28 +279,44 @@ button {
 <body>
 
 <header>
-    <div class="logo">Date Free</div>
+    <div class="logo-container">
+        <div class="logo-diamond"></div>
+        <div class="logo-text">LOGO</div>
+    </div>
 
-    <!-- 未登入 -->
-    <button id="loginBtn" onclick="openModal()">登入</button>
+    <button id="loginBtn" class="auth-btn" onclick="openModal()">登入 / 註冊</button>
 
-    <!-- 已登入 -->
     <div class="user-box" id="userBox">
         <span id="userName"></span>
         <button class="logout-btn" onclick="logout()">登出</button>
     </div>
 </header>
 
-<section style="text-align:center; margin-top:80px;">
-    <h1>找到真正適合你的人 ❤️</h1>
-    <p id="welcomeText">請先登入開始配對</p>
-</section>
+<main>
+    <section class="hero-section">
+        <div class="hero-text">
+            <h1><span class="brand-name">Date Free</span><br>大學生的自動配對交友平台</h1>
+            <p>不用左滑右滑，填寫問卷由大數據幫你找出屬於你的靈魂伴侶</p>
+        </div>
+        <div class="hero-graphic">
+            <div class="diamond-placeholder">
+                <div class="diamond-content">圖片或<br>LOGO</div>
+            </div>
+        </div>
+    </section>
 
-<!-- Modal -->
+    <section class="info-section">
+        <p>專為台中大學學生打造的『高效率三觀媒合系統』，我們透過6大維度深度演<br>算與學生身份驗證，排除外貌與隨機滑動的社交雜訊，將線上配對精準轉化為<br>線下真實赴約，為校園社交進行降噪，找回靈魂契合的深度連結。</p>
+        
+        <p class="highlight-text">我們不玩隨機盲滑，而是主打『每週一次精準開獎』<br>結合『200元約會補貼金』獎勵線下見面。</p>
+        
+        <h2>你們約會，我們買單！</h2>
+    </section>
+</main>
+
 <div class="modal" id="modal">
     <div class="modal-content">
-
-        <h3>使用 Google 登入</h3>
+        <h3>使用 Google 登入 / 註冊</h3>
 
         <div id="g_id_onload"
             data-client_id="460379161583-tdkqba7mu0pd1b6haf2qcqs297ghqpds.apps.googleusercontent.com"
@@ -103,7 +329,7 @@ button {
         </div>
 
         <br>
-        <button onclick="closeModal()">關閉</button>
+        <button class="close-btn" onclick="closeModal()">關閉</button>
     </div>
 </div>
 
@@ -114,7 +340,6 @@ const modal = document.getElementById("modal");
 const loginBtn = document.getElementById("loginBtn");
 const userBox = document.getElementById("userBox");
 const userName = document.getElementById("userName");
-const welcomeText = document.getElementById("welcomeText");
 
 // ==========================
 // Modal
@@ -130,7 +355,6 @@ function closeModal() {
 // Google 登入成功
 // ==========================
 function handleCredentialResponse(response) {
-
     fetch(`${API_BASE}/auth/google`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -140,7 +364,6 @@ function handleCredentialResponse(response) {
     })
     .then(res => res.json())
     .then(data => {
-
         if (data.detail) {
             alert("登入失敗：" + data.detail);
             return;
@@ -162,7 +385,6 @@ function handleCredentialResponse(response) {
 // UI 更新
 // ==========================
 function updateUI() {
-
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -170,11 +392,10 @@ function updateUI() {
         // 如果已經登入，直接幫他跳轉到 dashboard，不用再看一次首頁
         window.location.href = "dashboard.html";
         
-        // 下面這幾行其實可以刪掉或保留，因為已經跳轉了
+        // 保留介面切換邏輯
         loginBtn.style.display = "none";
         userBox.style.display = "flex";
         userName.innerText = user.name + " (" + user.email + ")";
-        welcomeText.innerText = "歡迎回來 " + user.name + " 🎉";
     }
 }
 
@@ -187,8 +408,6 @@ function logout() {
 
     loginBtn.style.display = "block";
     userBox.style.display = "none";
-
-    welcomeText.innerText = "請先登入開始配對";
 }
 
 // ==========================
