@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Free | 個人資料設定</title>
+
+<style>
+:root {
+    --text-dark: #2d3748;
+    --text-gray: #4a5568;
+    --accent-orange: #ff6b6b;
+}
+
+body {
+    margin: 0;
+    font-family: 'Microsoft JhengHei', sans-serif;
+    background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.profile-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* 預覽大頭貼 */
+.preview-box {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    margin: 0 auto 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 3px solid var(--accent-orange);
+}
+
+.preview-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.upload-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #f1f5f9;
+    color: var(--text-dark);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 30px;
+    transition: background 0.2s;
+}
+.upload-btn:hover { background: #e2e8f0; }
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--text-gray);
+}
+.input-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+    transition: transform 0.2s;
+}
+.save-btn:hover { transform: translateY(-2px); }
+
+.back-link {
+    display: block;
+    margin-top: 20px;
+    color: var(--text-gray);
+    text-decoration: none;
+    font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<div class="profile-card">
+    <h2>個人資料設定</h2>
+    
+    <div class="preview-box" id="previewBox">
+        <span style="font-size:40px; color:#cbd5e1;">👤</span>
+    </div>
+    
+    <label class="upload-btn">
+        選擇照片
+        <input type="file" id="photoInput" accept="image/*">
+    </label>
+
+    <div class="input-group">
+        <label>一句話自我介紹</label>
+        <textarea id="bioInput" rows="3" placeholder="讓大家更認識你..."></textarea>
+    </div>
+
+    <button class="save-btn" onclick="saveProfile()">儲存資料</button>
+    <a href="dashboard.html" class="back-link">← 返回主控台</a>
+</div>
+
+<script>
+const API_BASE = "/api";
+const token = localStorage.getItem("token");
+
+if (!token) {
+    alert("請先登入！");
+    window.location.href = "index.html";
+}
+
+let currentBase64 = "";
+
+// 1. 頁面載入時抓取現有資料
+fetch(`${API_BASE}/profile`, {
+    headers: { "Authorization": `Bearer ${token}` }
+})
+.then(res => res.json())
+.then(data => {
+    if(data) {
+        if(data.bio) document.getElementById("bioInput").value = data.bio;
+        if(data.photo_base64) {
+            currentBase64 = data.photo_base64;
+            document.getElementById("previewBox").innerHTML = `<img src="${currentBase64}">`;
+        }
+    }
+});
+
+// 2. 處理圖片上傳預覽與轉換 Base64
+document.getElementById('photoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // 檔案大小限制 (建議 2MB 以下避免 MongoDB 負載過大)
+    if (file.size > 2 * 1024 * 1024) {
+        alert("圖片請小於 2MB！");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        currentBase64 = event.target.result; // 這就是 Base64 字串
+        document.getElementById("previewBox").innerHTML = `<img src="${currentBase64}">`;
+    };
+    reader.readAsDataURL(file);
+});
+
+// 3. 儲存資料
+function saveProfile() {
+    const payload = {
+        photo_base64: currentBase64,
+        bio: document.getElementById("bioInput").value
+    };
+
+    fetch(`${API_BASE}/profile`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.detail) {
+            alert("錯誤：" + data.detail);
+        } else {
+            alert("儲存成功！");
+            window.location.href = "dashboard.html"; // 儲存後跳回主控台
+        }
+    })
+    .catch(() => alert("伺服器錯誤"));
+}
+</script>
+
+</body>
+</html>

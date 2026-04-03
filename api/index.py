@@ -82,6 +82,10 @@ class SurveyData(BaseModel):
     boundaries: str
     dating_goal: str
 
+class UserProfile(BaseModel):
+    photo_base64: str = None
+    bio: str = None
+
 # ==========================================
 # 🧠 配對演算法（原封不動保留）
 # ==========================================
@@ -204,3 +208,30 @@ async def match(current_user=Depends(get_current_user)):
 @app.get("/api")
 def root():
     return {"message": "API running"}
+
+# ==========================================
+# 👤 個人資料設定 (讀取與更新)
+# ==========================================
+@app.get("/api/profile")
+async def get_profile(current_user=Depends(get_current_user)):
+    # 回傳使用者資料，過濾掉 MongoDB 原生的 _id 欄位
+    user_data = users_collection.find_one(
+        {"email": current_user["email"]}, 
+        {"_id": 0, "photo_base64": 1, "bio": 1}
+    )
+    if not user_data:
+        return {}
+    return user_data
+
+@app.post("/api/profile")
+async def update_profile(profile: UserProfile, current_user=Depends(get_current_user)):
+    users_collection.update_one(
+        {"email": current_user["email"]},
+        {
+            "$set": {
+                "photo_base64": profile.photo_base64,
+                "bio": profile.bio
+            }
+        }
+    )
+    return {"message": "個人資料已更新"}
