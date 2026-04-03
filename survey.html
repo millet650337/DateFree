@@ -6,14 +6,19 @@
 <title>Date Free | 精準配對問卷</title>
 
 <style>
+:root {
+    --text-dark: #2d3748;
+    --text-gray: #4a5568;
+    --accent-orange: #ff6b6b;
+    --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    --bg-light: #f8fafc;
+}
+
 body {
-    margin: 0;
-    font-family: 'Microsoft JhengHei', sans-serif;
+    margin: 0; font-family: 'Microsoft JhengHei', sans-serif;
     background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    color: var(--text-dark); min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
 }
 
 /* 導覽列 */
@@ -24,22 +29,64 @@ header {
 }
 .logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
 .logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
-.logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: #2d3748; }
+.logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
 
+/* 問卷容器 */
 .container {
-    max-width: 600px; width: 100%; background: white;
-    padding: 30px; border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    margin-top: 20px; box-sizing: border-box;
+    max-width: 650px; width: 100%; background: white;
+    padding: 40px; border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    margin-top: 10px; margin-bottom: 40px; box-sizing: border-box;
 }
-h2 { color: #2d3748; margin-top: 0; }
-button { padding: 10px 20px; margin-top: 20px; border-radius: 20px; border: none; background: #e2e8f0; cursor: pointer; transition: background 0.2s; font-size: 16px; font-family: inherit; }
-button:hover { background: #cbd5e1; }
-.options-group div { margin: 10px 0; font-size: 16px; }
+
+h2 { text-align: center; color: var(--text-dark); margin-top: 0; font-size: 24px; }
+.step-indicator { text-align: center; color: var(--text-gray); font-size: 14px; margin-bottom: 30px; letter-spacing: 1px; }
+
+/* 表單群組 */
+.step-content { display: none; }
+.step-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.form-group { margin-bottom: 25px; }
+.form-group label.q-title { display: block; font-weight: bold; margin-bottom: 12px; font-size: 17px; color: var(--primary-blue); }
+.form-group .sub-text { font-size: 13px; color: #718096; margin-top: -8px; margin-bottom: 10px; display: block; }
+
+/* 基礎輸入 */
+select, input[type="number"] {
+    width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; font-family: inherit; margin-bottom: 10px;
+}
+.radio-group label {
+    display: block; margin-bottom: 10px; padding: 12px 15px; background: #f8fafc;
+    border-radius: 10px; cursor: pointer; transition: background 0.2s; border: 1px solid transparent;
+}
+.radio-group label:hover { background: #f1f5f9; }
+.radio-group input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
+
+/* 地雷標籤 Tags */
+.tags-container { display: flex; flex-wrap: wrap; gap: 10px; }
+.tag-label {
+    padding: 10px 20px; background: #f1f5f9; border-radius: 30px; cursor: pointer;
+    font-size: 15px; transition: all 0.3s; border: 1px solid transparent; user-select: none;
+}
+.tag-label input[type="checkbox"] { display: none; }
+.tag-label.selected { background: var(--accent-gradient); color: white; box-shadow: 0 4px 10px rgba(255,107,107,0.3); }
+
+/* 按鈕區 */
+.btn-wrapper { display: flex; justify-content: space-between; margin-top: 40px; }
+button {
+    padding: 12px 30px; border-radius: 30px; border: none; font-size: 16px; font-weight: bold;
+    cursor: pointer; transition: all 0.3s;
+}
+.btn-prev { background: #e2e8f0; color: var(--text-dark); }
+.btn-prev:hover { background: #cbd5e1; }
+.btn-next { background: var(--accent-gradient); color: white; box-shadow: 0 4px 15px rgba(255,107,107,0.3); }
+.btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,107,107,0.4); }
 
 @media (max-width: 768px) {
     header { padding: 15px 20px; }
-    .container { margin-top: 10px; width: 90%; }
+    .container { margin-top: 0; width: 95%; padding: 25px; }
+    .btn-wrapper { flex-direction: column-reverse; gap: 15px; }
+    button { width: 100%; }
 }
 </style>
 </head>
@@ -54,60 +101,319 @@ button:hover { background: #cbd5e1; }
 </header>
 
 <div class="container">
-    <h2 id="title">問卷</h2>
-    <div id="content" class="options-group"></div>
+    <h2>深度三觀契合問卷</h2>
+    <div class="step-indicator" id="stepIndicator">步驟 1 / 7：基礎資料與動態</div>
 
-    <button onclick="prev()">上一步</button>
-    <button onclick="next()" id="nextBtn">下一步</button>
+    <form id="surveyForm">
+        <div class="step-content active" id="step-1">
+            <div class="form-group">
+                <label class="q-title">1. 您的性別</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gender" value="男" required> 男</label>
+                    <label><input type="radio" name="gender" value="女"> 女</label>
+                    <label><input type="radio" name="gender" value="非二元"> 非二元</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">2. 身高與體重</label>
+                <input type="number" name="height" placeholder="身高 (140-200 cm)" min="140" max="200" required>
+                <input type="number" name="weight" placeholder="體重 (40-120 kg)" min="40" max="120" required>
+            </div>
+            <div class="form-group">
+                <label class="q-title">3. 您的系級</label>
+                <select name="dept" required>
+                    <option value="">選擇院系</option>
+                    <option value="資訊學院">資訊學院</option><option value="商學院">商學院</option>
+                    <option value="文學院">文學院</option><option value="理學院">理學院</option>
+                    <option value="工學院">工學院</option><option value="生科學院">生科學院</option>
+                </select>
+                <select name="grade" required>
+                    <option value="">選擇年級</option>
+                    <option value="一">一</option><option value="二">二</option>
+                    <option value="三">三</option><option value="四">四</option>
+                    <option value="五">五</option><option value="碩博">碩博</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="q-title">4. 未來 1-3 年動態 (核心篩選)</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="future_status" value="大學在讀"> 大學在讀（專注學業/社團）</label>
+                    <label><input type="radio" name="future_status" value="準備研究所"> 準備研究所（閉關讀書中）</label>
+                    <label><input type="radio" name="future_status" value="職場新鮮人"> 職場新鮮人（畢業即就業）</label>
+                    <label><input type="radio" name="future_status" value="國軍online"> 國軍 online（準備入伍/服役中）</label>
+                    <label><input type="radio" name="future_status" value="海外漂泊"> 海外漂泊（出國留學/交換/工作）</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">5. 預計居住城市 (地理門檻)</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="city" value="繼續留在台中"> 繼續留在台中</label>
+                    <label><input type="radio" name="city" value="北部地區"> 北部地區（雙北/基/桃）</label>
+                    <label><input type="radio" name="city" value="南部地區"> 南部地區（雲/嘉/南/高/屏）</label>
+                    <label><input type="radio" name="city" value="東部或離島"> 東部或離島</label>
+                    <label><input type="radio" name="city" value="國外"> 國外（Long-term overseas）</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-content" id="step-2">
+            <div class="form-group">
+                <label class="q-title">1. 希望對象的性別</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="target_gender" value="男"> 男</label>
+                    <label><input type="radio" name="target_gender" value="女"> 女</label>
+                    <label><input type="radio" name="target_gender" value="不限"> 不限</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">2. 期望身高區間</label>
+                <select name="target_height">
+                    <option value="">不拘</option>
+                    <option value="150以下">150 以下</option>
+                    <option value="150-160">150-160</option>
+                    <option value="160-170">160-170</option>
+                    <option value="170-180">170-180</option>
+                    <option value="180-190">180-190</option>
+                    <option value="190以上">190 以上</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="q-title">3. 年齡差距接受範圍</label>
+                <select name="target_age_diff">
+                    <option value="不拘">不拘</option>
+                    <option value="同歲">同歲即可</option>
+                    <option value="相差三歲">相差三歲內</option>
+                    <option value="相差五歲">相差五歲內</option>
+                    <option value="相差十歲">相差十歲內</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="step-content" id="step-3">
+            <div class="form-group">
+                <label class="q-title">地雷自選區 (至多選擇 3 項)</label>
+                <span class="sub-text">選擇你絕對無法容忍的特質，系統將嚴格避開。</span>
+                <div class="tags-container" id="dealbreakers-container">
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【抽菸習慣】"> 【抽菸習慣】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【酗酒/頻繁買醉】"> 【酗酒/頻繁買醉】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【極度衛生髒亂】"> 【極度衛生髒亂】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【作息極端不合】"> 【作息極端不合】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【異性邊界感模糊】"> 【異性邊界感模糊】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【過度依賴/黏人】"> 【過度依賴/黏人】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【冷暴力/不溝通】"> 【冷暴力/不溝通】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【身高不符預期】"> 【身高不符預期】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【年齡差距過大】"> 【年齡差距過大】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【有明顯紋身】"> 【有明顯紋身】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【政治立場對立】"> 【政治立場對立】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【宗教信仰強求】"> 【宗教信仰強求】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【金錢觀極度計較】"> 【金錢觀極度計較 (鐵公雞)】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【極度情緒化】"> 【極度情緒化】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【負能量過重】"> 【負能量過重】</label>
+                    <label class="tag-label"><input type="checkbox" name="dealbreakers" value="【大男人/大女人主義】"> 【大男人/大女人主義】</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-content" id="step-4">
+            <div class="form-group">
+                <label class="q-title">1. 金錢觀：約會買單大哉問</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="money_view" value="絕對 AA 制"> 絕對 AA 制（連 1 元都要算清楚）</label>
+                    <label><input type="radio" name="money_view" value="互請制"> 互請制（這次你請，下次我請）</label>
+                    <label><input type="radio" name="money_view" value="提議者付費"> 提議者付費（想吃大餐的人多出一點）</label>
+                    <label><input type="radio" name="money_view" value="偏好對方大方"> 偏好對方大方（期待被照顧感）</label>
+                    <label><input type="radio" name="money_view" value="願意主動買單"> 願意主動買單（更享受照顧對方的感覺）</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">2. 送禮儀式感</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gift_view" value="實用最重要"> 實用最重要（缺什麼買什麼）</label>
+                    <label><input type="radio" name="gift_view" value="浪漫驚喜"> 浪漫驚喜（手作或昂貴名牌）</label>
+                    <label><input type="radio" name="gift_view" value="吃頓好吃的就好"> 吃頓好吃的就好</label>
+                    <label><input type="radio" name="gift_view" value="無需特別過"> 節日無需特別過，過好每天比較重要</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">3. 衝突處理機制</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="conflict" value="當下決鬥型"> 【當下決鬥型】 必須現在講清楚，不帶情緒睡覺</label>
+                    <label><input type="radio" name="conflict" value="冷靜緩衝型"> 【冷靜緩衝型】 先各自冷靜，過後再理性溝通</label>
+                    <label><input type="radio" name="conflict" value="逃避包容型"> 【逃避/包容型】 怕吵架，習慣先道歉或冷戰等事情過去</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">4. 伴侶與異性邊界感</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="boundaries" value="絕對純潔型"> 【絕對純潔型】 除了必要聯繫，不應與異性有私人往來</label>
+                    <label><input type="radio" name="boundaries" value="報備信任型"> 【報備信任型】 可單獨吃飯/交友，但須事前報備且不曖昧</label>
+                    <label><input type="radio" name="boundaries" value="社交自由型"> 【社交自由型】 完全信任，不干涉交友自由與深夜出遊</label>
+                    <label><input type="radio" name="boundaries" value="精神至上型"> 【精神至上型】 肉體出軌勉強可原諒，但精神出軌絕對不行</label>
+                    <label><input type="radio" name="boundaries" value="開放式關係"> 【開放式關係】 心在我這即可，身體偶爾出軌可當沒看到</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-content" id="step-5">
+            <div class="form-group">
+                <label class="q-title">1. 遠距離接受度</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="ldr" value="黏人型"> 【黏人型】 完全無法接受，必須同城市</label>
+                    <label><input type="radio" name="ldr" value="階段型"> 【階段型】 短期可以(當兵/實習)，長期必須在一起</label>
+                    <label><input type="radio" name="ldr" value="獨立型"> 【獨立型】 完全可以，只要信任，距離不是問題</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">2. 婚姻與生育觀</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="marriage" value="家庭嚮往"> 【家庭嚮往】 渴望結婚並擁有小孩</label>
+                    <label><input type="radio" name="marriage" value="兩人世界"> 【兩人世界】 想結婚但傾向不生小孩，專注彼此</label>
+                    <label><input type="radio" name="marriage" value="隨緣不婚"> 【隨緣/不婚】 覺得結婚非必須，目前只想享受當下</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">3. 生理時鐘與社交電量</label>
+                <select name="chronotype">
+                    <option value="">請選擇作息...</option>
+                    <option value="晨型人">【晨型人】 習慣早起，晚上11點準時斷線</option>
+                    <option value="夜貓子">【夜貓子】 越夜越清醒，早上起不來</option>
+                </select>
+                <select name="social_energy">
+                    <option value="">請選擇週末偏好...</option>
+                    <option value="外向探索">【外向探索】 週末一定要出門，待在家會發霉</option>
+                    <option value="居家宅系">【居家宅系】 週末只想在家看劇打電動，人群耗電</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="step-content" id="step-6">
+            <label class="q-title">請在各類別中選擇較偏好的一項：</label>
+            <div class="form-group">
+                <div class="radio-group">
+                    <label><input type="radio" name="int_energy" value="群居充電"> 群居充電 (派對、集體活動)</label>
+                    <label><input type="radio" name="int_energy" value="遠離人群"> 遠離人群 (安靜、獨處愛好)</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="radio-group">
+                    <label><input type="radio" name="int_active" value="體育競技"> 體育競技 (健身、打球、登山)</label>
+                    <label><input type="radio" name="int_active" value="城市漫遊"> 城市漫遊 (逛街、探店)</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="radio-group">
+                    <label><input type="radio" name="int_vibe" value="文藝靜態"> 文藝靜態 (展覽、咖啡廳)</label>
+                    <label><input type="radio" name="int_vibe" value="聲色感官"> 聲色感官 (Live House、酒吧)</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="radio-group">
+                    <label><input type="radio" name="int_nerd" value="數位與模型"> 數位與模型 (遊戲、樂高)</label>
+                    <label><input type="radio" name="int_nerd" value="機械美學"> 機械美學 (汽機車改裝研究)</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="radio-group">
+                    <label><input type="radio" name="int_life" value="精緻美食"> 精緻美食 (挖掘名店、排隊)</label>
+                    <label><input type="radio" name="int_life" value="手作日常"> 手作日常 (烹飪、居家佈置)</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-content" id="step-7">
+            <div class="form-group">
+                <label class="q-title">最後一題，您目前的約會目的？</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="dating_goal" value="純粹交友"> 【純粹交友】 想認識新朋友，吃飯逛街不設限</label>
+                    <label><input type="radio" name="dating_goal" value="穩定關係"> 【穩定關係】 以尋找長期伴侶為目標，希望能穩定走下去</label>
+                    <label><input type="radio" name="dating_goal" value="浪漫曖昧"> 【浪漫曖昧】 享受約會與曖昧，不急著定下來</label>
+                    <label><input type="radio" name="dating_goal" value="學術運動戰友"> 【學術/運動戰友】 目標導向，找人一起讀書或運動</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-wrapper">
+            <button type="button" class="btn-prev" id="prevBtn" onclick="changeStep(-1)" style="display:none;">上一步</button>
+            <button type="button" class="btn-next" id="nextBtn" onclick="changeStep(1)">下一步</button>
+        </div>
+    </form>
 </div>
 
 <script>
 const token = localStorage.getItem("token");
 if (!token) { alert("請先登入！"); window.location.href = "index.html"; }
 
-const steps = [
-    { title:"性別", key:"gender", options:["男","女","非二元"] },
-    { title:"未來", key:"future_status", options:["大學在讀","研究所","工作"] },
-    { title:"金錢觀", key:"money_view", options:["AA","互請","男付","女付"] },
-    { title:"約會目的", key:"dating_goal", options:["交友","穩定關係","曖昧"] }
-];
-
-let i = 0; let answers = {};
-
-function render() {
-    const step = steps[i];
-    document.getElementById("title").innerText = step.title;
-    let html = "";
-    step.options.forEach(opt => {
-        html += `<div><label style="cursor:pointer;"><input type="radio" name="q" value="${opt}" ${answers[step.key] === opt ? "checked" : ""} onchange="select('${step.key}','${opt}')"> ${opt}</label></div>`;
+// 地雷標籤互動邏輯 (最多選3項)
+const dealbreakerLimit = 3;
+document.querySelectorAll('.tag-label input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const checkedCount = document.querySelectorAll('.tag-label input[type="checkbox"]:checked').length;
+        if (checkedCount > dealbreakerLimit) {
+            this.checked = false;
+            alert("至多只能選擇 3 項地雷喔！");
+            return;
+        }
+        if (this.checked) this.parentElement.classList.add('selected');
+        else this.parentElement.classList.remove('selected');
     });
-    document.getElementById("content").innerHTML = html;
-    document.getElementById("nextBtn").innerText = i === steps.length - 1 ? "送出" : "下一步";
+});
+
+// 分頁邏輯
+let currentStep = 1;
+const totalSteps = 7;
+
+function changeStep(n) {
+    const contents = document.querySelectorAll('.step-content');
+    
+    // 如果是下一步，可以在這裡加入必填驗證，這邊為求順暢先簡易放行
+    contents[currentStep - 1].classList.remove('active');
+    currentStep += n;
+
+    if (currentStep >= totalSteps) {
+        document.getElementById('nextBtn').innerText = "完成並送出";
+        document.getElementById('nextBtn').onclick = submitSurvey;
+    } else {
+        document.getElementById('nextBtn').innerText = "下一步";
+        document.getElementById('nextBtn').onclick = () => changeStep(1);
+    }
+
+    if (currentStep <= 1) document.getElementById('prevBtn').style.display = "none";
+    else document.getElementById('prevBtn').style.display = "block";
+
+    contents[currentStep - 1].classList.add('active');
+    document.getElementById('stepIndicator').innerText = `步驟 ${currentStep} / ${totalSteps}`;
 }
 
-function select(key,val) { answers[key] = val; }
-function next() { if (i < steps.length - 1) { i++; render(); } else { submitSurvey(); } }
-function prev() { if (i > 0) { i--; render(); } }
-
+// 收集資料並送出
 function submitSurvey() {
-    const payload = {
-        gender: answers.gender || "未提供", future_status: answers.future_status || "未提供",
-        dealbreakers: [], bad_habits: [], money_view: answers.money_view || "未提供",
-        boundaries: "【報備信任型】", dating_goal: answers.dating_goal || "未提供"
-    };
+    const form = document.getElementById("surveyForm");
+    const formData = new FormData(form);
+    
+    const payload = {};
+    formData.forEach((value, key) => {
+        if (!payload[key]) payload[key] = value;
+        else { // 處理陣列 (如 checkbox)
+            if (!Array.isArray(payload[key])) payload[key] = [payload[key]];
+            payload[key].push(value);
+        }
+    });
+
+    // 確保未選的 checkbox 回傳空陣列
+    if (!payload.dealbreakers) payload.dealbreakers = [];
 
     fetch("/api/survey", {
-        method:"POST", headers:{ "Content-Type":"application/json", "Authorization":`Bearer ${token}` },
-        body:JSON.stringify(payload)
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify(payload)
     })
-    .then(res=>res.json())
-    .then(data=>{
-        if (data.detail) { alert("錯誤："+data.detail); return; }
-        alert("問卷完成！"); window.location.href = "dashboard.html";
-    }).catch(()=>{ alert("伺服器錯誤"); });
+    .then(res => res.json())
+    .then(data => {
+        if (data.detail) { alert("錯誤：" + data.detail); return; }
+        alert("問卷填寫完成，系統已更新您的交友演算法！");
+        window.location.href = "dashboard.html";
+    })
+    .catch(() => { alert("伺服器連線錯誤"); });
 }
-
-render();
 </script>
 
 </body>
