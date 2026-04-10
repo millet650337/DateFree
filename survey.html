@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -188,6 +188,38 @@ button {
                     <option value="相差十歲">相差十歲內</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label class="q-title">4. 能接受的對象未來狀態 (可複選)</label>
+                <div class="tags-container">
+                    <label class="tag-label"><input type="checkbox" name="target_future_status" value="大學在讀"> 大學在讀</label>
+                    <label class="tag-label"><input type="checkbox" name="target_future_status" value="準備研究所"> 準備研究所</label>
+                    <label class="tag-label"><input type="checkbox" name="target_future_status" value="職場新鮮人"> 職場新鮮人</label>
+                    <label class="tag-label"><input type="checkbox" name="target_future_status" value="國軍online"> 國軍 online</label>
+                    <label class="tag-label"><input type="checkbox" name="target_future_status" value="海外漂泊"> 海外漂泊</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">5. 能接受的對象嗜好習慣</label>
+                <span class="sub-text">抽菸習慣：</span>
+                <div class="radio-group" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <label style="flex: 1;"><input type="radio" name="target_smoking" value="接受"> 接受</label>
+                    <label style="flex: 1;"><input type="radio" name="target_smoking" value="不接受"> 不接受</label>
+                </div>
+                
+                <span class="sub-text">喝酒頻率：</span>
+                <div class="radio-group" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <label style="flex: 1;"><input type="radio" name="target_drinking" value="不喝"> 不喝</label>
+                    <label style="flex: 1;"><input type="radio" name="target_drinking" value="小酌"> 小酌</label>
+                    <label style="flex: 1;"><input type="radio" name="target_drinking" value="頻繁"> 頻繁</label>
+                    <label style="flex: 1;"><input type="radio" name="target_drinking" value="不拘"> 不拘</label>
+                </div>
+
+                <span class="sub-text">紋身：</span>
+                <div class="radio-group" style="display: flex; gap: 10px;">
+                    <label style="flex: 1;"><input type="radio" name="target_tattoo" value="接受"> 接受</label>
+                    <label style="flex: 1;"><input type="radio" name="target_tattoo" value="不接受"> 不接受</label>
+                </div>
+            </div>
         </div>
 
         <div class="step-content" id="step-3">
@@ -217,7 +249,16 @@ button {
 
         <div class="step-content" id="step-4">
             <div class="form-group">
-                <label class="q-title">1. 金錢觀：約會買單大哉問</label>
+                <label class="q-title">1. 餐飲消費：日常午餐預算</label>
+                <span class="sub-text">平時在興大附近，你覺得一頓「日常午餐」合理的預算上限是？</span>
+                <div class="radio-group">
+                    <label><input type="radio" name="lunch_budget" value="100元內"> 100元內 (學餐/便當)</label>
+                    <label><input type="radio" name="lunch_budget" value="150-250元"> 150-250元 (特色小店)</label>
+                    <label><input type="radio" name="lunch_budget" value="300元以上"> 300元以上 (精緻套餐)</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="q-title">2. 金錢觀：約會買單大哉問</label>
                 <div class="radio-group">
                     <label><input type="radio" name="money_view" value="絕對 AA 制"> 絕對 AA 制（連 1 元都要算清楚）</label>
                     <label><input type="radio" name="money_view" value="互請制"> 互請制（這次你請，下次我請）</label>
@@ -227,7 +268,7 @@ button {
                 </div>
             </div>
             <div class="form-group">
-                <label class="q-title">2. 送禮儀式感</label>
+                <label class="q-title">3. 送禮儀式感</label>
                 <div class="radio-group">
                     <label><input type="radio" name="gift_view" value="實用最重要"> 實用最重要（缺什麼買什麼）</label>
                     <label><input type="radio" name="gift_view" value="浪漫驚喜"> 浪漫驚喜（手作或昂貴名牌）</label>
@@ -236,7 +277,7 @@ button {
                 </div>
             </div>
             <div class="form-group">
-                <label class="q-title">3. 衝突處理機制</label>
+                <label class="q-title">4. 衝突處理機制</label>
                 <div class="radio-group">
                     <label><input type="radio" name="conflict" value="當下決鬥型"> 【當下決鬥型】 必須現在講清楚，不帶情緒睡覺</label>
                     <label><input type="radio" name="conflict" value="冷靜緩衝型"> 【冷靜緩衝型】 先各自冷靜，過後再理性溝通</label>
@@ -244,7 +285,7 @@ button {
                 </div>
             </div>
             <div class="form-group">
-                <label class="q-title">4. 伴侶與異性邊界感</label>
+                <label class="q-title">5. 伴侶與異性邊界感</label>
                 <div class="radio-group">
                     <label><input type="radio" name="boundaries" value="絕對純潔型"> 【絕對純潔型】 除了必要聯繫，不應與異性有私人往來</label>
                     <label><input type="radio" name="boundaries" value="報備信任型"> 【報備信任型】 可單獨吃飯/交友，但須事前報備且不曖昧</label>
@@ -348,12 +389,17 @@ if (!token) { alert("請先登入！"); window.location.href = "index.html"; }
 const dealbreakerLimit = 3;
 document.querySelectorAll('.tag-label input[type="checkbox"]').forEach(checkbox => {
     checkbox.addEventListener('change', function() {
-        const checkedCount = document.querySelectorAll('.tag-label input[type="checkbox"]:checked').length;
-        if (checkedCount > dealbreakerLimit) {
-            this.checked = false;
-            alert("至多只能選擇 3 項地雷喔！");
-            return;
+        // 確保只有地雷區有數量限制
+        if (this.name === 'dealbreakers') {
+            const checkedCount = document.querySelectorAll('.tag-label input[name="dealbreakers"]:checked').length;
+            if (checkedCount > dealbreakerLimit) {
+                this.checked = false;
+                alert("至多只能選擇 3 項地雷喔！");
+                return;
+            }
         }
+        
+        // 樣式切換
         if (this.checked) this.parentElement.classList.add('selected');
         else this.parentElement.classList.remove('selected');
     });
@@ -401,6 +447,7 @@ function submitSurvey() {
 
     // 確保未選的 checkbox 回傳空陣列
     if (!payload.dealbreakers) payload.dealbreakers = [];
+    if (!payload.target_future_status) payload.target_future_status = [];
 
     fetch("/api/survey", {
         method: "POST",
