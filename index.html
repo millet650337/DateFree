@@ -147,6 +147,39 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
 .auth-right h3 { margin-top: 0; margin-bottom: 10px; color: var(--text-dark); font-weight: bold; font-size: 24px; }
 .auth-right p { color: var(--text-gray); font-size: 16px; margin-bottom: 30px; }
 
+/* ==========================
+   載入中動畫 (Loading Overlay)
+========================== */
+.loading-overlay {
+    display: none; /* 預設隱藏 */
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 10000; /* 確保在最上層 */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.spinner {
+    width: 60px; height: 60px;
+    border: 6px solid #f1f5f9;
+    border-top: 6px solid var(--accent-orange);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+.loading-text {
+    font-size: 20px;
+    color: var(--text-dark);
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
     header { padding: 15px 20px; }
     main { padding: 0 20px; }
@@ -264,17 +297,28 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     </div>
 </div>
 
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">登入中...</div>
+</div>
+
 <script>
 const API_BASE = "/api";
 const modal = document.getElementById("modal");
 const loginBtn = document.getElementById("loginBtn");
 const userBox = document.getElementById("userBox");
 const userName = document.getElementById("userName");
+const loadingOverlay = document.getElementById("loadingOverlay");
 
 function openModal() { modal.style.display = "flex"; }
 function closeModal() { modal.style.display = "none"; }
 
 function handleCredentialResponse(response) {
+    // 1. 在收到 Google 驗證成功時，關閉 Modal 並開啟 Loading 畫面
+    closeModal();
+    loadingOverlay.style.display = "flex";
+
+    // 2. 將 credential 送到後端驗證
     fetch(`${API_BASE}/auth/google`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -282,12 +326,25 @@ function handleCredentialResponse(response) {
     })
     .then(res => res.json())
     .then(data => {
-        if (data.detail) { alert("登入失敗：" + data.detail); return; }
+        if (data.detail) { 
+            // 若後端回傳失敗，關閉 Loading 並跳出提示
+            loadingOverlay.style.display = "none";
+            alert("登入失敗：" + data.detail); 
+            return; 
+        }
+        
+        // 成功，儲存資料
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        updateUI();
-        closeModal();
+        
+        // 跳轉前可以讓 Loading 畫面繼續留著，視覺上會更平滑
         window.location.href = "dashboard.html";
+    })
+    .catch(err => {
+        // 例外處理：若網路異常或伺服器無回應
+        loadingOverlay.style.display = "none";
+        alert("網路或伺服器連線錯誤，請稍後再試。");
+        console.error(err);
     });
 }
 
