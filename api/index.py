@@ -72,17 +72,13 @@ class SurveyData(BaseModel):
     future_status: str = ""
     city: str = ""
     target_gender: str = ""
-    target_height: str = ""
+    target_height: List[str] = []
     target_age_diff: str = ""
-    
-    # ----- 新增的問卷欄位開始 -----
     target_future_status: List[str] = []
     target_smoking: str = ""
     target_drinking: str = ""
     target_tattoo: str = ""
     lunch_budget: str = ""
-    # ----- 新增的問卷欄位結束 -----
-    
     dealbreakers: List[str] = []
     money_view: str = ""
     gift_view: str = ""

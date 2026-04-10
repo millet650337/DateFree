@@ -166,17 +166,16 @@ button {
                     <label><input type="radio" name="target_gender" value="不限"> 不限</label>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="q-title">2. 期望身高區間</label>
-                <select name="target_height">
-                    <option value="">不拘</option>
-                    <option value="150以下">150 以下</option>
-                    <option value="150-160">150-160</option>
-                    <option value="160-170">160-170</option>
-                    <option value="170-180">170-180</option>
-                    <option value="180-190">180-190</option>
-                    <option value="190以上">190 以上</option>
-                </select>
+           <div class="form-group">
+                <label class="q-title">2. 期望身高區間 (可複選)</label>
+                <div class="tags-container">
+                    <label class="tag-label"><input type="checkbox" name="target_height" value="150以下"> 150以下</label>
+                    <label class="tag-label"><input type="checkbox" name="target_height" value="150-160"> 150-160</label>
+                    <label class="tag-label"><input type="checkbox" name="target_height" value="160-170"> 160-170</label>
+                    <label class="tag-label"><input type="checkbox" name="target_height" value="170-180"> 170-180</label>
+                    <label class="tag-label"><input type="checkbox" name="target_height" value="180-190"> 180-190</label>
+                    <label class="tag-label"><input type="checkbox" name="target_height" value="190以上"> 190以上</label>
+                </div>
             </div>
             <div class="form-group">
                 <label class="q-title">3. 年齡差距接受範圍</label>
