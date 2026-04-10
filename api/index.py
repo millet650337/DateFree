@@ -238,6 +238,11 @@ async def update_profile(profile: UserProfile, current_user=Depends(get_current_
     return {"message": "個人資料已更新"}
 
 # 3. 問卷填寫
+@app.get("/api/survey")
+async def get_survey(current_user=Depends(get_current_user)):
+    # 回傳使用者資料庫中的 survey 欄位，若無則回傳空字典
+    return {"survey": current_user.get("survey")}
+
 @app.post("/api/survey")
 async def submit_survey(survey: SurveyData, current_user=Depends(get_current_user)):
     users_collection.update_one({"email": current_user["email"]}, {"$set": {"survey": survey.model_dump()}})

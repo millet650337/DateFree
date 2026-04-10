@@ -384,6 +384,64 @@ button {
 const token = localStorage.getItem("token");
 if (!token) { alert("請先登入！"); window.location.href = "index.html"; }
 
+// ====== 新增：自動載入歷史問卷紀錄 ======
+function loadSurveyData() {
+    fetch("/api/survey", {
+        headers: { "Authorization": `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.survey) {
+            const s = data.survey;
+            
+            // 1. 填入一般文字、數字、下拉選單 (Select / Number)
+            const inputNames = ['height', 'weight', 'dept', 'grade', 'chronotype', 'social_energy'];
+            inputNames.forEach(key => {
+                const el = document.querySelector(`[name="${key}"]`);
+                if (el && s[key]) el.value = s[key];
+            });
+
+            // 2. 填入單選按鈕 (Radio)
+            const radioNames = [
+                'gender', 'future_status', 'city', 'target_gender', 
+                'target_smoking', 'target_drinking', 'target_tattoo', 
+                'lunch_budget', 'money_view', 'gift_view', 'conflict', 
+                'boundaries', 'ldr', 'marriage', 'int_energy', 
+                'int_active', 'int_vibe', 'int_nerd', 'int_life', 'dating_goal'
+            ];
+            radioNames.forEach(key => {
+                if (s[key]) {
+                    const el = document.querySelector(`input[name="${key}"][value="${s[key]}"]`);
+                    if (el) el.checked = true;
+                }
+            });
+
+            // 3. 填入複選按鈕與標籤樣式 (Checkbox Array)
+            const checkboxNames = ['target_height', 'target_future_status', 'dealbreakers'];
+            checkboxNames.forEach(key => {
+                if (s[key] && Array.isArray(s[key])) {
+                    s[key].forEach(val => {
+                        const el = document.querySelector(`input[name="${key}"][value="${val}"]`);
+                        if (el) {
+                            el.checked = true;
+                            // 若該選項外面包著 .tag-label，要加上 selected 讓背景亮起
+                            if (el.parentElement.classList.contains('tag-label')) {
+                                el.parentElement.classList.add('selected');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    })
+    .catch(err => console.error("無法載入歷史紀錄", err));
+}
+
+// 頁面載入時立刻抓取資料
+loadSurveyData();
+// ========================================
+
+
 // 地雷標籤互動邏輯 (最多選3項)
 const dealbreakerLimit = 3;
 document.querySelectorAll('.tag-label input[type="checkbox"]').forEach(checkbox => {
@@ -411,7 +469,6 @@ const totalSteps = 7;
 function changeStep(n) {
     const contents = document.querySelectorAll('.step-content');
     
-    // 如果是下一步，可以在這裡加入必填驗證，這邊為求順暢先簡易放行
     contents[currentStep - 1].classList.remove('active');
     currentStep += n;
 
@@ -447,6 +504,7 @@ function submitSurvey() {
     // 確保未選的 checkbox 回傳空陣列
     if (!payload.dealbreakers) payload.dealbreakers = [];
     if (!payload.target_future_status) payload.target_future_status = [];
+    if (!payload.target_height) payload.target_height = [];
 
     fetch("/api/survey", {
         method: "POST",
