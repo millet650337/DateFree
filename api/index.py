@@ -45,7 +45,7 @@ security = HTTPBearer()
 # 🔐 驗證與輔助函式
 # ==========================================
 def create_jwt(user_email: str):
-    payload = { "sub": user_email, "exp": datetime.utcnow() + timedelta(days=7) }
+    payload = { "sub": user_email, "exp": datetime.utcnow() + timedelta(days=1) }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):

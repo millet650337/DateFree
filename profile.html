@@ -94,7 +94,23 @@ input[type="file"] { display: none; }
 <script>
 const API_BASE = "/api";
 const token = localStorage.getItem("token");
-if (!token) { alert("請先登入！"); window.location.href = "index.html"; }
+function isTokenExpired(t) {
+    if (!t) return true;
+    try {
+        const payload = JSON.parse(atob(t.split('.')[1]));
+        return (Date.now() >= payload.exp * 1000); // 檢查當前時間是否已大於過期時間
+    } catch (e) { 
+        return true; 
+    }
+}
+
+if (isTokenExpired(token)) {
+    alert("登入狀態已過期，請重新登入！");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+}
+
 let currentBase64 = "";
 
 function setRadio(name, value) { if(!value) return; const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if(el) el.checked = true; }

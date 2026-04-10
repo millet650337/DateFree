@@ -110,8 +110,20 @@ const API_BASE = "/api";
 const token = localStorage.getItem("token");
 let user = JSON.parse(localStorage.getItem("user"));
 
-if (!token || !user) {
-    alert("請先登入！");
+function isTokenExpired(t) {
+    if (!t) return true;
+    try {
+        const payload = JSON.parse(atob(t.split('.')[1]));
+        return (Date.now() >= payload.exp * 1000); // 檢查當前時間是否已大於過期時間
+    } catch (e) { 
+        return true; 
+    }
+}
+
+if (isTokenExpired(token)) {
+    alert("登入狀態已過期，請重新登入！");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     window.location.href = "index.html";
 }
 
