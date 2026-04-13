@@ -6,29 +6,13 @@
 <title>Date Free | 個人資料設定</title>
 <link rel="icon" href="S__18784267.jpg" type="image/jpeg">
 <style>
-:root {
-    --text-dark: #2d3748;
-    --text-gray: #4a5568;
-    --accent-orange: #ff6b6b;
-    --bg-light: #f8fafc;
-}
-
-body {
-    margin: 0; font-family: 'Microsoft JhengHei', sans-serif;
-    background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
-    color: var(--text-dark); min-height: 100vh;
-}
-
-/* 導覽列 */
-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 40px; border-bottom: 1px solid #cbd5e1; background: transparent;
-}
+:root { --text-dark: #2d3748; --text-gray: #4a5568; --accent-orange: #ff6b6b; --bg-light: #f8fafc; }
+body { margin: 0; font-family: 'Microsoft JhengHei', sans-serif; background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%); color: var(--text-dark); min-height: 100vh; }
+header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; border-bottom: 1px solid #cbd5e1; background: transparent; }
 .logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
 .logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
 .logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
 .logout-text { cursor: pointer; color: var(--text-gray); text-decoration: none; font-size: 16px; }
-
 main { max-width: 600px; margin: 40px auto; padding: 0 20px; }
 .photo-section { text-align: center; margin-bottom: 40px; }
 .preview-box { width: 120px; height: 120px; border-radius: 50%; background: #f1f5f9; margin: 0 auto 15px auto; display: flex; justify-content: center; align-items: center; overflow: hidden; border: 3px solid var(--accent-orange); }
@@ -36,19 +20,22 @@ main { max-width: 600px; margin: 40px auto; padding: 0 20px; }
 .upload-btn { padding: 6px 16px; background: #f1f5f9; border-radius: 20px; cursor: pointer; font-size: 14px; }
 input[type="file"] { display: none; }
 .bio-input { width: 100%; padding: 10px; margin-top: 20px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; }
-
 .section-header { text-align: center; margin: 40px 0 30px 0; }
 .dotted-decor { color: var(--text-gray); letter-spacing: 2px; font-size: 14px; }
 .section-header h3 { font-size: 22px; font-weight: normal; margin: 10px 0 0 0; }
-
 .form-group { margin-bottom: 25px; font-size: 16px; line-height: 1.8; }
 .form-group label.title { display: inline-block; width: 140px; color: var(--text-dark); }
 .form-group select, .form-group input[type="number"] { padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 16px; }
-
 .submit-btn-wrapper { text-align: center; margin-top: 50px; margin-bottom: 50px; }
 .submit-btn { padding: 12px 50px; background: #e2e8f0; color: var(--text-dark); border: none; font-size: 18px; cursor: pointer; transition: all 0.3s; border-radius: 30px; }
 .submit-btn:hover { background: #cbd5e1; }
 .radio-group label { margin-right: 15px; cursor: pointer; }
+
+/* 標籤的 CSS */
+.tags-container { display: flex; flex-wrap: wrap; gap: 10px; margin-left: 20px; }
+.tag-label { padding: 6px 16px; background: #f1f5f9; border-radius: 20px; cursor: pointer; font-size: 14px; transition: all 0.3s; user-select: none; color: var(--text-gray); }
+.tag-label input[type="checkbox"] { display: none; }
+.tag-label.selected { background: var(--accent-orange); color: white; box-shadow: 0 4px 10px rgba(255,107,107,0.3); }
 
 @media (max-width: 768px) { header { padding: 15px 20px; } }
 </style>
@@ -79,7 +66,6 @@ input[type="file"] { display: none; }
         <p style="font-size: 13px; color: gray;">為確保平台安全，請上傳身分證與學生證正面。審核通過後將獲得藍勾勾徽章。</p>
         <div id="verifyStatusBadge" style="margin-top:10px; font-weight:bold; font-size:15px;"></div>
     </div>
-
     <div class="form-group" style="display:flex; align-items:center;">
         <label class="title">身分證正面：</label>
         <label class="upload-btn">選擇檔案<input type="file" id="idCardInput" accept="image/*"></label>
@@ -99,12 +85,61 @@ input[type="file"] { display: none; }
     <div class="form-group"><label class="title">性別：</label><span class="radio-group"><label><input type="radio" name="gender" value="男"> 男</label><label><input type="radio" name="gender" value="女"> 女</label><label><input type="radio" name="gender" value="非二元"> 非二元</label></span></div>
     <div class="form-group"><label class="title">身高 (cm)：</label><input type="number" id="heightInput" min="140" max="200" placeholder="140-200"></div>
     <div class="form-group"><label class="title">體重 (kg)：</label><input type="number" id="weightInput" min="40" max="120" placeholder="40-120"></div>
+    
     <div class="form-group"><label class="title">系級：</label>
-        <select id="deptInput"><option value="">選擇院系</option><option value="資訊學院">資訊學院</option><option value="商學院">商學院</option><option value="文學院">文學院</option><option value="理學院">理學院</option><option value="工學院">工學院</option></select>
+        <select id="deptInput">
+            <option value="">選擇院系</option>
+            <option value="文學院">文學院</option>
+            <option value="農資學院">農資學院</option>
+            <option value="理學院">理學院</option>
+            <option value="工學院">工學院</option>
+            <option value="生命科學院">生命科學院</option>
+            <option value="獸醫學院">獸醫學院</option>
+            <option value="管理學院">管理學院</option>
+            <option value="法政學院">法政學院</option>
+            <option value="電機資訊學院">電機資訊學院</option>
+            <option value="醫學院">醫學院</option>
+            <option value="循環經濟研究學院">循環經濟研究學院</option>
+        </select>
         <select id="gradeInput"><option value="">選擇年級</option><option value="一">一</option><option value="二">二</option><option value="三">三</option><option value="四">四</option><option value="五">五</option><option value="碩博">碩博</option></select>
     </div>
-    <div class="form-group"><label class="title" style="width:100%; margin-bottom:10px;">期望身高區間：</label><span class="radio-group" style="display:block; margin-left:20px;"><label><input type="radio" name="expected_height" value="150以下"> 150以下</label><label><input type="radio" name="expected_height" value="150-160"> 150-160</label><label><input type="radio" name="expected_height" value="160-170"> 160-170</label><br><label><input type="radio" name="expected_height" value="170-180"> 170-180</label><label><input type="radio" name="expected_height" value="180-190"> 180-190</label><label><input type="radio" name="expected_height" value="190以上"> 190以上</label></span></div>
+
+    <div class="form-group"><label class="title">MBTI：</label>
+        <select id="mbtiInput">
+            <option value="">選擇MBTI</option>
+            <option value="ISTJ">ISTJ (物流師)</option><option value="ISFJ">ISFJ (守衛者)</option>
+            <option value="INFJ">INFJ (提倡者)</option><option value="INTJ">INTJ (建築師)</option>
+            <option value="ISTP">ISTP (鑑賞家)</option><option value="ISFP">ISFP (探險家)</option>
+            <option value="INFP">INFP (調停者)</option><option value="INTP">INTP (邏輯學家)</option>
+            <option value="ESTP">ESTP (企業家)</option><option value="ESFP">ESFP (表演者)</option>
+            <option value="ENFP">ENFP (競選者)</option><option value="ENTP">ENTP (辯論家)</option>
+            <option value="ESTJ">ESTJ (總經理)</option><option value="ESFJ">ESFJ (執政官)</option>
+            <option value="ENFJ">ENFJ (主人公)</option><option value="ENTJ">ENTJ (指揮官)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="title" style="width:100%; margin-bottom:10px;">個人標籤 (可複選)：</label>
+        <div class="tags-container">
+            <label class="tag-label"><input type="checkbox" name="tags" value="愛看電影"> #愛看電影</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="音樂祭"> #音樂祭</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="貓派"> #貓派</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="狗派"> #狗派</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="戶外咖"> #戶外咖</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="美食獵人"> #美食獵人</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="宅家追劇"> #宅家追劇</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="夜貓子"> #夜貓子</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="早睡早起"> #早睡早起</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="喜歡旅行"> #喜歡旅行</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="獨立音樂"> #獨立音樂</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="健身狂"> #健身狂</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="喜歡跑咖"> #喜歡跑咖</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="動漫迷"> #動漫迷</label>
+        </div>
+    </div>
+
     <div class="form-group"><label class="title" style="width:100%; margin-bottom:10px;">年齡差距接受範圍：</label><span class="radio-group" style="display:block; margin-left:20px;"><label><input type="radio" name="age_diff" value="同歲"> 同歲</label><label><input type="radio" name="age_diff" value="相差三歲"> 相差三歲</label><label><input type="radio" name="age_diff" value="相差五歲"> 相差五歲</label><label><input type="radio" name="age_diff" value="相差十歲"> 相差十歲</label></span></div>
+    
     <div class="form-group" style="line-height:2.5;"><label class="title">嗜好習慣：</label><br><span style="margin-left:20px;">抽菸：</span><span class="radio-group"><label><input type="radio" name="smoking" value="是"> 是</label><label><input type="radio" name="smoking" value="否"> 否</label></span><br><span style="margin-left:20px;">喝酒頻率：</span><span class="radio-group"><label><input type="radio" name="drinking" value="不喝"> 不喝</label><label><input type="radio" name="drinking" value="小酌"> 小酌</label><label><input type="radio" name="drinking" value="頻繁"> 頻繁</label></span><br><span style="margin-left:20px;">紋身：</span><span class="radio-group"><label><input type="radio" name="tattoo" value="是"> 是</label><label><input type="radio" name="tattoo" value="否"> 否</label></span></div>
     
     <div class="submit-btn-wrapper"><button class="submit-btn" onclick="saveProfile()">儲存</button></div>
@@ -116,17 +151,12 @@ const token = localStorage.getItem("token");
 
 function isTokenExpired(t) {
     if (!t) return true;
-    try {
-        const payload = JSON.parse(atob(t.split('.')[1]));
-        return (Date.now() >= payload.exp * 1000);
-    } catch (e) { return true; }
+    try { const payload = JSON.parse(atob(t.split('.')[1])); return (Date.now() >= payload.exp * 1000); } catch (e) { return true; }
 }
 
 if (isTokenExpired(token)) {
     alert("登入狀態已過期，請重新登入！");
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.href = "index.html";
+    localStorage.removeItem("token"); localStorage.removeItem("user"); window.location.href = "index.html";
 }
 
 let currentBase64 = "";
@@ -135,6 +165,14 @@ let studentIdBase64 = null;
 
 function setRadio(name, value) { if(!value) return; const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if(el) el.checked = true; }
 function getRadio(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; }
+
+// 處理標籤點擊效果
+document.querySelectorAll('.tag-label input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        if (this.checked) this.parentElement.classList.add('selected');
+        else this.parentElement.classList.remove('selected');
+    });
+});
 
 fetch(`${API_BASE}/profile`, { headers: { "Authorization": `Bearer ${token}` } })
 .then(res => res.json())
@@ -146,23 +184,26 @@ fetch(`${API_BASE}/profile`, { headers: { "Authorization": `Bearer ${token}` } }
         if(data.weight) document.getElementById("weightInput").value = data.weight;
         if(data.department) document.getElementById("deptInput").value = data.department;
         if(data.grade) document.getElementById("gradeInput").value = data.grade;
-        setRadio("gender", data.gender); setRadio("expected_height", data.expected_height); setRadio("age_diff", data.age_diff); setRadio("smoking", data.smoking); setRadio("drinking", data.drinking); setRadio("tattoo", data.tattoo);
+        if(data.mbti) document.getElementById("mbtiInput").value = data.mbti;
+        setRadio("gender", data.gender); setRadio("age_diff", data.age_diff); setRadio("smoking", data.smoking); setRadio("drinking", data.drinking); setRadio("tattoo", data.tattoo);
         
-        // 處理證件與驗證狀態
+        // 載入個人標籤
+        if(data.tags && Array.isArray(data.tags)) {
+            data.tags.forEach(tag => {
+                const el = document.querySelector(`input[name="tags"][value="${tag}"]`);
+                if (el) { el.checked = true; el.parentElement.classList.add('selected'); }
+            });
+        }
+        
         if(data.id_card_base64) { idCardBase64 = data.id_card_base64; document.getElementById("idCardStatus").innerText = "已上傳 ✔"; document.getElementById("idCardStatus").style.color = "green"; }
         if(data.student_id_base64) { studentIdBase64 = data.student_id_base64; document.getElementById("studentIdStatus").innerText = "已上傳 ✔"; document.getElementById("studentIdStatus").style.color = "green"; }
         
-        if (data.is_verified) {
-            document.getElementById("verifyStatusBadge").innerHTML = "<span style='color:#1da1f2;'>✅ 您已通過真人身分驗證！</span>";
-        } else if (data.id_card_base64 && data.student_id_base64) {
-            document.getElementById("verifyStatusBadge").innerHTML = "<span style='color:#d97706;'>⏳ 證件已提交，等待人工審核中...</span>";
-        } else {
-            document.getElementById("verifyStatusBadge").innerHTML = "<span style='color:#e53e3e;'>❌ 尚未完成驗證</span>";
-        }
+        if (data.is_verified) { document.getElementById("verifyStatusBadge").innerHTML = "<span style='color:#1da1f2;'>✅ 您已通過真人身分驗證！</span>";
+        } else if (data.id_card_base64 && data.student_id_base64) { document.getElementById("verifyStatusBadge").innerHTML = "<span style='color:#d97706;'>⏳ 證件已提交，等待人工審核中...</span>";
+        } else { document.getElementById("verifyStatusBadge").innerHTML = "<span style='color:#e53e3e;'>❌ 尚未完成驗證</span>"; }
     }
 });
 
-// 封裝圖片上傳轉 Base64
 function handleImageUpload(inputId, callback) {
     document.getElementById(inputId).addEventListener('change', function(e) {
         const file = e.target.files[0]; if (!file) return;
@@ -172,19 +213,21 @@ function handleImageUpload(inputId, callback) {
         reader.readAsDataURL(file);
     });
 }
-
 handleImageUpload('photoInput', (res) => { currentBase64 = res; document.getElementById("previewBox").innerHTML = `<img src="${currentBase64}">`; });
 handleImageUpload('idCardInput', (res) => { idCardBase64 = res; document.getElementById("idCardStatus").innerText = "✔ 準備儲存"; document.getElementById("idCardStatus").style.color = "orange"; });
 handleImageUpload('studentIdInput', (res) => { studentIdBase64 = res; document.getElementById("studentIdStatus").innerText = "✔ 準備儲存"; document.getElementById("studentIdStatus").style.color = "orange"; });
 
 function saveProfile() {
+    const selectedTags = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(el => el.value);
+
     const payload = {
         photo_base64: currentBase64, bio: document.getElementById("bioInput").value || null, gender: getRadio("gender"),
         height: document.getElementById("heightInput").value ? parseInt(document.getElementById("heightInput").value) : null,
         weight: document.getElementById("weightInput").value ? parseInt(document.getElementById("weightInput").value) : null,
         department: document.getElementById("deptInput").value || null, grade: document.getElementById("gradeInput").value || null,
-        expected_height: getRadio("expected_height"), age_diff: getRadio("age_diff"), smoking: getRadio("smoking"), drinking: getRadio("drinking"), tattoo: getRadio("tattoo"),
-        id_card_base64: idCardBase64, student_id_base64: studentIdBase64
+        age_diff: getRadio("age_diff"), smoking: getRadio("smoking"), drinking: getRadio("drinking"), tattoo: getRadio("tattoo"),
+        id_card_base64: idCardBase64, student_id_base64: studentIdBase64,
+        mbti: document.getElementById("mbtiInput").value || null, tags: selectedTags
     };
 
     fetch(`${API_BASE}/profile`, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }, body: JSON.stringify(payload) })
@@ -194,9 +237,7 @@ function saveProfile() {
         else { alert("資料已儲存！"); window.location.href = "dashboard.html"; }
     }).catch(() => alert("伺服器錯誤"));
 }
-
 function logout() { localStorage.removeItem("token"); localStorage.removeItem("user"); window.location.href = "index.html"; }
 </script>
-
 </body>
 </html>

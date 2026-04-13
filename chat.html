@@ -6,87 +6,58 @@
 <title>Date Free | 聊天室</title>
 <link rel="icon" href="S__18784267.jpg" type="image/jpeg">
 <style>
-:root {
-    --text-dark: #2d3748;
-    --text-gray: #4a5568;
-    --accent-orange: #ff6b6b;
-    --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff8e53);
-    --bg-light: #f8fafc;
-}
-
-body {
-    margin: 0; font-family: 'Microsoft JhengHei', sans-serif;
-    background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%);
-    color: var(--text-dark); height: 100vh;
-    display: flex; flex-direction: column; overflow: hidden;
-}
-
-/* 導覽列 */
-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 40px; background: white; border-bottom: 1px solid #eee;
-    flex-shrink: 0;
-}
+:root { --text-dark: #2d3748; --text-gray: #4a5568; --accent-orange: #ff6b6b; --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff8e53); --bg-light: #f8fafc; }
+body { margin: 0; font-family: 'Microsoft JhengHei', sans-serif; background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: white; border-bottom: 1px solid #eee; flex-shrink: 0; }
 .logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
 .logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
 .logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
 .back-btn { padding: 8px 16px; border: 1px solid #cbd5e1; border-radius: 20px; background: transparent; cursor: pointer; transition: 0.3s; }
 .back-btn:hover { background: #f1f5f9; }
-
-/* 聊天室主架構 (三欄式) */
-.chat-container {
-    display: flex; flex: 1; overflow: hidden;
-    margin: 20px; background: white; border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-}
-
-/* 左側：配對列表 */
-.chat-sidebar {
-    width: 280px; border-right: 1px solid #eee;
-    display: flex; flex-direction: column; background: #fafafa;
-}
+.chat-container { display: flex; flex: 1; overflow: hidden; margin: 20px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+.chat-sidebar { width: 280px; border-right: 1px solid #eee; display: flex; flex-direction: column; background: #fafafa; }
 .chat-sidebar h3 { padding: 20px; margin: 0; border-bottom: 1px solid #eee; font-size: 18px; }
 .match-list { flex: 1; overflow-y: auto; }
-.match-item {
-    display: flex; align-items: center; padding: 15px 20px;
-    cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;
-}
+.match-item { display: flex; align-items: center; padding: 15px 20px; cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s; }
 .match-item:hover { background: #f1f5f9; }
 .match-item.active { background: #ffe4e4; border-left: 4px solid var(--accent-orange); }
 .match-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.match-info h4 { margin: 0 0 5px 0; font-size: 16px; }
+.match-info h4 { margin: 0 0 5px 0; font-size: 16px; display: flex; align-items: center; }
 .match-info p { margin: 0; font-size: 12px; color: var(--text-gray); }
-
-/* 中間：聊天區塊 */
 .chat-main { flex: 1; display: flex; flex-direction: column; background: #fff; }
 .chat-header { padding: 20px; border-bottom: 1px solid #eee; font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 15px; }
 .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: #fcfcfc; }
 .msg { max-width: 65%; padding: 12px 18px; border-radius: 20px; font-size: 15px; line-height: 1.5; word-wrap: break-word; }
 .msg.self { align-self: flex-end; background: var(--accent-gradient); color: white; border-bottom-right-radius: 5px; box-shadow: 0 4px 10px rgba(255,107,107,0.2); }
 .msg.other { align-self: flex-start; background: #f1f5f9; color: var(--text-dark); border-bottom-left-radius: 5px; }
-
 .chat-input-area { padding: 15px 20px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
 .chat-input-area input { flex: 1; padding: 15px 20px; border-radius: 30px; border: 1px solid #cbd5e1; outline: none; font-size: 15px; font-family: inherit; }
 .chat-input-area button { padding: 0 30px; border-radius: 30px; background: var(--text-dark); color: white; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
 .chat-input-area button:hover { background: var(--accent-orange); }
-
-/* 右側：話題卡 */
-.chat-right {
-    width: 280px; border-left: 1px solid #eee; padding: 30px 20px;
-    background: #fafafa; display: flex; flex-direction: column; align-items: center;
-}
-.topic-container {
-    background: white; border: 2px dashed #ffb8b8; border-radius: 20px;
-    padding: 30px 20px; text-align: center; width: 100%; box-sizing: border-box;
-    box-shadow: 0 10px 20px rgba(255,107,107,0.05); position: relative;
-}
+.chat-right { width: 280px; border-left: 1px solid #eee; padding: 30px 20px; background: #fafafa; display: flex; flex-direction: column; align-items: center; }
+.topic-container { background: white; border: 2px dashed #ffb8b8; border-radius: 20px; padding: 30px 20px; text-align: center; width: 100%; box-sizing: border-box; box-shadow: 0 10px 20px rgba(255,107,107,0.05); position: relative; }
 .topic-label { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--accent-gradient); color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; }
 .topic-text { font-size: 18px; color: var(--text-dark); line-height: 1.6; font-weight: bold; transition: opacity 0.5s; min-height: 80px; display: flex; align-items: center; justify-content: center; }
 
-@media (max-width: 900px) {
-    .chat-right { display: none; /* 手機版隱藏話題卡 */ }
-    .chat-sidebar { width: 220px; }
-}
+/* 自介卡片 Modal CSS */
+.card-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 9999; padding: 20px; box-sizing: border-box; }
+.profile-card { background: white; border-radius: 20px; overflow: hidden; width: 100%; max-width: 380px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; animation: slideUp 0.4s ease; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.card-photo { width: 100%; height: 350px; object-fit: cover; background: #f1f5f9; display: block; }
+.card-close { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+.card-body { padding: 25px 20px; }
+.card-header-info { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
+.card-name { font-size: 26px; font-weight: bold; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 8px; }
+.verified-icon { background: #1d9bf0; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; justify-content: center; align-items: center; font-size: 12px; }
+.card-score { background: #ffe4e4; color: var(--accent-orange); padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+.card-meta { color: var(--text-gray); font-size: 15px; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+.card-bio { font-size: 15px; line-height: 1.6; color: #4a5568; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.card-tag { background: white; border: 1px solid var(--accent-orange); color: var(--accent-orange); padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+.card-action { display: block; width: 100%; padding: 15px; background: #e2e8f0; color: var(--text-dark); border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: center; margin-top: 20px; transition: 0.2s; }
+.card-action:hover { background: #cbd5e1; }
+
+@media (max-width: 900px) { .chat-right { display: none; } .chat-sidebar { width: 220px; } }
 @media (max-width: 600px) {
     .chat-container { flex-direction: column; margin: 0; border-radius: 0; }
     .chat-sidebar { width: 100%; height: 120px; border-right: none; border-bottom: 1px solid #eee; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
@@ -139,75 +110,76 @@ header {
     </div>
 </div>
 
+<div class="card-modal" id="matchModal" onclick="closeMatchModal(event)">
+    <div class="profile-card" onclick="event.stopPropagation()">
+        <button class="card-close" onclick="closeMatchModal(event)">✕</button>
+        <img src="" id="cardPhoto" class="card-photo">
+        <div class="card-body">
+            <div class="card-header-info">
+                <h2 class="card-name"><span id="cardName"></span> <span id="cardVerified" style="display:none;" class="verified-icon" title="已通過真人驗證">✔</span></h2>
+                <div class="card-score">契合度 <span id="cardScore"></span>%</div>
+            </div>
+            <div class="card-meta">
+                <span id="cardDept"></span> • <span id="cardGrade"></span>
+                <span id="cardMbti" style="background:#e2e8f0; padding:2px 8px; border-radius:10px; font-size:13px;"></span>
+            </div>
+            <div class="card-bio" id="cardBio"></div>
+            <div class="card-tags" id="cardTags"></div>
+            <button class="card-action" onclick="closeMatchModal(event)">關閉</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const API_BASE = "/api";
 const token = localStorage.getItem("token");
-const user = JSON.parse(localStorage.getItem("user"));
-let currentTarget = null;
-let ws = null;
 
 function isTokenExpired(t) {
     if (!t) return true;
-    try {
-        const payload = JSON.parse(atob(t.split('.')[1]));
-        return (Date.now() >= payload.exp * 1000); // 檢查當前時間是否已大於過期時間
-    } catch (e) { 
-        return true; 
-    }
+    try { const payload = JSON.parse(atob(t.split('.')[1])); return (Date.now() >= payload.exp * 1000); } catch (e) { return true; }
 }
 
 if (isTokenExpired(token)) {
     alert("登入狀態已過期，請重新登入！");
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.href = "index.html";
+    localStorage.removeItem("token"); localStorage.removeItem("user"); window.location.href = "index.html";
 }
 
-// 1. 動態話題卡邏輯
+const user = JSON.parse(localStorage.getItem("user"));
+let currentTarget = null;
+let ws = null;
+
 const topics = [
-    "如果你可以瞬間移動，現在最想去哪裡？",
-    "分享一件最近讓你大笑的事情！",
-    "你覺得情侶間最完美的週末是怎麼度過的？",
-    "你最受不了的一種生活習慣是什麼？",
-    "如果我們第一天約會，你會想安排什麼行程？",
-    "你有什麼鮮為人知的隱藏技能嗎？",
-    "如果這輩子只能吃一種食物，你會選什麼？",
-    "你最近聽過最喜歡的一首歌是什麼？",
+    "如果你可以瞬間移動，現在最想去哪裡？", "分享一件最近讓你大笑的事情！",
+    "你覺得情侶間最完美的週末是怎麼度過的？", "你最受不了的一種生活習慣是什麼？",
+    "如果我們第一天約會，你會想安排什麼行程？", "你有什麼鮮為人知的隱藏技能嗎？",
+    "如果這輩子只能吃一種食物，你會選什麼？", "你最近聽過最喜歡的一首歌是什麼？",
     "在大學裡做過最瘋狂的事情是什麼？"
 ];
 
 function rotateTopic() {
     const el = document.getElementById('topicText');
-    el.style.opacity = 0; // 淡出
+    el.style.opacity = 0;
     setTimeout(() => {
         el.innerText = topics[Math.floor(Math.random() * topics.length)];
-        el.style.opacity = 1; // 淡入
+        el.style.opacity = 1;
     }, 500);
 }
-rotateTopic();
-setInterval(rotateTopic, 10000); // 每 10 秒更換
+rotateTopic(); setInterval(rotateTopic, 10000);
 
-// 2. 初始化 WebSocket
 function initWS() {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     ws = new WebSocket(`${protocol}//${window.location.host}/api/ws/chat?token=${token}`);
     
     ws.onmessage = function(event) {
         const msg = JSON.parse(event.data);
-        // 如果目前正在跟這個人聊天，就把訊息印出來
         if ((msg.sender === currentTarget) || (msg.receiver === currentTarget && msg.sender === user.email)) {
             appendMessage(msg.content, msg.sender === user.email);
         }
     };
-    
-    ws.onclose = function() {
-        console.log("連線中斷，3秒後重新連線...");
-        setTimeout(initWS, 3000);
-    };
+    ws.onclose = function() { console.log("連線中斷，3秒後重新連線..."); setTimeout(initWS, 3000); };
 }
 initWS();
 
-// 3. 獲取配對列表
 fetch(`${API_BASE}/my_matches`, { headers: { Authorization: `Bearer ${token}` } })
 .then(res => res.json())
 .then(data => {
@@ -221,13 +193,13 @@ fetch(`${API_BASE}/my_matches`, { headers: { Authorization: `Bearer ${token}` } 
         const div = document.createElement('div');
         div.className = 'match-item';
         
-        // 對方的藍勾勾徽章
         const verifiedBadge = m.is_verified ? '<span style="display:inline-block; background:#1d9bf0; color:white; border-radius:50%; width:14px; height:14px; text-align:center; line-height:14px; font-size:9px; margin-left:5px; vertical-align:middle;" title="已通過真人驗證">✔</span>' : '';
+        const mStr = encodeURIComponent(JSON.stringify(m));
         
         div.onclick = () => selectMatch(m.email, m.name, div, verifiedBadge);
         const img = m.photo_base64 || 'S__18784267.jpg';
         div.innerHTML = `
-            <img src="${img}" class="match-avatar">
+            <img src="${img}" class="match-avatar" style="cursor:pointer;" title="點擊查看個人資料" onclick="event.stopPropagation(); showProfileCard('${mStr}')">
             <div class="match-info">
                 <h4>${m.name}${verifiedBadge}</h4>
                 <p>契合度: <span style="color:var(--accent-orange);font-weight:bold;">${m.score}%</span></p>
@@ -237,19 +209,14 @@ fetch(`${API_BASE}/my_matches`, { headers: { Authorization: `Bearer ${token}` } 
     });
 });
 
-// 4. 選擇聊天對象
 function selectMatch(email, name, element, verifiedBadge) {
     currentTarget = email;
-    // 將對方的藍勾勾也顯示在聊天室頂部標題
     document.getElementById('chatHeader').innerHTML = `與 <span style="color:var(--accent-orange);margin-left:5px;">${name}</span>${verifiedBadge} 聊天中...`;
-    
     document.querySelectorAll('.match-item').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
-    
     document.getElementById('chatInput').disabled = false;
     document.getElementById('sendBtn').disabled = false;
 
-    // 獲取歷史訊息
     fetch(`${API_BASE}/messages/${email}`, { headers: { Authorization: `Bearer ${token}` } })
     .then(res => res.json())
     .then(data => {
@@ -258,32 +225,23 @@ function selectMatch(email, name, element, verifiedBadge) {
         if(data.messages.length === 0) {
             box.innerHTML = '<div style="text-align:center; color:#ccc; margin-top:20px;">你們還沒有聊過天，發個訊息打招呼吧！</div>';
         } else {
-            data.messages.forEach(m => {
-                appendMessage(m.content, m.sender === user.email);
-            });
+            data.messages.forEach(m => { appendMessage(m.content, m.sender === user.email); });
         }
     });
 }
 
-// 5. 傳送訊息
 function sendMessage() {
     if (!currentTarget) return;
     const input = document.getElementById('chatInput');
     const content = input.value.trim();
     if (!content) return;
-
-    // 透過 WebSocket 發送
     ws.send(JSON.stringify({ receiver: currentTarget, content: content }));
     input.value = '';
-    
-    // 移除空白提示
     const box = document.getElementById('chatMessages');
     if(box.innerHTML.includes('你們還沒有聊過天')) box.innerHTML = '';
 }
 
-function handleEnter(e) {
-    if (e.key === 'Enter') sendMessage();
-}
+function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
 
 function appendMessage(content, isSelf) {
     const box = document.getElementById('chatMessages');
@@ -291,7 +249,32 @@ function appendMessage(content, isSelf) {
     div.className = 'msg ' + (isSelf ? 'self' : 'other');
     div.innerText = content;
     box.appendChild(div);
-    box.scrollTop = box.scrollHeight; // 捲動到最底
+    box.scrollTop = box.scrollHeight;
+}
+
+function showProfileCard(mStr) {
+    const matchData = JSON.parse(decodeURIComponent(mStr));
+    document.getElementById("cardPhoto").src = matchData.photo_base64 || 'S__18784267.jpg';
+    document.getElementById("cardName").innerText = matchData.name;
+    document.getElementById("cardScore").innerText = matchData.score;
+    document.getElementById("cardVerified").style.display = matchData.is_verified ? 'inline-flex' : 'none';
+    document.getElementById("cardDept").innerText = matchData.department || '未設定系所';
+    document.getElementById("cardGrade").innerText = matchData.grade || '';
+    document.getElementById("cardMbti").innerText = matchData.mbti || 'MBTI未知';
+    document.getElementById("cardMbti").style.display = matchData.mbti ? 'inline-block' : 'none';
+    document.getElementById("cardBio").innerText = matchData.bio || '這個人很神秘，還沒寫自我介紹...';
+    
+    const tagsContainer = document.getElementById("cardTags");
+    tagsContainer.innerHTML = '';
+    if (matchData.tags && matchData.tags.length > 0) {
+        matchData.tags.forEach(tag => { tagsContainer.innerHTML += `<span class="card-tag">#${tag}</span>`; });
+    }
+    document.getElementById("matchModal").style.display = 'flex';
+}
+
+function closeMatchModal(e) {
+    if(e) e.stopPropagation();
+    document.getElementById("matchModal").style.display = 'none';
 }
 </script>
 

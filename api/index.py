@@ -45,7 +45,7 @@ security = HTTPBearer()
 # 🔐 驗證與輔助函式
 # ==========================================
 def create_jwt(user_email: str):
-    payload = { "sub": user_email, "exp": datetime.utcnow() + timedelta(days=1) }
+    payload = { "sub": user_email, "exp": datetime.utcnow() + timedelta(days=1) } # 改為1天過期
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
@@ -103,13 +103,15 @@ class UserProfile(BaseModel):
     weight: int = None
     department: str = None
     grade: str = None
-    expected_height: str = None
+    # 刪除了 expected_height 欄位
     age_diff: str = None
     smoking: str = None
     drinking: str = None
     tattoo: str = None
     id_card_base64: str = None
     student_id_base64: str = None
+    mbti: str = None          # 新增 MBTI
+    tags: List[str] = []      # 新增個人標籤
 
 # ==========================================
 # 🧠 深度三觀配對演算法
@@ -117,13 +119,11 @@ class UserProfile(BaseModel):
 def calculate_match_score(a: dict, b: dict) -> int:
     score = 40  # 基礎分數
 
-    # 1. 絕對硬性過濾 (性別不符直接 0 分)
     if a.get("target_gender") and a.get("target_gender") != "不限" and a.get("target_gender") != b.get("gender"): return 0
     if b.get("target_gender") and b.get("target_gender") != "不限" and b.get("target_gender") != a.get("gender"): return 0
 
     a_db, b_db = set(a.get("dealbreakers", [])), set(b.get("dealbreakers", []))
 
-    # 2. 地雷秒殺機制
     if "【作息極端不合】" in a_db and a.get("chronotype") != b.get("chronotype"): score -= 25
     if "【金錢觀極度計較】" in a_db and b.get("money_view") == "絕對 AA 制": score -= 25
     if "【冷暴力/不溝通】" in a_db and b.get("conflict") == "逃避包容型": score -= 25
@@ -134,7 +134,6 @@ def calculate_match_score(a: dict, b: dict) -> int:
     if "【冷暴力/不溝通】" in b_db and a.get("conflict") == "逃避包容型": score -= 25
     if "【異性邊界感模糊】" in b_db and a.get("boundaries") in ["社交自由型", "開放式關係"]: score -= 30
 
-    # 3. 核心價值觀加權加分
     if a.get("marriage") == b.get("marriage"): score += 15
     if a.get("dating_goal") == b.get("dating_goal"): score += 15
     if a.get("ldr") == b.get("ldr"): score += 10
@@ -144,7 +143,6 @@ def calculate_match_score(a: dict, b: dict) -> int:
     if a.get("chronotype") == b.get("chronotype"): score += 5
     if a.get("social_energy") == b.get("social_energy"): score += 5
 
-    # 4. 興趣嗜好微調 (+2 分/項)
     interests = ["int_energy", "int_active", "int_vibe", "int_nerd", "int_life"]
     for i in interests:
         if a.get(i) and a.get(i) == b.get(i): score += 2
@@ -190,17 +188,10 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
             content = msg_data.get("content")
 
             if receiver and content:
-                # 將新訊息存入 MongoDB
-                new_msg = {
-                    "sender": email,
-                    "receiver": receiver,
-                    "content": content,
-                    "timestamp": datetime.utcnow().isoformat()
-                }
+                new_msg = { "sender": email, "receiver": receiver, "content": content, "timestamp": datetime.utcnow().isoformat() }
                 result = messages_collection.insert_one(new_msg.copy())
                 new_msg["_id"] = str(result.inserted_id)
 
-                # 即時推播給接收方與發送方
                 await manager.send_personal_message(new_msg, receiver)
                 await manager.send_personal_message(new_msg, email)
 
@@ -210,8 +201,6 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
 # ==========================================
 # 🌐 路由 API (Endpoints)
 # ==========================================
-
-# 1. 登入與認證
 @app.post("/api/auth/google")
 async def google_login(data: GoogleLoginRequest):
     try:
@@ -227,7 +216,6 @@ async def google_login(data: GoogleLoginRequest):
     except ValueError:
         raise HTTPException(401, "Google Token 無效")
 
-# 2. 個人資料設定
 @app.get("/api/profile")
 async def get_profile(current_user=Depends(get_current_user)):
     user_data = users_collection.find_one({"email": current_user["email"]}, {"_id": 0})
@@ -239,10 +227,8 @@ async def update_profile(profile: UserProfile, current_user=Depends(get_current_
     users_collection.update_one({"email": current_user["email"]}, {"$set": update_data})
     return {"message": "個人資料已更新"}
 
-# 3. 問卷填寫
 @app.get("/api/survey")
 async def get_survey(current_user=Depends(get_current_user)):
-    # 回傳使用者資料庫中的 survey 欄位，若無則回傳空字典
     return {"survey": current_user.get("survey")}
 
 @app.post("/api/survey")
@@ -250,7 +236,6 @@ async def submit_survey(survey: SurveyData, current_user=Depends(get_current_use
     users_collection.update_one({"email": current_user["email"]}, {"$set": {"survey": survey.model_dump()}})
     return {"message": "問卷已儲存"}
 
-# 4. 獲取單一最高分配對名單 (聊天室左側使用)
 @app.get("/api/my_matches")
 async def my_matches(current_user=Depends(get_current_user)):
     if not current_user.get("survey"): return {"matches": []}
@@ -259,27 +244,28 @@ async def my_matches(current_user=Depends(get_current_user)):
     best_score = 0
     others = users_collection.find({"email": {"$ne": current_user["email"]}, "survey": {"$ne": None}})
     
-    # 計算所有人的分數，只保留最高分的那一位
     for u in others:
         score = calculate_match_score(current_user["survey"], u["survey"])
         if score > best_score:
             best_score = score
             best_match = u
             
-    # 如果最高分的人都沒有達到 50 分門檻，回傳空名單
     if not best_match or best_score < 50:
         return {"matches": []}
         
-    # 維持單一配對結果
     return {"matches": [{
-        "name": best_match["name"], 
-        "email": best_match["email"],
+        "name": best_match.get("name", "Unknown"), 
+        "email": best_match.get("email"),
         "score": best_score, 
         "photo_base64": best_match.get("photo_base64", ""),
-        "is_verified": best_match.get("is_verified", False)
+        "is_verified": best_match.get("is_verified", False),
+        "bio": best_match.get("bio", "這個人很神秘，還沒寫自我介紹..."),
+        "department": best_match.get("department", "神秘科系"),
+        "grade": best_match.get("grade", ""),
+        "mbti": best_match.get("mbti", ""),
+        "tags": best_match.get("tags", [])
     }]}
 
-# 5. 獲取單一最高分配對 (Dashboard 彈窗使用)
 @app.get("/api/match")
 async def match(current_user=Depends(get_current_user)):
     if not current_user.get("survey"): raise HTTPException(400, "請先填寫深度三觀問卷才能進行配對喔！")
@@ -288,10 +274,8 @@ async def match(current_user=Depends(get_current_user)):
     if not matches_data["matches"]:
         return {"message": "目前還沒有三觀契合的對象，系統將持續為您尋找！"}
     
-    best = matches_data["matches"][0]
-    return { "match": { "name": best["name"], "email": best["email"], "score": best["score"], "is_verified": best.get("is_verified", False) } }
+    return { "match": matches_data["matches"][0] }
 
-# 6. 獲取歷史聊天紀錄
 @app.get("/api/messages/{target_email}")
 async def get_messages(target_email: str, current_user=Depends(get_current_user)):
     my_email = current_user["email"]
@@ -305,7 +289,6 @@ async def get_messages(target_email: str, current_user=Depends(get_current_user)
     for m in msgs: m["_id"] = str(m["_id"])
     return {"messages": msgs}
 
-# 7. 系統狀態檢查
 @app.get("/api")
 def root(): 
     return {"message": "Date Free API is running successfully!"}
