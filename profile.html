@@ -6,7 +6,7 @@
 <title>Date Free | 個人資料設定</title>
 <link rel="icon" href="S__18784267.jpg" type="image/jpeg">
 <style>
-:root { --text-dark: #2d3748; --text-gray: #4a5568; --accent-orange: #ff6b6b; --bg-light: #f8fafc; }
+:root { --text-dark: #2d3748; --text-gray: #4a5568; --accent-orange: #ff6b6b; --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff8e53); --bg-light: #f8fafc; }
 body { margin: 0; font-family: 'Microsoft JhengHei', sans-serif; background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%); color: var(--text-dark); min-height: 100vh; }
 header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; border-bottom: 1px solid #cbd5e1; background: transparent; }
 .logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
@@ -24,18 +24,38 @@ input[type="file"] { display: none; }
 .dotted-decor { color: var(--text-gray); letter-spacing: 2px; font-size: 14px; }
 .section-header h3 { font-size: 22px; font-weight: normal; margin: 10px 0 0 0; }
 .form-group { margin-bottom: 25px; font-size: 16px; line-height: 1.8; }
-.form-group label.title { display: inline-block; width: 140px; color: var(--text-dark); }
-.form-group select, .form-group input[type="number"] { padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 16px; }
-.submit-btn-wrapper { text-align: center; margin-top: 50px; margin-bottom: 50px; }
-.submit-btn { padding: 12px 50px; background: #e2e8f0; color: var(--text-dark); border: none; font-size: 18px; cursor: pointer; transition: all 0.3s; border-radius: 30px; }
-.submit-btn:hover { background: #cbd5e1; }
+.form-group label.title { display: inline-block; width: 140px; color: var(--text-dark); font-weight: bold;}
+.form-group select, .form-group input[type="number"], .form-group input[type="text"], .form-group input[type="date"] { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 15px; }
+.submit-btn-wrapper { display: flex; justify-content: center; gap: 20px; margin-top: 50px; margin-bottom: 50px; }
+.preview-btn { padding: 12px 30px; background: #fff; color: var(--accent-orange); border: 2px solid var(--accent-orange); font-size: 18px; cursor: pointer; transition: all 0.3s; border-radius: 30px; font-weight: bold; }
+.preview-btn:hover { background: #fff0f0; }
+.submit-btn { padding: 12px 50px; background: var(--text-dark); color: white; border: none; font-size: 18px; cursor: pointer; transition: all 0.3s; border-radius: 30px; font-weight: bold; }
+.submit-btn:hover { background: var(--accent-orange); }
 .radio-group label { margin-right: 15px; cursor: pointer; }
 
 /* 標籤的 CSS */
-.tags-container { display: flex; flex-wrap: wrap; gap: 10px; margin-left: 20px; }
+.tags-container { display: flex; flex-wrap: wrap; gap: 10px; margin-left: 20px; margin-top: 10px;}
 .tag-label { padding: 6px 16px; background: #f1f5f9; border-radius: 20px; cursor: pointer; font-size: 14px; transition: all 0.3s; user-select: none; color: var(--text-gray); }
 .tag-label input[type="checkbox"] { display: none; }
 .tag-label.selected { background: var(--accent-orange); color: white; box-shadow: 0 4px 10px rgba(255,107,107,0.3); }
+
+/* 自介卡片預覽 Modal */
+.card-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 9999; padding: 20px; box-sizing: border-box; }
+.profile-card { background: white; border-radius: 20px; overflow: hidden; width: 100%; max-width: 380px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; animation: slideUp 0.4s ease; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.card-photo { width: 100%; height: 350px; object-fit: cover; background: #f1f5f9; display: block; }
+.card-close { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+.card-body { padding: 25px 20px; }
+.card-header-info { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
+.card-name { font-size: 26px; font-weight: bold; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 8px; }
+.verified-icon { background: #1d9bf0; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; justify-content: center; align-items: center; font-size: 12px; }
+.card-score { background: #ffe4e4; color: var(--accent-orange); padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+.card-meta { color: var(--text-gray); font-size: 15px; margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;}
+.meta-badge { background: #f1f5f9; padding: 2px 8px; border-radius: 10px; font-size: 12px; color: var(--text-gray); border: 1px solid #e2e8f0; }
+.card-details { font-size: 13px; color: #718096; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+.card-bio { font-size: 15px; line-height: 1.6; color: #4a5568; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.card-tag { background: white; border: 1px solid var(--accent-orange); color: var(--accent-orange); padding: 4px 12px; border-radius: 20px; font-size: 13px; }
 
 @media (max-width: 768px) { header { padding: 15px 20px; } }
 </style>
@@ -83,48 +103,88 @@ input[type="file"] { display: none; }
     </div>
 
     <div class="form-group"><label class="title">性別：</label><span class="radio-group"><label><input type="radio" name="gender" value="男"> 男</label><label><input type="radio" name="gender" value="女"> 女</label><label><input type="radio" name="gender" value="非二元"> 非二元</label></span></div>
+    <div class="form-group"><label class="title">生日：</label><input type="date" id="birthdayInput"></div>
     <div class="form-group"><label class="title">身高 (cm)：</label><input type="number" id="heightInput" min="140" max="200" placeholder="140-200"></div>
     <div class="form-group"><label class="title">體重 (kg)：</label><input type="number" id="weightInput" min="40" max="120" placeholder="40-120"></div>
+    <div class="form-group"><label class="title">來自哪裡：</label><input type="text" id="hometownInput" placeholder="例如：台北市 / 高雄市"></div>
     
     <div class="form-group"><label class="title">系級：</label>
         <select id="deptInput">
             <option value="">選擇院系</option>
-            <option value="文學院">文學院</option>
-            <option value="農資學院">農資學院</option>
-            <option value="理學院">理學院</option>
-            <option value="工學院">工學院</option>
-            <option value="生命科學院">生命科學院</option>
-            <option value="獸醫學院">獸醫學院</option>
-            <option value="管理學院">管理學院</option>
-            <option value="法政學院">法政學院</option>
-            <option value="電機資訊學院">電機資訊學院</option>
-            <option value="醫學院">醫學院</option>
+            <option value="文學院">文學院</option><option value="農資學院">農資學院</option>
+            <option value="理學院">理學院</option><option value="工學院">工學院</option>
+            <option value="生命科學院">生命科學院</option><option value="獸醫學院">獸醫學院</option>
+            <option value="管理學院">管理學院</option><option value="法政學院">法政學院</option>
+            <option value="電機資訊學院">電機資訊學院</option><option value="醫學院">醫學院</option>
             <option value="循環經濟研究學院">循環經濟研究學院</option>
         </select>
         <select id="gradeInput"><option value="">選擇年級</option><option value="一">一</option><option value="二">二</option><option value="三">三</option><option value="四">四</option><option value="五">五</option><option value="碩博">碩博</option></select>
     </div>
 
-    <div class="form-group"><label class="title">MBTI：</label>
-        <select id="mbtiInput">
-            <option value="">選擇MBTI</option>
-            <option value="ISTJ">ISTJ (物流師)</option><option value="ISFJ">ISFJ (守衛者)</option>
-            <option value="INFJ">INFJ (提倡者)</option><option value="INTJ">INTJ (建築師)</option>
-            <option value="ISTP">ISTP (鑑賞家)</option><option value="ISFP">ISFP (探險家)</option>
-            <option value="INFP">INFP (調停者)</option><option value="INTP">INTP (邏輯學家)</option>
-            <option value="ESTP">ESTP (企業家)</option><option value="ESFP">ESFP (表演者)</option>
-            <option value="ENFP">ENFP (競選者)</option><option value="ENTP">ENTP (辯論家)</option>
-            <option value="ESTJ">ESTJ (總經理)</option><option value="ESFJ">ESFJ (執政官)</option>
-            <option value="ENFJ">ENFJ (主人公)</option><option value="ENTJ">ENTJ (指揮官)</option>
+    <div class="form-group"><label class="title">星座：</label>
+        <select id="zodiacInput">
+            <option value="">選擇星座</option>
+            <option value="牡羊座">牡羊座</option><option value="金牛座">金牛座</option>
+            <option value="雙子座">雙子座</option><option value="巨蟹座">巨蟹座</option>
+            <option value="獅子座">獅子座</option><option value="處女座">處女座</option>
+            <option value="天秤座">天秤座</option><option value="天蠍座">天蠍座</option>
+            <option value="射手座">射手座</option><option value="摩羯座">摩羯座</option>
+            <option value="水瓶座">水瓶座</option><option value="雙魚座">雙魚座</option>
+        </select>
+    </div>
+    
+    <div class="form-group"><label class="title">血型：</label>
+        <select id="bloodTypeInput">
+            <option value="">選擇血型</option>
+            <option value="A型">A型</option><option value="B型">B型</option>
+            <option value="O型">O型</option><option value="AB型">AB型</option><option value="不清楚">不清楚</option>
         </select>
     </div>
 
+    <div class="form-group"><label class="title">MBTI：</label>
+        <select id="mbtiInput">
+            <option value="">選擇MBTI</option>
+            <option value="ISTJ">ISTJ</option><option value="ISFJ">ISFJ</option>
+            <option value="INFJ">INFJ</option><option value="INTJ">INTJ</option>
+            <option value="ISTP">ISTP</option><option value="ISFP">ISFP</option>
+            <option value="INFP">INFP</option><option value="INTP">INTP</option>
+            <option value="ESTP">ESTP</option><option value="ESFP">ESFP</option>
+            <option value="ENFP">ENFP</option><option value="ENTP">ENTP</option>
+            <option value="ESTJ">ESTJ</option><option value="ESFJ">ESFJ</option>
+            <option value="ENFJ">ENFJ</option><option value="ENTJ">ENTJ</option>
+        </select>
+    </div>
+
+    <div class="section-header">
+        <div class="dotted-decor">◇ ‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧‧ ◇</div>
+        <h3>生活與興趣</h3>
+    </div>
+
+    <div class="form-group"><label class="title">有沒有養寵物：</label>
+        <span class="radio-group"><label><input type="radio" name="pet" value="狗派"> 狗</label><label><input type="radio" name="pet" value="貓派"> 貓</label><label><input type="radio" name="pet" value="其他"> 其他</label><label><input type="radio" name="pet" value="無"> 無</label></span>
+    </div>
+    <div class="form-group"><label class="title">健身頻率：</label>
+        <span class="radio-group"><label><input type="radio" name="fitness" value="每天"> 每天</label><label><input type="radio" name="fitness" value="每週數次"> 每週數次</label><label><input type="radio" name="fitness" value="偶爾"> 偶爾</label><label><input type="radio" name="fitness" value="不運動"> 不運動</label></span>
+    </div>
+    <div class="form-group"><label class="title">飲食習慣：</label>
+        <span class="radio-group"><label><input type="radio" name="diet" value="葷食"> 葷食</label><label><input type="radio" name="diet" value="蛋奶素"> 蛋奶素</label><label><input type="radio" name="diet" value="全素"> 全素</label><label><input type="radio" name="diet" value="不拘"> 不拘</label></span>
+    </div>
+
+    <div class="form-group" style="line-height:2.5;"><label class="title">嗜好習慣：</label><br>
+        <span style="margin-left:20px;">抽菸：</span><span class="radio-group"><label><input type="radio" name="smoking" value="是"> 是</label><label><input type="radio" name="smoking" value="否"> 否</label></span><br>
+        <span style="margin-left:20px;">喝酒：</span><span class="radio-group"><label><input type="radio" name="drinking" value="不喝"> 不喝</label><label><input type="radio" name="drinking" value="小酌"> 小酌</label><label><input type="radio" name="drinking" value="頻繁"> 頻繁</label></span><br>
+        <span style="margin-left:20px;">紋身：</span><span class="radio-group"><label><input type="radio" name="tattoo" value="是"> 是</label><label><input type="radio" name="tattoo" value="否"> 否</label></span>
+    </div>
+
     <div class="form-group">
-        <label class="title" style="width:100%; margin-bottom:10px;">個人標籤 (可複選)：</label>
-        <div class="tags-container">
+        <label class="title" style="width:100%;">個人標籤 (可複選)：</label>
+        <div style="margin-top: 10px; margin-left: 20px; display:flex; gap:10px;">
+            <input type="text" id="customTagInput" placeholder="自訂標籤 (例如：攝影)" style="flex:1;">
+            <button type="button" onclick="addCustomTag()" style="padding: 6px 15px; border-radius: 6px; border: none; background: #cbd5e1; cursor: pointer; font-weight:bold;">新增</button>
+        </div>
+        <div class="tags-container" id="tagsContainer">
             <label class="tag-label"><input type="checkbox" name="tags" value="愛看電影"> #愛看電影</label>
             <label class="tag-label"><input type="checkbox" name="tags" value="音樂祭"> #音樂祭</label>
-            <label class="tag-label"><input type="checkbox" name="tags" value="貓派"> #貓派</label>
-            <label class="tag-label"><input type="checkbox" name="tags" value="狗派"> #狗派</label>
             <label class="tag-label"><input type="checkbox" name="tags" value="戶外咖"> #戶外咖</label>
             <label class="tag-label"><input type="checkbox" name="tags" value="美食獵人"> #美食獵人</label>
             <label class="tag-label"><input type="checkbox" name="tags" value="宅家追劇"> #宅家追劇</label>
@@ -132,18 +192,44 @@ input[type="file"] { display: none; }
             <label class="tag-label"><input type="checkbox" name="tags" value="早睡早起"> #早睡早起</label>
             <label class="tag-label"><input type="checkbox" name="tags" value="喜歡旅行"> #喜歡旅行</label>
             <label class="tag-label"><input type="checkbox" name="tags" value="獨立音樂"> #獨立音樂</label>
-            <label class="tag-label"><input type="checkbox" name="tags" value="健身狂"> #健身狂</label>
             <label class="tag-label"><input type="checkbox" name="tags" value="喜歡跑咖"> #喜歡跑咖</label>
             <label class="tag-label"><input type="checkbox" name="tags" value="動漫迷"> #動漫迷</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="攝影"> #攝影</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="閱讀"> #閱讀</label>
+            <label class="tag-label"><input type="checkbox" name="tags" value="打電動"> #打電動</label>
         </div>
     </div>
-
-    <div class="form-group"><label class="title" style="width:100%; margin-bottom:10px;">年齡差距接受範圍：</label><span class="radio-group" style="display:block; margin-left:20px;"><label><input type="radio" name="age_diff" value="同歲"> 同歲</label><label><input type="radio" name="age_diff" value="相差三歲"> 相差三歲</label><label><input type="radio" name="age_diff" value="相差五歲"> 相差五歲</label><label><input type="radio" name="age_diff" value="相差十歲"> 相差十歲</label></span></div>
     
-    <div class="form-group" style="line-height:2.5;"><label class="title">嗜好習慣：</label><br><span style="margin-left:20px;">抽菸：</span><span class="radio-group"><label><input type="radio" name="smoking" value="是"> 是</label><label><input type="radio" name="smoking" value="否"> 否</label></span><br><span style="margin-left:20px;">喝酒頻率：</span><span class="radio-group"><label><input type="radio" name="drinking" value="不喝"> 不喝</label><label><input type="radio" name="drinking" value="小酌"> 小酌</label><label><input type="radio" name="drinking" value="頻繁"> 頻繁</label></span><br><span style="margin-left:20px;">紋身：</span><span class="radio-group"><label><input type="radio" name="tattoo" value="是"> 是</label><label><input type="radio" name="tattoo" value="否"> 否</label></span></div>
-    
-    <div class="submit-btn-wrapper"><button class="submit-btn" onclick="saveProfile()">儲存</button></div>
+    <div class="submit-btn-wrapper">
+        <button class="preview-btn" onclick="previewProfile()">預覽卡片</button>
+        <button class="submit-btn" onclick="saveProfile()">儲存資料</button>
+    </div>
 </main>
+
+<div class="card-modal" id="previewModal" onclick="closePreviewModal(event)">
+    <div class="profile-card" onclick="event.stopPropagation()">
+        <button class="card-close" onclick="closePreviewModal(event)">✕</button>
+        <img src="" id="cardPhoto" class="card-photo">
+        <div class="card-body">
+            <div class="card-header-info">
+                <h2 class="card-name"><span id="cardName"></span> <span id="cardVerified" style="display:none;" class="verified-icon" title="真人驗證">✔</span></h2>
+                <div class="card-score">契合度 <span id="cardScore">100</span>% (預覽)</div>
+            </div>
+            <div class="card-meta">
+                <span id="cardAge" style="font-weight:bold; color:var(--text-dark);"></span>
+                <span id="cardHometown"></span>
+                <span>• <span id="cardDept"></span> <span id="cardGrade"></span></span>
+                <span id="cardMbti" class="meta-badge" style="display:none;"></span>
+                <span id="cardZodiac" class="meta-badge" style="display:none;"></span>
+                <span id="cardBlood" class="meta-badge" style="display:none;"></span>
+            </div>
+            <div class="card-details" id="cardDetails">
+                </div>
+            <div class="card-bio" id="cardBio"></div>
+            <div class="card-tags" id="cardTags"></div>
+        </div>
+    </div>
+</div>
 
 <script>
 const API_BASE = "/api";
@@ -162,17 +248,32 @@ if (isTokenExpired(token)) {
 let currentBase64 = "";
 let idCardBase64 = null;
 let studentIdBase64 = null;
+let isVerifiedStatus = false; 
 
 function setRadio(name, value) { if(!value) return; const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if(el) el.checked = true; }
 function getRadio(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; }
 
-// 處理標籤點擊效果
-document.querySelectorAll('.tag-label input[type="checkbox"]').forEach(checkbox => {
+function bindTagEvent(checkbox) {
     checkbox.addEventListener('change', function() {
         if (this.checked) this.parentElement.classList.add('selected');
         else this.parentElement.classList.remove('selected');
     });
-});
+}
+document.querySelectorAll('.tag-label input[type="checkbox"]').forEach(bindTagEvent);
+
+function addCustomTag() {
+    const val = document.getElementById("customTagInput").value.trim();
+    if(!val) return;
+    if(document.querySelector(`input[name="tags"][value="${val}"]`)) { alert("此標籤已存在！"); return; }
+    
+    const container = document.getElementById("tagsContainer");
+    const label = document.createElement("label");
+    label.className = "tag-label selected";
+    label.innerHTML = `<input type="checkbox" name="tags" value="${val}" checked> #${val}`;
+    bindTagEvent(label.querySelector('input'));
+    container.appendChild(label);
+    document.getElementById("customTagInput").value = "";
+}
 
 fetch(`${API_BASE}/profile`, { headers: { "Authorization": `Bearer ${token}` } })
 .then(res => res.json())
@@ -185,19 +286,33 @@ fetch(`${API_BASE}/profile`, { headers: { "Authorization": `Bearer ${token}` } }
         if(data.department) document.getElementById("deptInput").value = data.department;
         if(data.grade) document.getElementById("gradeInput").value = data.grade;
         if(data.mbti) document.getElementById("mbtiInput").value = data.mbti;
-        setRadio("gender", data.gender); setRadio("age_diff", data.age_diff); setRadio("smoking", data.smoking); setRadio("drinking", data.drinking); setRadio("tattoo", data.tattoo);
+        if(data.birthday) document.getElementById("birthdayInput").value = data.birthday;
+        if(data.hometown) document.getElementById("hometownInput").value = data.hometown;
+        if(data.zodiac) document.getElementById("zodiacInput").value = data.zodiac;
+        if(data.blood_type) document.getElementById("bloodTypeInput").value = data.blood_type;
         
-        // 載入個人標籤
+        setRadio("gender", data.gender); setRadio("smoking", data.smoking); setRadio("drinking", data.drinking); setRadio("tattoo", data.tattoo);
+        setRadio("pet", data.pet); setRadio("fitness", data.fitness); setRadio("diet", data.diet);
+        
         if(data.tags && Array.isArray(data.tags)) {
             data.tags.forEach(tag => {
                 const el = document.querySelector(`input[name="tags"][value="${tag}"]`);
                 if (el) { el.checked = true; el.parentElement.classList.add('selected'); }
+                else {
+                    const container = document.getElementById("tagsContainer");
+                    const label = document.createElement("label");
+                    label.className = "tag-label selected";
+                    label.innerHTML = `<input type="checkbox" name="tags" value="${tag}" checked> #${tag}`;
+                    bindTagEvent(label.querySelector('input'));
+                    container.appendChild(label);
+                }
             });
         }
         
         if(data.id_card_base64) { idCardBase64 = data.id_card_base64; document.getElementById("idCardStatus").innerText = "已上傳 ✔"; document.getElementById("idCardStatus").style.color = "green"; }
         if(data.student_id_base64) { studentIdBase64 = data.student_id_base64; document.getElementById("studentIdStatus").innerText = "已上傳 ✔"; document.getElementById("studentIdStatus").style.color = "green"; }
         
+        isVerifiedStatus = data.is_verified || false;
         if (data.is_verified) { document.getElementById("verifyStatusBadge").innerHTML = "<span style='color:#1da1f2;'>✅ 您已通過真人身分驗證！</span>";
         } else if (data.id_card_base64 && data.student_id_base64) { document.getElementById("verifyStatusBadge").innerHTML = "<span style='color:#d97706;'>⏳ 證件已提交，等待人工審核中...</span>";
         } else { document.getElementById("verifyStatusBadge").innerHTML = "<span style='color:#e53e3e;'>❌ 尚未完成驗證</span>"; }
@@ -217,6 +332,61 @@ handleImageUpload('photoInput', (res) => { currentBase64 = res; document.getElem
 handleImageUpload('idCardInput', (res) => { idCardBase64 = res; document.getElementById("idCardStatus").innerText = "✔ 準備儲存"; document.getElementById("idCardStatus").style.color = "orange"; });
 handleImageUpload('studentIdInput', (res) => { studentIdBase64 = res; document.getElementById("studentIdStatus").innerText = "✔ 準備儲存"; document.getElementById("studentIdStatus").style.color = "orange"; });
 
+function calculateAge(birthdayStr) {
+    if(!birthdayStr) return '?';
+    const birth = new Date(birthdayStr); const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) { age--; }
+    return age;
+}
+
+function previewProfile() {
+    const selectedTags = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(el => el.value);
+    const userStorage = JSON.parse(localStorage.getItem("user"));
+    
+    document.getElementById("cardPhoto").src = currentBase64 || 'S__18784267.jpg';
+    document.getElementById("cardName").innerText = userStorage.name;
+    document.getElementById("cardVerified").style.display = isVerifiedStatus ? 'inline-flex' : 'none';
+    
+    const bday = document.getElementById("birthdayInput").value;
+    document.getElementById("cardAge").innerText = bday ? calculateAge(bday) + "歲" : "年齡未知";
+    document.getElementById("cardHometown").innerText = document.getElementById("hometownInput").value ? " • " + document.getElementById("hometownInput").value : "";
+    
+    document.getElementById("cardDept").innerText = document.getElementById("deptInput").value || '未設定系所';
+    document.getElementById("cardGrade").innerText = document.getElementById("gradeInput").value || '';
+    
+    const mbti = document.getElementById("mbtiInput").value;
+    if(mbti) { document.getElementById("cardMbti").innerText = mbti; document.getElementById("cardMbti").style.display = 'inline-block'; } else { document.getElementById("cardMbti").style.display = 'none'; }
+    
+    const zodiac = document.getElementById("zodiacInput").value;
+    if(zodiac) { document.getElementById("cardZodiac").innerText = zodiac; document.getElementById("cardZodiac").style.display = 'inline-block'; } else { document.getElementById("cardZodiac").style.display = 'none'; }
+    
+    const blood = document.getElementById("bloodTypeInput").value;
+    if(blood) { document.getElementById("cardBlood").innerText = blood; document.getElementById("cardBlood").style.display = 'inline-block'; } else { document.getElementById("cardBlood").style.display = 'none'; }
+    
+    const detailsDiv = document.getElementById("cardDetails");
+    detailsDiv.innerHTML = '';
+    const pet = getRadio("pet"); if(pet) detailsDiv.innerHTML += `<span>🐾 寵物: ${pet}</span>`;
+    const fitness = getRadio("fitness"); if(fitness) detailsDiv.innerHTML += `<span>💪 健身: ${fitness}</span>`;
+    const diet = getRadio("diet"); if(diet) detailsDiv.innerHTML += `<span>🍽️ 飲食: ${diet}</span>`;
+    
+    document.getElementById("cardBio").innerText = document.getElementById("bioInput").value || '這個人很神秘，還沒寫自我介紹...';
+    
+    const tagsContainer = document.getElementById("cardTags");
+    tagsContainer.innerHTML = '';
+    if (selectedTags.length > 0) {
+        selectedTags.forEach(tag => { tagsContainer.innerHTML += `<span class="card-tag">#${tag}</span>`; });
+    }
+    
+    document.getElementById("previewModal").style.display = 'flex';
+}
+
+function closePreviewModal(e) {
+    if(e) e.stopPropagation();
+    document.getElementById("previewModal").style.display = 'none';
+}
+
 function saveProfile() {
     const selectedTags = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(el => el.value);
 
@@ -225,9 +395,14 @@ function saveProfile() {
         height: document.getElementById("heightInput").value ? parseInt(document.getElementById("heightInput").value) : null,
         weight: document.getElementById("weightInput").value ? parseInt(document.getElementById("weightInput").value) : null,
         department: document.getElementById("deptInput").value || null, grade: document.getElementById("gradeInput").value || null,
-        age_diff: getRadio("age_diff"), smoking: getRadio("smoking"), drinking: getRadio("drinking"), tattoo: getRadio("tattoo"),
+        smoking: getRadio("smoking"), drinking: getRadio("drinking"), tattoo: getRadio("tattoo"),
         id_card_base64: idCardBase64, student_id_base64: studentIdBase64,
-        mbti: document.getElementById("mbtiInput").value || null, tags: selectedTags
+        mbti: document.getElementById("mbtiInput").value || null, tags: selectedTags,
+        birthday: document.getElementById("birthdayInput").value || null,
+        hometown: document.getElementById("hometownInput").value || null,
+        zodiac: document.getElementById("zodiacInput").value || null,
+        blood_type: document.getElementById("bloodTypeInput").value || null,
+        pet: getRadio("pet"), fitness: getRadio("fitness"), diet: getRadio("diet")
     };
 
     fetch(`${API_BASE}/profile`, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }, body: JSON.stringify(payload) })

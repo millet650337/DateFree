@@ -50,7 +50,9 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .card-name { font-size: 26px; font-weight: bold; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 8px; }
 .verified-icon { background: #1d9bf0; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; justify-content: center; align-items: center; font-size: 12px; }
 .card-score { background: #ffe4e4; color: var(--accent-orange); padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
-.card-meta { color: var(--text-gray); font-size: 15px; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+.card-meta { color: var(--text-gray); font-size: 15px; margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;}
+.meta-badge { background: #f1f5f9; padding: 2px 8px; border-radius: 10px; font-size: 12px; color: var(--text-gray); border: 1px solid #e2e8f0; }
+.card-details { font-size: 13px; color: #718096; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
 .card-bio { font-size: 15px; line-height: 1.6; color: #4a5568; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
 .card-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .card-tag { background: white; border: 1px solid var(--accent-orange); color: var(--accent-orange); padding: 4px 12px; border-radius: 20px; font-size: 13px; }
@@ -120,9 +122,14 @@ header { display: flex; justify-content: space-between; align-items: center; pad
                 <div class="card-score">契合度 <span id="cardScore"></span>%</div>
             </div>
             <div class="card-meta">
-                <span id="cardDept"></span> • <span id="cardGrade"></span>
-                <span id="cardMbti" style="background:#e2e8f0; padding:2px 8px; border-radius:10px; font-size:13px;"></span>
+                <span id="cardAge" style="font-weight:bold; color:var(--text-dark);"></span>
+                <span id="cardHometown"></span>
+                <span>• <span id="cardDept"></span> <span id="cardGrade"></span></span>
+                <span id="cardMbti" class="meta-badge" style="display:none;"></span>
+                <span id="cardZodiac" class="meta-badge" style="display:none;"></span>
+                <span id="cardBlood" class="meta-badge" style="display:none;"></span>
             </div>
+            <div class="card-details" id="cardDetails"></div>
             <div class="card-bio" id="cardBio"></div>
             <div class="card-tags" id="cardTags"></div>
             <button class="card-action" onclick="closeMatchModal(event)">關閉</button>
@@ -179,6 +186,15 @@ function initWS() {
     ws.onclose = function() { console.log("連線中斷，3秒後重新連線..."); setTimeout(initWS, 3000); };
 }
 initWS();
+
+function calculateAge(birthdayStr) {
+    if(!birthdayStr) return '?';
+    const birth = new Date(birthdayStr); const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) { age--; }
+    return age;
+}
 
 fetch(`${API_BASE}/my_matches`, { headers: { Authorization: `Bearer ${token}` } })
 .then(res => res.json())
@@ -258,10 +274,22 @@ function showProfileCard(mStr) {
     document.getElementById("cardName").innerText = matchData.name;
     document.getElementById("cardScore").innerText = matchData.score;
     document.getElementById("cardVerified").style.display = matchData.is_verified ? 'inline-flex' : 'none';
+    
+    document.getElementById("cardAge").innerText = matchData.birthday ? calculateAge(matchData.birthday) + "歲" : "年齡未知";
+    document.getElementById("cardHometown").innerText = matchData.hometown ? " • " + matchData.hometown : "";
     document.getElementById("cardDept").innerText = matchData.department || '未設定系所';
     document.getElementById("cardGrade").innerText = matchData.grade || '';
-    document.getElementById("cardMbti").innerText = matchData.mbti || 'MBTI未知';
-    document.getElementById("cardMbti").style.display = matchData.mbti ? 'inline-block' : 'none';
+    
+    if(matchData.mbti) { document.getElementById("cardMbti").innerText = matchData.mbti; document.getElementById("cardMbti").style.display = 'inline-block'; } else { document.getElementById("cardMbti").style.display = 'none'; }
+    if(matchData.zodiac) { document.getElementById("cardZodiac").innerText = matchData.zodiac; document.getElementById("cardZodiac").style.display = 'inline-block'; } else { document.getElementById("cardZodiac").style.display = 'none'; }
+    if(matchData.blood_type) { document.getElementById("cardBlood").innerText = matchData.blood_type; document.getElementById("cardBlood").style.display = 'inline-block'; } else { document.getElementById("cardBlood").style.display = 'none'; }
+    
+    const detailsDiv = document.getElementById("cardDetails");
+    detailsDiv.innerHTML = '';
+    if(matchData.pet) detailsDiv.innerHTML += `<span>🐾 寵物: ${matchData.pet}</span>`;
+    if(matchData.fitness) detailsDiv.innerHTML += `<span>💪 健身: ${matchData.fitness}</span>`;
+    if(matchData.diet) detailsDiv.innerHTML += `<span>🍽️ 飲食: ${matchData.diet}</span>`;
+    
     document.getElementById("cardBio").innerText = matchData.bio || '這個人很神秘，還沒寫自我介紹...';
     
     const tagsContainer = document.getElementById("cardTags");
