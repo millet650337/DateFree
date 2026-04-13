@@ -220,12 +220,16 @@ fetch(`${API_BASE}/my_matches`, { headers: { Authorization: `Bearer ${token}` } 
     data.matches.forEach(m => {
         const div = document.createElement('div');
         div.className = 'match-item';
-        div.onclick = () => selectMatch(m.email, m.name, div);
+        
+        // 對方的藍勾勾徽章
+        const verifiedBadge = m.is_verified ? '<span style="display:inline-block; background:#1d9bf0; color:white; border-radius:50%; width:14px; height:14px; text-align:center; line-height:14px; font-size:9px; margin-left:5px; vertical-align:middle;" title="已通過真人驗證">✔</span>' : '';
+        
+        div.onclick = () => selectMatch(m.email, m.name, div, verifiedBadge);
         const img = m.photo_base64 || 'S__18784267.jpg';
         div.innerHTML = `
             <img src="${img}" class="match-avatar">
             <div class="match-info">
-                <h4>${m.name}</h4>
+                <h4>${m.name}${verifiedBadge}</h4>
                 <p>契合度: <span style="color:var(--accent-orange);font-weight:bold;">${m.score}%</span></p>
             </div>
         `;
@@ -234,9 +238,11 @@ fetch(`${API_BASE}/my_matches`, { headers: { Authorization: `Bearer ${token}` } 
 });
 
 // 4. 選擇聊天對象
-function selectMatch(email, name, element) {
+function selectMatch(email, name, element, verifiedBadge) {
     currentTarget = email;
-    document.getElementById('chatHeader').innerHTML = `與 <span style="color:var(--accent-orange);margin-left:5px;">${name}</span> 聊天中...`;
+    // 將對方的藍勾勾也顯示在聊天室頂部標題
+    document.getElementById('chatHeader').innerHTML = `與 <span style="color:var(--accent-orange);margin-left:5px;">${name}</span>${verifiedBadge} 聊天中...`;
+    
     document.querySelectorAll('.match-item').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
     

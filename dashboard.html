@@ -137,6 +137,10 @@ function loadProfile() {
             document.getElementById("profileContent").innerHTML = 
                 `<img src="${data.photo_base64}" class="profile-img" alt="Profile">`;
         }
+        
+        // 判斷是否有驗證，如果有就加上 CSS 寫的藍勾勾
+        const verifiedBadge = data.is_verified ? '<span style="display:inline-block; background:#1d9bf0; color:white; border-radius:50%; width:18px; height:18px; text-align:center; line-height:18px; font-size:12px; margin-left:6px; vertical-align:middle; cursor:pointer;" title="已通過真人驗證">✔</span>' : '';
+        document.getElementById("nickname").innerHTML = user.name + verifiedBadge;
     })
     .catch(err => console.error("無法載入", err));
 }

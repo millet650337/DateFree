@@ -108,6 +108,8 @@ class UserProfile(BaseModel):
     smoking: str = None
     drinking: str = None
     tattoo: str = None
+    id_card_base64: str = None
+    student_id_base64: str = None
 
 # ==========================================
 # 🧠 深度三觀配對演算法
@@ -273,7 +275,8 @@ async def my_matches(current_user=Depends(get_current_user)):
         "name": best_match["name"], 
         "email": best_match["email"],
         "score": best_score, 
-        "photo_base64": best_match.get("photo_base64", "")
+        "photo_base64": best_match.get("photo_base64", ""),
+        "is_verified": best_match.get("is_verified", False)
     }]}
 
 # 5. 獲取單一最高分配對 (Dashboard 彈窗使用)
@@ -286,7 +289,7 @@ async def match(current_user=Depends(get_current_user)):
         return {"message": "目前還沒有三觀契合的對象，系統將持續為您尋找！"}
     
     best = matches_data["matches"][0]
-    return { "match": { "name": best["name"], "email": best["email"], "score": best["score"] } }
+    return { "match": { "name": best["name"], "email": best["email"], "score": best["score"], "is_verified": best.get("is_verified", False) } }
 
 # 6. 獲取歷史聊天紀錄
 @app.get("/api/messages/{target_email}")
