@@ -507,19 +507,23 @@ function submitSurvey() {
     const form = document.getElementById("surveyForm");
     const formData = new FormData(form);
     
+    // 1. 明確定義哪些欄位「必定是陣列 (複選題)」
+    const arrayFields = ['target_height', 'target_future_status', 'dealbreakers'];
     const payload = {};
+
+    // 初始化陣列欄位為空陣列
+    arrayFields.forEach(field => payload[field] = []);
+
+    // 2. 收集表單資料
     formData.forEach((value, key) => {
-        if (!payload[key]) payload[key] = value;
-        else { // 處理陣列 (如 checkbox)
-            if (!Array.isArray(payload[key])) payload[key] = [payload[key]];
+        if (arrayFields.includes(key)) {
+            // 如果是設定好的複選題，一律塞進陣列裡 (不管勾了 1 個還是多個)
             payload[key].push(value);
+        } else {
+            // 單選或文字直接賦值
+            payload[key] = value;
         }
     });
-
-    // 確保未選的 checkbox 回傳空陣列
-    if (!payload.dealbreakers) payload.dealbreakers = [];
-    if (!payload.target_future_status) payload.target_future_status = [];
-    if (!payload.target_height) payload.target_height = [];
 
     fetch("/api/survey", {
         method: "POST",
@@ -528,11 +532,34 @@ function submitSurvey() {
     })
     .then(res => res.json())
     .then(data => {
-        if (data.detail) { alert("錯誤：" + data.detail); return; }
+        if (data.detail) {
+            // 處理 Token 過期 (保留之前的防呆)
+            if (data.detail === "Token 無效" || data.detail === "使用者不存在") {
+                alert("登入狀態已過期，請重新登入！");
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                window.location.href = "index.html";
+                return;
+            }
+            
+            // 處理 [object Object] 顯示問題：將 FastAPI 的陣列錯誤轉成可讀文字
+            let errorMsg = data.detail;
+            if (typeof data.detail === 'object') {
+                errorMsg = JSON.stringify(data.detail, null, 2); 
+                console.error("詳細錯誤內容：", data.detail); // 同時印在 F12 Console 方便除錯
+            }
+            
+            alert("錯誤：" + errorMsg);
+            return;
+        }
+        
         alert("問卷填寫完成，系統已更新您的交友演算法！");
         window.location.href = "dashboard.html";
     })
-    .catch(() => { alert("伺服器連線錯誤"); });
+    .catch((err) => { 
+        console.error(err);
+        alert("伺服器連線錯誤，請稍後再試。"); 
+    });
 }
 </script>
 
