@@ -43,34 +43,72 @@ header {
 h2 { text-align: center; color: var(--text-dark); margin-top: 0; font-size: 24px; }
 .step-indicator { text-align: center; color: var(--text-gray); font-size: 14px; margin-bottom: 30px; letter-spacing: 1px; }
 
-/* 表單群組 */
+/* ==========================
+   表單群組 (獨立卡片化)
+========================== */
 .step-content { display: none; }
 .step-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.form-group { margin-bottom: 25px; }
-.form-group label.q-title { display: block; font-weight: bold; margin-bottom: 12px; font-size: 17px; color: var(--primary-blue); }
-.form-group .sub-text { font-size: 13px; color: #718096; margin-top: -8px; margin-bottom: 10px; display: block; }
-
-/* 基礎輸入 */
-select, input[type="number"] {
-    width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; font-family: inherit; margin-bottom: 10px;
+.form-group { 
+    margin-bottom: 30px; 
+    padding: 25px; 
+    background: #f8fafc; /* 給予每一題獨立的淺灰藍色背景 */
+    border: 1px solid #e2e8f0; 
+    border-radius: 16px; 
 }
+.form-group label.q-title { 
+    display: block; 
+    font-weight: bold; 
+    margin-bottom: 15px; 
+    font-size: 18px; 
+    color: var(--text-dark); 
+    border-left: 5px solid var(--accent-orange); /* 左側加上橘紅色標籤條，增加起點辨識度 */
+    padding-left: 12px;
+    line-height: 1.2;
+}
+.form-group .sub-text { 
+    font-size: 13px; 
+    color: #718096; 
+    margin-top: -5px; 
+    margin-bottom: 15px; 
+    display: block; 
+    padding-left: 17px; /* 與上方標題對齊 */
+}
+
+/* ==========================
+   基礎輸入與選項按鈕
+========================== */
+select, input[type="number"], input[type="text"] {
+    width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 16px; font-family: inherit; margin-bottom: 10px; box-sizing: border-box;
+}
+
 .radio-group label {
-    display: block; margin-bottom: 10px; padding: 12px 15px; background: #f8fafc;
-    border-radius: 10px; cursor: pointer; transition: background 0.2s; border: 1px solid transparent;
+    display: block; margin-bottom: 10px; padding: 12px 15px; 
+    background: #ffffff; /* 選項改為純白，與外層淺灰背景產生對比 */
+    border-radius: 10px; cursor: pointer; transition: all 0.2s; 
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02); /* 微微的浮凸感 */
 }
-.radio-group label:hover { background: #f1f5f9; }
-.radio-group input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
+.radio-group label:hover { 
+    background: #fff0f0; 
+    border-color: #ffb8b8;
+}
+.radio-group input[type="radio"] { 
+    margin-right: 12px; transform: scale(1.2); accent-color: var(--accent-orange); 
+}
 
-/* 地雷標籤 Tags */
+/* ==========================
+   地雷與興趣標籤 Tags
+========================== */
 .tags-container { display: flex; flex-wrap: wrap; gap: 10px; }
 .tag-label {
-    padding: 10px 20px; background: #f1f5f9; border-radius: 30px; cursor: pointer;
-    font-size: 15px; transition: all 0.3s; border: 1px solid transparent; user-select: none;
+    padding: 10px 20px; background: #ffffff; border-radius: 30px; cursor: pointer;
+    font-size: 15px; transition: all 0.3s; border: 1px solid #e2e8f0; user-select: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
 .tag-label input[type="checkbox"] { display: none; }
-.tag-label.selected { background: var(--accent-gradient); color: white; box-shadow: 0 4px 10px rgba(255,107,107,0.3); }
+.tag-label.selected { background: var(--accent-gradient); color: white; border-color: transparent; box-shadow: 0 4px 10px rgba(255,107,107,0.3); }
 
 /* 按鈕區 */
 .btn-wrapper { display: flex; justify-content: space-between; margin-top: 40px; }
