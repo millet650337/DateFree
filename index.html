@@ -40,8 +40,25 @@ header {
     margin: 0 auto;
 }
 
-.logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
-.logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+.logo-container { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    cursor: pointer; 
+    height: 100%; /* 確保容器高度足夠 */
+}
+.logo-img { 
+    height: 70px;       /* 增加高度，原為 40px */
+    width: auto;        /* 寬度自動調整，確保比例正確 */
+    max-width: 150px;   /* 設定最大寬度，避免過大 */
+    border-radius: 0;   /* 移除 50% 的圓形裁切，顯示完整圖片 */
+    object-fit: contain; /* 確保圖片在容器內完整顯示而不被縮放裁切 */
+    transition: transform 0.3s ease; /* 加入微互動動畫 */
+}
+/* 增加滑鼠懸停時的縮放效果，增加商業質感 */
+.logo-img:hover {
+    transform: scale(1.05);
+}
 .logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
 
 .auth-btn {

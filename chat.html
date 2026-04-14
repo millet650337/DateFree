@@ -9,8 +9,25 @@
 :root { --text-dark: #2d3748; --text-gray: #4a5568; --accent-orange: #ff6b6b; --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff8e53); --bg-light: #f8fafc; }
 body { margin: 0; font-family: 'Microsoft JhengHei', sans-serif; background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: white; border-bottom: 1px solid #eee; flex-shrink: 0; }
-.logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
-.logo-img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+.logo-container { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    cursor: pointer; 
+    height: 100%; /* 確保容器高度足夠 */
+}
+.logo-img { 
+    height: 70px;       /* 增加高度，原為 40px */
+    width: auto;        /* 寬度自動調整，確保比例正確 */
+    max-width: 150px;   /* 設定最大寬度，避免過大 */
+    border-radius: 0;   /* 移除 50% 的圓形裁切，顯示完整圖片 */
+    object-fit: contain; /* 確保圖片在容器內完整顯示而不被縮放裁切 */
+    transition: transform 0.3s ease; /* 加入微互動動畫 */
+}
+/* 增加滑鼠懸停時的縮放效果，增加商業質感 */
+.logo-img:hover {
+    transform: scale(1.05);
+}
 .logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
 .back-btn { padding: 8px 16px; border: 1px solid #cbd5e1; border-radius: 20px; background: transparent; cursor: pointer; transition: 0.3s; }
 .back-btn:hover { background: #f1f5f9; }
