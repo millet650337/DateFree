@@ -244,11 +244,61 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
 }
+
+/* ==========================
+   全螢幕進場動畫 (Intro Overlay)
+========================== */
+.intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* 擷取新 Logo 上的顏色：從左下角的紫色漸層到右上角的橘紅色 */
+    background: linear-gradient(45deg, #8A78C5 0%, #E37476 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999; /* 確保它在最上層 */
+    /* 停留 1.2 秒後，花 0.8 秒向上滑出並淡出 */
+    animation: slideUpFadeOut 0.8s cubic-bezier(0.77, 0, 0.175, 1) 1.2s forwards;
+}
+
+.intro-logo {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: scale(0.5);
+    /* 圖片彈出動畫：延遲 0.2 秒後彈出 */
+    animation: logoPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
+}
+
+/* 定義 Logo 彈出的關鍵影格 */
+@keyframes logoPopIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 定義全螢幕向上滑出消失的關鍵影格 */
+@keyframes slideUpFadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(-100%);
+        visibility: hidden; /* 確保隱藏後不會擋住使用者的點擊 */
+    }
+}
 </style>
 </head>
 
 <body>
-
+<div id="introOverlay" class="intro-overlay">
+    <img src="S__3203081_0.jpg" alt="Date Free Intro" class="intro-logo">
+</div>
 <header>
     <div class="logo-container" onclick="window.location.href='index.html'">
         <img src="S__18784267.jpg" alt="Date Free Logo" class="logo-img">
@@ -419,7 +469,16 @@ function revealOnScroll() {
 }
 window.addEventListener("scroll", revealOnScroll);
 revealOnScroll(); // 初始載入時先觸發一次
-window.onload = function() { updateUI(); }
+window.onload = function() {
+     updateUI();
+    // ====== 新增：在動畫結束後 (2.5秒)，徹底移除全螢幕遮罩 ======
+    setTimeout(function() {
+        const overlay = document.getElementById("introOverlay");
+        if (overlay) {
+            overlay.remove();
+        }
+    }, 2500);
+}
 window.onclick = function(e) { if (e.target == modal) closeModal(); }
 </script>
 
