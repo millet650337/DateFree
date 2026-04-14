@@ -102,8 +102,7 @@ class UserProfile(BaseModel):
     smoking: str = None
     drinking: str = None
     tattoo: str = None
-    id_card_base64: str = None
-    student_id_base64: str = None
+    enrollment_cert_base64: Optional[str] = None
     mbti: str = None
     tags: List[str] = []
     birthday: str = None
