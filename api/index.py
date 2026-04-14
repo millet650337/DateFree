@@ -95,8 +95,8 @@ class UserProfile(BaseModel):
     photo_base64: str = None
     bio: str = None
     gender: str = None
-    height: int = None
-    weight: int = None
+    height: Optional[int] = None   
+    weight: Optional[int] = None
     department: str = None
     grade: str = None
     smoking: str = None
@@ -106,7 +106,6 @@ class UserProfile(BaseModel):
     student_id_base64: str = None
     mbti: str = None
     tags: List[str] = []
-    # --- 新增欄位 ---
     birthday: str = None
     hometown: str = None
     zodiac: str = None

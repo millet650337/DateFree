@@ -390,27 +390,54 @@ function closePreviewModal(e) {
 function saveProfile() {
     const selectedTags = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(el => el.value);
 
+    // 新增防呆機制：確保身高與體重是有效數字，如果沒填或填錯就送出 null
+    const hInput = document.getElementById("heightInput").value;
+    const wInput = document.getElementById("weightInput").value;
+    const heightVal = (hInput && !isNaN(hInput)) ? parseInt(hInput) : null;
+    const weightVal = (wInput && !isNaN(wInput)) ? parseInt(wInput) : null;
+
     const payload = {
-        photo_base64: currentBase64, bio: document.getElementById("bioInput").value || null, gender: getRadio("gender"),
-        height: document.getElementById("heightInput").value ? parseInt(document.getElementById("heightInput").value) : null,
-        weight: document.getElementById("weightInput").value ? parseInt(document.getElementById("weightInput").value) : null,
-        department: document.getElementById("deptInput").value || null, grade: document.getElementById("gradeInput").value || null,
-        smoking: getRadio("smoking"), drinking: getRadio("drinking"), tattoo: getRadio("tattoo"),
-        id_card_base64: idCardBase64, student_id_base64: studentIdBase64,
-        mbti: document.getElementById("mbtiInput").value || null, tags: selectedTags,
+        photo_base64: currentBase64, 
+        bio: document.getElementById("bioInput").value || null, 
+        gender: getRadio("gender"),
+        height: heightVal,  // 使用處理過的安全數值
+        weight: weightVal,  // 使用處理過的安全數值
+        department: document.getElementById("deptInput").value || null, 
+        grade: document.getElementById("gradeInput").value || null,
+        smoking: getRadio("smoking"), 
+        drinking: getRadio("drinking"), 
+        tattoo: getRadio("tattoo"),
+        id_card_base64: idCardBase64, 
+        student_id_base64: studentIdBase64,
+        mbti: document.getElementById("mbtiInput").value || null, 
+        tags: selectedTags,
         birthday: document.getElementById("birthdayInput").value || null,
         hometown: document.getElementById("hometownInput").value || null,
         zodiac: document.getElementById("zodiacInput").value || null,
         blood_type: document.getElementById("bloodTypeInput").value || null,
-        pet: getRadio("pet"), fitness: getRadio("fitness"), diet: getRadio("diet")
+        pet: getRadio("pet"), 
+        fitness: getRadio("fitness"), 
+        diet: getRadio("diet")
     };
 
-    fetch(`${API_BASE}/profile`, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }, body: JSON.stringify(payload) })
+    fetch(`${API_BASE}/profile`, { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }, 
+        body: JSON.stringify(payload) 
+    })
     .then(res => res.json())
     .then(data => {
-        if (data.detail) { alert("錯誤：" + data.detail); } 
-        else { alert("資料已儲存！"); window.location.href = "dashboard.html"; }
-    }).catch(() => alert("伺服器錯誤"));
+        if (data.detail) { 
+            // 若再遇到錯誤，會將錯誤細節轉成文字印出，避免變成 [object Object]
+            let errMsg = typeof data.detail === 'object' ? JSON.stringify(data.detail) : data.detail;
+            alert("錯誤：" + errMsg); 
+        } 
+        else { 
+            alert("資料已儲存！"); 
+            window.location.href = "dashboard.html"; 
+        }
+    })
+    .catch(() => alert("伺服器錯誤"));
 }
 function logout() { localStorage.removeItem("token"); localStorage.removeItem("user"); window.location.href = "index.html"; }
 </script>
