@@ -199,6 +199,51 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     .auth-right { padding: 40px 20px; }
     .auth-logo-img { width: 140px; height: 140px; }
 }
+
+/* ==========================
+   新增：商業感進場與漂浮動畫
+========================== */
+/* 主視覺漂浮動畫 */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+.hero-graphic .main-logo-img {
+    animation: float 6s ease-in-out infinite; /* 加入持續的漂浮感 */
+    box-shadow: 0 25px 50px rgba(255, 107, 107, 0.2);
+}
+
+/* 滾動浮現 (Reveal) 基礎樣式 */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 按鈕光暈特效 */
+.auth-btn {
+    position: relative;
+    overflow: hidden;
+}
+.auth-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 300%; height: 300%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.6s, opacity 0.6s;
+}
+.auth-btn:hover::after {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
 </style>
 </head>
 
@@ -360,6 +405,20 @@ function logout() {
     window.location.reload(); 
 }
 
+// ====== 新增：滾動浮現動畫 (Scroll Reveal) ======
+function revealOnScroll() {
+    var reveals = document.querySelectorAll(".reveal");
+    for (var i = 0; i < reveals.length; i++) {
+        var windowHeight = window.innerHeight;
+        var elementTop = reveals[i].getBoundingClientRect().top;
+        var elementVisible = 100; // 提早觸發的距離
+        if (elementTop < windowHeight - elementVisible) {
+            reveals[i].classList.add("active");
+        }
+    }
+}
+window.addEventListener("scroll", revealOnScroll);
+revealOnScroll(); // 初始載入時先觸發一次
 window.onload = function() { updateUI(); }
 window.onclick = function(e) { if (e.target == modal) closeModal(); }
 </script>

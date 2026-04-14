@@ -58,6 +58,28 @@ input[type="file"] { display: none; }
 .card-tag { background: white; border: 1px solid var(--accent-orange); color: var(--accent-orange); padding: 4px 12px; border-radius: 20px; font-size: 13px; }
 
 @media (max-width: 768px) { header { padding: 15px 20px; } }
+
+/* 輸入框與下拉選單的過渡動畫 */
+select, input[type="number"], input[type="text"], input[type="date"], .bio-input {
+    transition: all 0.3s ease;
+    border: 2px solid #e2e8f0; /* 加粗一點點邊框 */
+    background-color: #f8fafc;
+}
+
+/* 當使用者點擊輸入框時的發光效果 */
+select:focus, input[type="number"]:focus, input[type="text"]:focus, input[type="date"]:focus, .bio-input:focus {
+    outline: none;
+    border-color: var(--accent-orange);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.15); /* 外圈柔和光暈 */
+    transform: translateY(-2px); /* 微微浮起 */
+}
+
+/* 單選與複選按鈕的點擊回饋 */
+.radio-group label:active, .tag-label:active {
+    transform: scale(0.95); /* 按下去的時候微微縮小 */
+}
+
 </style>
 </head>
 

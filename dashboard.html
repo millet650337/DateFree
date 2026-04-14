@@ -51,6 +51,45 @@ header { width: 100%; max-width: 1200px; display: flex; justify-content: space-b
 .card-action { display: block; width: 100%; padding: 15px; background: var(--accent-gradient); color: white; border: none; border-radius: 30px; font-size: 18px; font-weight: bold; cursor: pointer; text-align: center; margin-top: 20px; text-decoration: none; box-sizing: border-box; }
 
 @media (max-width: 900px) { header { padding: 15px 20px; } .menu-section { gap: 30px; } .menu-item { width: 140px; height: 140px; } .profile-diamond { width: 140px; height: 140px; } }
+
+/* ==========================
+   新增：主控台進場與毛玻璃特效
+========================== */
+/* 整體頁面柔和載入 */
+body {
+    animation: fadeInPage 0.8s ease-out;
+}
+@keyframes fadeInPage {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 菱形選單漸次彈出 */
+.menu-item {
+    opacity: 0;
+    transform: rotate(45deg) scale(0.5) translateY(50px);
+    animation: popInDiamond 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* 利用 nth-child 創造時間差 (Stagger effect) */
+.menu-item:nth-child(1) { animation-delay: 0.1s; }
+.menu-item:nth-child(2) { animation-delay: 0.2s; }
+.menu-item:nth-child(3) { animation-delay: 0.3s; }
+.menu-item:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes popInDiamond {
+    to {
+        opacity: 1;
+        transform: rotate(45deg) scale(1) translateY(0);
+    }
+}
+
+/* 讓配對卡片擁有「毛玻璃 (Glassmorphism)」的高級感 */
+.profile-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
 </style>
 </head>
 
