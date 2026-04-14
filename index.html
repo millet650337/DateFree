@@ -261,18 +261,16 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     align-items: center;
     z-index: 999999; /* 確保它在最上層 */
     /* 停留 1.2 秒後，花 0.8 秒向上滑出並淡出 */
-    animation: slideUpFadeOut 0.8s cubic-bezier(0.77, 0, 0.175, 1) 1.2s forwards;
+    animation: slideUpFadeOut 0.8s cubic-bezier(0.77, 0, 0.175, 1) 2.2s forwards;
 }
 
 .intro-logo {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    background: transparent;
     opacity: 0;
     transform: scale(0.5);
-    /* 圖片彈出動畫：延遲 0.2 秒後彈出 */
     animation: logoPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
 }
 
@@ -297,11 +295,11 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
 
 <body>
 <div id="introOverlay" class="intro-overlay">
-    <img src="datefreesquare.png" alt="Date Free Intro" class="intro-logo">
+    <img src="datefreelogo.png" alt="Date Free Intro" class="intro-logo">
 </div>
 <header>
     <div class="logo-container" onclick="window.location.href='index.html'">
-        <img src="S__18784267.jpg" alt="Date Free Logo" class="logo-img">
+        <img src="datefreelogo.png" alt="Date Free Logo" class="logo-img">
         <div class="logo-text">Date Free</div>
     </div>
 
@@ -471,13 +469,13 @@ window.addEventListener("scroll", revealOnScroll);
 revealOnScroll(); // 初始載入時先觸發一次
 window.onload = function() {
      updateUI();
-    // ====== 新增：在動畫結束後 (2.5秒)，徹底移除全螢幕遮罩 ======
+    // ====在動畫結束後 (3.5秒)，徹底移除全螢幕遮罩 ====
     setTimeout(function() {
         const overlay = document.getElementById("introOverlay");
         if (overlay) {
             overlay.remove();
         }
-    }, 2500);
+    }, 3500);
 }
 window.onclick = function(e) { if (e.target == modal) closeModal(); }
 </script>
