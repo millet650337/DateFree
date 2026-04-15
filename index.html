@@ -388,7 +388,21 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
         <div class="auth-right">
             <h3>使用 Google 帳號登入 / 註冊</h3>
             <p>快速驗證學生身分，開始你的精準配對</p>
-            <div id="buttonDiv" style="display: flex; justify-content: center; width: 100%;"></div>
+            <div id="g_id_onload"
+                data-client_id="460379161583-tdkqba7mu0pd1b6haf2qcqs297ghqpds.apps.googleusercontent.com"
+                data-login_uri="https://date-free-kappa.vercel.app/api/auth/google/callback"
+                data-ux_mode="redirect"
+                data-auto_prompt="false"> </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-size="large"
+                data-theme="outline"
+                data-text="continue_with"
+                data-shape="pill"
+                data-width="320"
+                data-logo_alignment="center">
+            </div>
             
         </div>
     </div>
@@ -481,17 +495,6 @@ window.onload = function() {
         }
     }, 3500);
 
-    // ====== 新增：使用 JS API 初始化 Google 登入 ======
-    google.accounts.id.initialize({
-        client_id: "460379161583-tdkqba7mu0pd1b6haf2qcqs297ghqpds.apps.googleusercontent.com",
-        callback: handleCredentialResponse,
-        ux_mode: "popup" // 關鍵設定：強制使用彈出視窗，避免 iOS 產生 POST 表單重新導向問題
-    });
-    
-    google.accounts.id.renderButton(
-        document.getElementById("buttonDiv"),
-        { theme: "outline", size: "large", text: "continue_with", shape: "pill", width: 320 }
-    );
 }
 window.onclick = function(e) { if (e.target == modal) closeModal(); }
 </script>

@@ -1,4 +1,6 @@
-from fastapi import FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect, Request
+from fastapi.responses import RedirectResponse
+import urllib.parse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
@@ -201,6 +203,42 @@ async def google_login(data: GoogleLoginRequest):
     except ValueError:
         raise HTTPException(401, "Google Token 無效")
 
+@app.post("/api/auth/google/callback")
+async def google_login_callback(request: Request):
+    try:
+        # 讀取 Google 傳來的表單資料
+        body = await request.body()
+        parsed = urllib.parse.parse_qs(body.decode('utf-8'))
+        credential = parsed.get("credential", [None])[0]
+        
+        if not credential:
+            return RedirectResponse(url="/index.html?error=missing_credential", status_code=303)
+
+        # 驗證 Google Token
+        idinfo = id_token.verify_oauth2_token(credential, requests.Request(), GOOGLE_CLIENT_ID)
+        email = idinfo["email"]
+        name = idinfo.get("name", "")
+        
+        # 資料庫尋找或建立使用者
+        user = users_collection.find_one({"email": email})
+        if not user:
+            user_data = { "email": email, "name": name, "survey": None, "created_at": datetime.utcnow() }
+            users_collection.insert_one(user_data)
+        
+        # 產生你的系統 JWT
+        token = create_jwt(email)
+        
+        # 將 token 與使用者資訊編碼後，放進 URL 參數並跳轉到儀表板
+        encoded_name = urllib.parse.quote(name)
+        encoded_email = urllib.parse.quote(email)
+        redirect_url = f"/dashboard.html?token={token}&name={encoded_name}&email={encoded_email}"
+        
+        return RedirectResponse(url=redirect_url, status_code=303)
+        
+    except Exception as e:
+        print("Google Callback Error:", e)
+        return RedirectResponse(url="/index.html?error=auth_failed", status_code=303)
+    
 @app.get("/api/profile")
 async def get_profile(current_user=Depends(get_current_user)):
     user_data = users_collection.find_one({"email": current_user["email"]}, {"_id": 0})

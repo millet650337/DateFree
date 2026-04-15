@@ -171,6 +171,18 @@ body {
 </div>
 
 <script>
+const urlParams = new URLSearchParams(window.location.search);
+const urlToken = urlParams.get('token');
+const urlName = urlParams.get('name');
+const urlEmail = urlParams.get('email');
+
+if (urlToken && urlName && urlEmail) {
+    // 存入 localStorage
+    localStorage.setItem("token", urlToken);
+    localStorage.setItem("user", JSON.stringify({ name: urlName, email: urlEmail }));
+    // 清除網址列參數，保持畫面乾淨，避免重新整理時出錯
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
 const API_BASE = "/api";
 const token = localStorage.getItem("token");
 
