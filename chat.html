@@ -7,7 +7,12 @@
 <link rel="icon" href="datefreecircle.png" type="image/jpeg">
 <style>
 :root { --text-dark: #2d3748; --text-gray: #4a5568; --accent-orange: #ff6b6b; --accent-gradient: linear-gradient(45deg, #ff6b6b, #ff8e53); --bg-light: #f8fafc; }
-body { margin: 0; font-family: 'Microsoft JhengHei', sans-serif; background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+body { 
+    margin: 0; font-family: 'Microsoft JhengHei', sans-serif; 
+    background: linear-gradient(180deg, #ffffff 0%, #fff0f0 100%); 
+    color: var(--text-dark); 
+    height: 100dvh; display: flex; flex-direction: column; overflow: hidden; 
+}
 header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: white; border-bottom: 1px solid #eee; flex-shrink: 0; }
 .logo-container { 
     display: flex; 
@@ -47,7 +52,11 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .msg { max-width: 65%; padding: 12px 18px; border-radius: 20px; font-size: 15px; line-height: 1.5; word-wrap: break-word; }
 .msg.self { align-self: flex-end; background: var(--accent-gradient); color: white; border-bottom-right-radius: 5px; box-shadow: 0 4px 10px rgba(255,107,107,0.2); }
 .msg.other { align-self: flex-start; background: #f1f5f9; color: var(--text-dark); border-bottom-left-radius: 5px; }
-.chat-input-area { padding: 15px 20px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
+.chat-input-area { 
+    padding: 15px 20px; 
+    padding-bottom: calc(15px + env(safe-area-inset-bottom));
+    border-top: 1px solid #eee; display: flex; gap: 10px; background: white; 
+}
 .chat-input-area input { flex: 1; padding: 15px 20px; border-radius: 30px; border: 1px solid #cbd5e1; outline: none; font-size: 15px; font-family: inherit; }
 .chat-input-area button { padding: 0 30px; border-radius: 30px; background: var(--text-dark); color: white; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
 .chat-input-area button:hover { background: var(--accent-orange); }
@@ -79,13 +88,15 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 @media (max-width: 900px) { .chat-right { display: none; } .chat-sidebar { width: 220px; } }
 @media (max-width: 600px) {
     .chat-container { flex-direction: column; margin: 0; border-radius: 0; }
-    .chat-sidebar { width: 100%; height: 120px; border-right: none; border-bottom: 1px solid #eee; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
+    .chat-sidebar { width: 100%; height: 120px; flex-shrink: 0; border-right: none; border-bottom: 1px solid #eee; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
     .chat-sidebar h3 { display: none; }
     .match-list { display: flex; flex-direction: row; }
     .match-item { flex-direction: column; border-bottom: none; border-right: 1px solid #eee; min-width: 90px; justify-content: center; text-align: center; padding: 10px; }
     .match-item.active { border-left: none; border-bottom: 4px solid var(--accent-orange); }
     .match-avatar { margin: 0 0 5px 0; }
     .match-info p { display: none; }
+    .chat-input-area button { padding: 0 15px; font-size: 15px; }
+    .chat-input-area input { padding: 12px 15px; }
 }
 </style>
 </head>
@@ -195,8 +206,9 @@ function initWS() {
     
     ws.onmessage = function(event) {
         const msg = JSON.parse(event.data);
-        if ((msg.sender === currentTarget) || (msg.receiver === currentTarget && msg.sender === user.email)) {
-            appendMessage(msg.content, msg.sender === user.email);
+        // 只處理對方傳來的訊息 (自己的訊息已在 sendMessage 時優先渲染了)
+        if (msg.sender === currentTarget) {
+            appendMessage(msg.content, false);
         }
     };
     ws.onclose = function() { console.log("連線中斷，3秒後重新連線..."); setTimeout(initWS, 3000); };
@@ -267,10 +279,19 @@ function sendMessage() {
     const input = document.getElementById('chatInput');
     const content = input.value.trim();
     if (!content) return;
+    
+    // 1. 先清除畫面上的「你們還沒有聊過天」提示
+    const box = document.getElementById('chatMessages');
+    if (box.innerHTML.includes('你們還沒有聊過天')) {
+        box.innerHTML = '';
+    }
+    
+    // 2. 樂觀更新 (Optimistic Update)：立刻在自己的畫面上顯示訊息！
+    appendMessage(content, true);
+    
+    // 3. 透過 WebSocket 送給後端，並清空輸入框
     ws.send(JSON.stringify({ receiver: currentTarget, content: content }));
     input.value = '';
-    const box = document.getElementById('chatMessages');
-    if(box.innerHTML.includes('你們還沒有聊過天')) box.innerHTML = '';
 }
 
 function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
