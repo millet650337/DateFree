@@ -1,15 +1,14 @@
 {
-  "routes": [
-    { 
-      "handle": "filesystem" 
-    },
-    { 
-      "src": "/api/(.*)", 
-      "dest": "/api/index.py" 
-    },
-    { 
-      "src": "/(.*)", 
-      "dest": "/index.html" 
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/admin/run-weekly-match",
+      "schedule": "0 21 * * 0"
     }
   ]
 }

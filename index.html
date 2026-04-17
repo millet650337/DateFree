@@ -45,20 +45,17 @@ header {
     align-items: center; 
     gap: 15px; 
     cursor: pointer; 
-    height: 100%; /* 確保容器高度足夠 */
+    height: 100%; 
 }
 .logo-img { 
-    height: 70px;       /* 增加高度，原為 40px */
-    width: auto;        /* 寬度自動調整，確保比例正確 */
-    max-width: 150px;   /* 設定最大寬度，避免過大 */
-    border-radius: 0;   /* 移除 50% 的圓形裁切，顯示完整圖片 */
-    object-fit: contain; /* 確保圖片在容器內完整顯示而不被縮放裁切 */
-    transition: transform 0.3s ease; /* 加入微互動動畫 */
+    height: 70px;
+    width: auto;
+    max-width: 150px;
+    border-radius: 0;
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
-/* 增加滑鼠懸停時的縮放效果，增加商業質感 */
-.logo-img:hover {
-    transform: scale(1.05);
-}
+.logo-img:hover { transform: scale(1.05); }
 .logo-text { font-weight: bold; font-size: 20px; letter-spacing: 1px; color: var(--text-dark); }
 
 .auth-btn {
@@ -164,38 +161,45 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
 .auth-right h3 { margin-top: 0; margin-bottom: 10px; color: var(--text-dark); font-weight: bold; font-size: 24px; }
 .auth-right p { color: var(--text-gray); font-size: 16px; margin-bottom: 30px; }
 
-/* ==========================
-   載入中動畫 (Loading Overlay)
-========================== */
-.loading-overlay {
-    display: none; /* 預設隱藏 */
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(5px);
-    z-index: 10000; /* 確保在最上層 */
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+/* 進場動畫與毛玻璃 */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
 }
-.spinner {
-    width: 60px; height: 60px;
-    border: 6px solid #f1f5f9;
-    border-top: 6px solid var(--accent-orange);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
+.hero-graphic .main-logo-img {
+    animation: float 6s ease-in-out infinite;
+    box-shadow: 0 25px 50px rgba(255, 107, 107, 0.2);
 }
-.loading-text {
-    font-size: 20px;
-    color: var(--text-dark);
-    font-weight: bold;
-    letter-spacing: 2px;
+.reveal {
+    opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
 }
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+.auth-btn { position: relative; overflow: hidden; }
+.auth-btn::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 300%; height: 300%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+    transform: translate(-50%, -50%) scale(0); opacity: 0;
+    transition: transform 0.6s, opacity 0.6s;
 }
+.auth-btn:hover::after { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+.intro-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: linear-gradient(45deg, #8A78C5 0%, #E37476 100%);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 999999; 
+    animation: slideUpFadeOut 0.8s cubic-bezier(0.77, 0, 0.175, 1) 2.2s forwards;
+}
+.intro-logo {
+    width: 350px; height: 350px; max-width: 80vw; object-fit: contain;
+    opacity: 0; transform: scale(0.5);
+    animation: logoPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
+}
+@keyframes logoPopIn { to { opacity: 1; transform: scale(1); } }
+@keyframes slideUpFadeOut { to { opacity: 0; transform: translateY(-100%); visibility: hidden; } }
 
 @media (max-width: 768px) {
     header { padding: 15px 20px; }
@@ -216,98 +220,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     .auth-right { padding: 40px 20px; }
     .auth-logo-img { width: 140px; height: 140px; }
 }
-
-/* ==========================
-   新增：商業感進場與漂浮動畫
-========================== */
-/* 主視覺漂浮動畫 */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
-}
-.hero-graphic .main-logo-img {
-    animation: float 6s ease-in-out infinite; /* 加入持續的漂浮感 */
-    box-shadow: 0 25px 50px rgba(255, 107, 107, 0.2);
-}
-
-/* 滾動浮現 (Reveal) 基礎樣式 */
-.reveal {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-}
-.reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* 按鈕光暈特效 */
-.auth-btn {
-    position: relative;
-    overflow: hidden;
-}
-.auth-btn::after {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 300%; height: 300%;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-    transition: transform 0.6s, opacity 0.6s;
-}
-.auth-btn:hover::after {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-}
-
-/* ==========================
-   全螢幕進場動畫 (Intro Overlay)
-========================== */
-.intro-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    /* 擷取新 Logo 上的顏色：從左下角的紫色漸層到右上角的橘紅色 */
-    background: linear-gradient(45deg, #8A78C5 0%, #E37476 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999999; /* 確保它在最上層 */
-    /* 停留 1.2 秒後，花 0.8 秒向上滑出並淡出 */
-    animation: slideUpFadeOut 0.8s cubic-bezier(0.77, 0, 0.175, 1) 2.2s forwards;
-}
-
-.intro-logo {
-    width: 350px;
-    height: 350px;
-    max-width: 80vw;
-    object-fit: contain;
-    background: transparent;
-    opacity: 0;
-    transform: scale(0.5);
-    animation: logoPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
-}
-
-/* 定義 Logo 彈出的關鍵影格 */
-@keyframes logoPopIn {
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* 定義全螢幕向上滑出消失的關鍵影格 */
-@keyframes slideUpFadeOut {
-    to {
-        opacity: 0;
-        transform: translateY(-100%);
-        visibility: hidden; /* 確保隱藏後不會擋住使用者的點擊 */
-    }
-}
 </style>
 </head>
 
@@ -319,13 +231,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     <div class="logo-container" onclick="window.location.href='index.html'">
         <img src="datefreelogo.png" alt="Date Free Logo" class="logo-img">
     </div>
-
     <button id="loginBtn" class="auth-btn" onclick="openModal()">登入 / 註冊</button>
-
-    <div class="user-box" id="userBox">
-        <span id="userName"></span>
-        <button class="logout-btn" onclick="logout()">登出</button>
-    </div>
 </header>
 
 <main>
@@ -340,9 +246,9 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     </section>
 
     <section class="info-section">
-        <p>專為台中大學學生打造的『高效率三觀媒合系統』，我們透過6大維度深度演<br>算與學生身份驗證，排除外貌與隨機滑動的社交雜訊，將線上配對精準轉化為<br>線下真實赴約，為校園社交進行降噪，找回靈魂契合的深度連結。</p>
-        <p class="highlight-text">我們不玩隨機盲滑，而是主打『每週一次精準開獎』<br>結合『200元約會補貼金』獎勵線下見面。</p>
-        <h2>你們約會，我們買單！</h2>
+        <p>專為台中大學學生打造的『高效率三觀媒合系統』，我們透過興趣、三觀適配度精準找出最適合你的對象<br>配合學生身份驗證，排除外貌與隨機滑動的社交雜訊<br>將線上配對精準轉化為線下真實赴約，為校園社交進行降噪，找回靈魂契合的深度連結。</p>
+        <p class="highlight-text">我們不玩隨機盲滑，而是主打『每週一次精準開獎』<br>結合『100元約會補貼金』獎勵線下見面。</p>
+        <h2>與其盲滑千遍 ，不如精準一見</h2>
     </section>
 
     <section class="comparison-section">
@@ -388,116 +294,89 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
         <div class="auth-right">
             <h3>使用 Google 帳號登入 / 註冊</h3>
             <p>快速驗證學生身分，開始你的精準配對</p>
-            <div id="g_id_onload"
-                data-client_id="460379161583-tdkqba7mu0pd1b6haf2qcqs297ghqpds.apps.googleusercontent.com"
-                data-login_uri="https://date-free-kappa.vercel.app/api/auth/google/callback"
-                data-ux_mode="redirect"
-                data-auto_prompt="false"> </div>
-
-            <div class="g_id_signin"
-                data-type="standard"
-                data-size="large"
-                data-theme="outline"
-                data-text="continue_with"
-                data-shape="pill"
-                data-width="320"
-                data-logo_alignment="center">
-            </div>
             
+            <div id="webviewWarning" style="display: none; background: #fff0f0; border: 1px solid #ffb8b8; padding: 15px; border-radius: 10px; margin-bottom: 20px; color: #d93025; font-weight: bold;">
+                ⚠️ 為了帳號安全，Google 不允許在 LINE/IG 內登入。<br><br>
+                👉 請點擊畫面<span style="color: blue;">右下角</span>或<span style="color: blue;">右上角</span>的選單 (⋮)<br>
+                👉 選擇 <span style="background: #ffcccc; padding: 2px 5px; border-radius: 5px;">「以預設瀏覽器開啟」</span>或<span style="background: #ffcccc; padding: 2px 5px; border-radius: 5px;">「在 Safari 開啟」</span>即可正常登入！
+            </div>
+
+            <div id="googleLoginWrapper">
+                <div id="g_id_onload"
+                    data-client_id="460379161583-tdkqba7mu0pd1b6haf2qcqs297ghqpds.apps.googleusercontent.com"
+                    data-login_uri="https://date-free-kappa.vercel.app/api/auth/google/callback"
+                    data-ux_mode="redirect"
+                    data-auto_prompt="false"> </div>
+
+                <div class="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-theme="outline"
+                    data-text="continue_with"
+                    data-shape="pill"
+                    data-width="320"
+                    data-logo_alignment="center">
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="loading-overlay" id="loadingOverlay">
-    <div class="spinner"></div>
-    <div class="loading-text">登入中...</div>
-</div>
-
 <script>
-const API_BASE = "/api";
 const modal = document.getElementById("modal");
-const loginBtn = document.getElementById("loginBtn");
-const userBox = document.getElementById("userBox");
-const userName = document.getElementById("userName");
-const loadingOverlay = document.getElementById("loadingOverlay");
 
-function openModal() { modal.style.display = "flex"; }
+// 偵測是否為 App 內建瀏覽器 (LINE, IG, FB) 以避免 Google 登入報錯 403
+function isWebView() {
+    var ua = navigator.userAgent || navigator.vendor || window.opera;
+    return (ua.indexOf("FBAN") > -1) || 
+           (ua.indexOf("FBAV") > -1) || 
+           (ua.indexOf("Instagram") > -1) || 
+           (ua.indexOf("Line") > -1);
+}
+
+function openModal() { 
+    modal.style.display = "flex"; 
+    
+    if (isWebView()) {
+        document.getElementById("googleLoginWrapper").style.display = "none";
+        document.getElementById("webviewWarning").style.display = "block";
+    } else {
+        document.getElementById("googleLoginWrapper").style.display = "block";
+        document.getElementById("webviewWarning").style.display = "none";
+    }
+}
 function closeModal() { modal.style.display = "none"; }
 
-function handleCredentialResponse(response) {
-    // 1. 在收到 Google 驗證成功時，關閉 Modal 並開啟 Loading 畫面
-    closeModal();
-    loadingOverlay.style.display = "flex";
+// 檢查網址列是否有後端跳轉回來的錯誤訊息
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error === "auth_failed" || error === "missing_credential") {
+        alert("Google 登入失敗或發生錯誤，請重新嘗試！");
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 
-    // 2. 將 credential 送到後端驗證
-    fetch(`${API_BASE}/auth/google`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ credential: response.credential })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.detail) { 
-            // 若後端回傳失敗，關閉 Loading 並跳出提示
-            loadingOverlay.style.display = "none";
-            alert("登入失敗：" + data.detail); 
-            return; 
-        }
-        
-        // 成功，儲存資料
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        
-        // 跳轉前可以讓 Loading 畫面繼續留著，視覺上會更平滑
-        window.location.href = "dashboard.html";
-    })
-    .catch(err => {
-        // 例外處理：若網路異常或伺服器無回應
-        loadingOverlay.style.display = "none";
-        alert("網路或伺服器連線錯誤，請稍後再試。");
-        console.error(err);
-    });
-}
-
-function updateUI() {
     const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (token && user) { window.location.href = "dashboard.html"; }
+    if (token) { window.location.href = "dashboard.html"; }
+
+    setTimeout(function() {
+        const overlay = document.getElementById("introOverlay");
+        if (overlay) { overlay.remove(); }
+    }, 3500);
 }
 
-function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.reload(); 
-}
+window.onclick = function(e) { if (e.target == modal) closeModal(); }
 
-// ====== 新增：滾動浮現動畫 (Scroll Reveal) ======
 function revealOnScroll() {
     var reveals = document.querySelectorAll(".reveal");
     for (var i = 0; i < reveals.length; i++) {
         var windowHeight = window.innerHeight;
         var elementTop = reveals[i].getBoundingClientRect().top;
-        var elementVisible = 100; // 提早觸發的距離
-        if (elementTop < windowHeight - elementVisible) {
-            reveals[i].classList.add("active");
-        }
+        if (elementTop < windowHeight - 100) { reveals[i].classList.add("active"); }
     }
 }
 window.addEventListener("scroll", revealOnScroll);
-revealOnScroll(); // 初始載入時先觸發一次
-window.onload = function() {
-     updateUI();
-    // ====在動畫結束後 (3.5秒)，徹底移除全螢幕遮罩 ====
-    setTimeout(function() {
-        const overlay = document.getElementById("introOverlay");
-        if (overlay) {
-            overlay.remove();
-        }
-    }, 3500);
-
-}
-window.onclick = function(e) { if (e.target == modal) closeModal(); }
+revealOnScroll(); 
 </script>
-
 </body>
 </html>
