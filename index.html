@@ -128,6 +128,66 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
 .summary-right { font-weight: bold; color: var(--text-dark); }
 
 /* ==========================
+   活動宣傳區塊 (新增)
+========================== */
+.event-section {
+    max-width: 900px;
+    margin: 0 auto 100px auto;
+    padding: 50px 40px;
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.04);
+    text-align: center;
+    position: relative;
+}
+.event-section::before {
+    content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 8px; background: var(--accent-gradient); border-radius: 4px;
+}
+.event-poster {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+}
+.event-content {
+    text-align: left;
+    line-height: 1.8;
+    color: var(--text-gray);
+    font-size: 1.1rem;
+}
+.event-content h3 {
+    color: var(--text-dark);
+    font-size: 1.8rem;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.event-content h4 {
+    color: var(--accent-orange);
+    font-size: 1.3rem;
+    margin-top: 35px;
+    margin-bottom: 15px;
+    border-bottom: 2px dashed #ffe4e4;
+    padding-bottom: 10px;
+}
+.event-content ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.event-content li {
+    margin-bottom: 12px;
+    background: #f8fafc;
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+.event-content p {
+    margin-bottom: 15px;
+}
+
+/* ==========================
    Modal (登入視窗)
 ========================== */
 .modal {
@@ -209,12 +269,14 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     .hero-text .brand-name { font-size: 2.8rem; }
     .info-section h2 { font-size: 2rem; }
     .main-logo-img { width: 240px; height: 240px; }
-    .comparison-section { padding: 40px 10px; }
+    .comparison-section { padding: 40px 10px; margin-bottom: 40px;}
     .table-header h3 { font-size: 18px; }
     .compare-row { font-size: 16px; padding: 15px 5%; }
     .col-right { font-size: 18px; }
     .center-diamond { display: none; }
     .bottom-summary { flex-direction: column; gap: 20px; text-align: center; }
+    .event-section { padding: 30px 20px; }
+    .event-content h3 { font-size: 1.5rem; }
     .modal-content.auth-layout { flex-direction: column; width: 400px; }
     .auth-left { padding: 40px 20px; border-right: none; border-bottom: 1px solid #f1f5f9; }
     .auth-right { padding: 40px 20px; }
@@ -245,13 +307,12 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
         </div>
     </section>
 
-    <section class="info-section">
+    <section class="info-section reveal">
         <p>專為大學學生打造的『高效率三觀媒合系統』<br>我們透過興趣、三觀適配度精準找出最適合你的對象<br>配合學生身份驗證，排除外貌與隨機滑動的社交雜訊<br>將線上配對精準轉化為線下真實赴約，為校園社交進行降噪，找回靈魂契合的深度連結。</p>
-        <p class="highlight-text">我們不玩隨機盲滑，而是主打『每週一次精準開獎』<br>結合『100元約會補貼金』獎勵線下見面。</p>
         <h2>與其盲滑千遍 ，不如精準一見</h2>
     </section>
 
-    <section class="comparison-section">
+    <section class="comparison-section reveal">
         <div class="table-header">
             <h3>傳統交友APP</h3>
             <h3 class="brand-title">Date Free</h3>
@@ -279,6 +340,41 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
         <div class="bottom-summary">
             <h2 class="summary-left">你在上面浪費多少青春？</h2>
             <h2 class="summary-right">我們只給你對的人！</h2>
+        </div>
+    </section>
+
+    <section class="event-section reveal">
+        <img src="S__75767820.jpg" alt="Pitch Your Friend 活動海報" class="event-poster">
+        
+        <div class="event-content">
+            <h3>【做簡報幫朋友找對象】<br>Pitch Your Friend 活動資訊來了！</h3>
+            
+            <p>你身邊是不是也有那種：明明條件超好，卻一直母胎單身？或是整天散發單身怨念，害你約會都要帶著這個電燈泡？<br>
+            <strong>自己的幸福自己救，朋友的單身你來秀！</strong></p>
+            
+            <p>這不是面試，是一場最頂的經紀人表演秀。你可以感性告白，也可以爆笑吐槽，只要能把那個「單身鬼」成功推銷出去，你就是全場最強邱比特！👼<br>
+            現場備有特調酒精，上台前喝一口，膽量翻倍、口才起飛！🍸</p>
+
+            <h4>✨ 怎麼參與？（兩種角色任你選）</h4>
+            <p><strong>🎤 我要推銷朋友：</strong> 準備 3-5 頁 PPT，限時 5 分鐘。你是朋友最鐵的經紀人，用妳的視角告訴大家他為什麼值得被愛！<br>
+            <strong>👀 我要當現場觀眾：</strong> 不想上台？沒問題！歡迎報名來當觀眾。你可以坐在台下吃瓜看戲、犀利提問，甚至遇到心儀的對象直接舉手收編！</p>
+
+            <h4>🎁 現場加碼福利</h4>
+            <p>只要現場配對成功，該對組合就有機會抽中：<br>
+            🍴 <strong>「西堤 TASTy 牛排」雙人餐券乙組！</strong><br>
+            脫單之後的第一頓大餐，我們直接幫你包了！</p>
+
+            <h4>📍 活動資訊</h4>
+            <ul>
+                <li>📅 <strong>時間：</strong> 2026/05/29（五）18:30 入場交流</li>
+                <li>📍 <strong>地點：</strong> 沃茲新創空間 Words Live 忠明館</li>
+                <li>👥 <strong>對象：</strong> 想推銷朋友、想被推銷、或單純想看戲湊熱鬧的大學生</li>
+                <li>💰 <strong>活動費用：</strong><br>
+                　 單人報名 $299 附一杯調酒<br>
+                　 雙人報名 $500（一人 $250）附一杯調酒</li>
+                <li>🪄 <strong>報名方式：</strong> 點擊主頁連結填寫表單/匯款</li>
+                <li>⏳ <strong>報名截止：</strong> 05/24（日） 23:59 逾期不候，要推銷的朋友投影片要提早交喔！</li>
+            </ul>
         </div>
     </section>
 </main>
