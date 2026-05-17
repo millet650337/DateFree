@@ -328,6 +328,11 @@ async def match(current_user=Depends(get_current_user)):
 # ---------------------------------------------------------
 @app.post("/api/admin/run-weekly-match")
 async def run_weekly_match(request: Request):
+
+    # 預設為 "true"，如果設定為 "false" 則直接中斷配對程序
+    if os.getenv("ENABLE_MATCHING", "true").lower() == "false":
+        return {"status": "paused", "message": "全站配對功能目前已關閉"}
+    
     # 取得所有有填寫問卷的使用者
     all_users = list(users_collection.find({"survey": {"$ne": None}}))
     potential_pairs = []
